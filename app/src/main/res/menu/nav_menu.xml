@@ -1,0 +1,37 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Item cho Statistic -->
+    <item
+        android:id="@+id/nav_statistic"
+        android:title="Statistic"
+        android:icon="@drawable/ic_statistic" />
+
+    <!-- Item cho Manage Classes -->
+    <item
+        android:id="@+id/nav_manage_classes"
+        android:title="Manage Courses"
+        android:icon="@drawable/ic_manage_classes" />
+
+    <!-- Item cho Manage Class Instances -->
+    <item
+        android:id="@+id/nav_manage_class_instances"
+        android:title="Manage Class Instances"
+        android:icon="@drawable/ic_manage_class_instances" />
+
+    <!-- Item cho Notifications -->
+    <item
+        android:id="@+id/nav_notifications"
+        android:title="Notifications"
+        android:icon="@drawable/ic_notification" />
+
+    <!-- Item cho Profile -->
+    <item
+        android:id="@+id/nav_profile"
+        android:title="Profile"
+        android:icon="@drawable/ic_profile" />
+
+    <!-- Footer: Logout -->
+    <item
+        android:id="@+id/nav_logout"
+        android:title="Logout"
+        android:icon="@drawable/ic_logout" />
+</menu>

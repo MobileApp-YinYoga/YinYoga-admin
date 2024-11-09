@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="348dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:id="@+id/dialog_success"
+    android:gravity="center"
+    android:background="@drawable/rounded_popup_background">
+
+    <!-- Icon -->
+    <ImageView
+        android:id="@+id/dialog_icon"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/ic_success" />
+
+    <!-- Message -->
+    <TextView
+        android:id="@+id/dialog_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="30dp"
+        android:gravity="center"
+        android:text="Course removed successfully!"
+        android:textColor="@color/main"
+        android:fontFamily="@font/poppins_bold"
+        android:textSize="20sp" />
+
+</LinearLayout>

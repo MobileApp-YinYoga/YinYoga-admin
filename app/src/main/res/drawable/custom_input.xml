@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Set white with 50% opacity -->
+    <solid android:color="@color/white"/> <!-- 80 is the hex code for 50% opacity -->
+    <corners android:radius="12dp"/>
+    <stroke
+        android:width="2dp"
+        android:color="@color/main" />
+</shape>

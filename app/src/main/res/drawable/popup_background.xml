@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#FFFFFF" /> <!-- Màu nền cho popup -->
+    <corners android:radius="30dp" /> <!-- Bo tròn viền -->
+    <stroke android:width="2dp" android:color="@color/main" /> <!-- Viền màu tím nhạt -->
+</shape>

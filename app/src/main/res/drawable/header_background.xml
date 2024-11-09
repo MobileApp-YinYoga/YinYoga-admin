@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Màu nền gradient cho header -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#2196F3"
+                android:endColor="#21CBF3"
+                android:angle="90"/>
+        </shape>
+    </item>
+
+    <!-- Đường cong bo tròn ở trên cùng của header -->
+    <item
+        android:top="0dp"
+        android:right="0dp"
+        android:left="0dp"
+        android:bottom="-20dp">
+        <shape android:shape="rectangle">
+            <corners android:topLeftRadius="40dp" android:topRightRadius="40dp" />
+        </shape>
+    </item>
+</layer-list>

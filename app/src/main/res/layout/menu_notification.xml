@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_border_white_background"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/tv_mark_all_read"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:text="Mark all as read"
+        android:textSize="16sp"
+        android:textColor="@color/main"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/tv_clear_all"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:text="Clear all"
+        android:textSize="16sp"
+        android:textColor="@color/main"
+        android:gravity="center"/>
+</LinearLayout>

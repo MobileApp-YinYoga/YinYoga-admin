@@ -1,0 +1,163 @@
+package com.example.yinyoga.adapters;
+
+import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.os.Handler;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupMenu;
+import android.widget.PopupWindow;
+import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.yinyoga.R;
+import com.example.yinyoga.fragments.ManageCoursesFragment;
+import com.example.yinyoga.models.Course;
+import com.example.yinyoga.service.CourseService;
+import com.example.yinyoga.utils.DialogHelper;
+
+import java.util.List;
+
+public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.YogaClassViewHolder> {
+
+    private List<Course> courseList;
+    private ManageCoursesFragment fragment;
+    private CourseService courseService;
+
+    // Constructor with fragment and courseList
+    public CourseAdapter(List<Course> courseList, ManageCoursesFragment fragment) {
+        this.fragment = fragment;
+        this.courseList = courseList;
+        this.courseService = new CourseService(fragment.getContext());
+    }
+
+    // Constructor without fragment
+    public CourseAdapter(List<Course> courseList) {
+        this.courseList = courseList;
+    }
+
+    @NonNull
+    @Override
+    public YogaClassViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_course_layout, parent, false);
+        return new YogaClassViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull YogaClassViewHolder holder, int position) {
+        Course course = courseList.get(position);
+
+        // Set course details to the ViewHolder
+        holder.className.setText(course.getCourseName() != null ? course.getCourseName() : "N/A");
+        holder.dayOfWeek.setText(course.getDayOfWeek() != null ? course.getDayOfWeek() : "N/A");
+        holder.time.setText(course.getTime() != null ? course.getTime() : "N/A");
+        holder.duration.setText(course.getDuration() > 0 ? "Duration: " + course.getDuration() + " minutes" : "N/A");
+        holder.genre.setText(course.getCourseType() != null ? course.getCourseType() : "N/A");
+        holder.price.setText(course.getPrice() > 0 ? course.getPrice() + " dollars" : "$0.00");
+        holder.capacity.setText(course.getCapacity() > 0 ? "Capacity: " + course.getCapacity() + " members" : "Capacity: 0");
+
+        holder.see_more_button.setOnClickListener(v -> showClassInstance());
+        // Open menu for edit or delete options
+        holder.taskMenu.setOnClickListener(v -> showCustomPopupMenu(v, position));
+    }
+
+    private void showClassInstance() {
+        // Khởi tạo dialog khi cần thiết
+        Dialog dialog = new Dialog(fragment.getContext());
+        dialog.setContentView(R.layout.popup_view_detail);
+        dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_rounded_border);
+
+        dialog.show();
+    }
+
+    // Method to show the popup menu for editing and deleting a course
+    private void showCustomPopupMenu(View anchorView, int position) {
+        // Inflate the custom layout
+        View popupView = LayoutInflater.from(anchorView.getContext()).inflate(R.layout.menu_edit_delete, null);
+
+        // Create the PopupWindow
+        PopupWindow popupWindow = new PopupWindow(popupView,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                true);
+
+        TextView editSection = popupView.findViewById(R.id.edit_section);
+        TextView deleteSection = popupView.findViewById(R.id.delete_section);
+
+        // Set event for Edit button
+        editSection.setOnClickListener(v -> handleEditAction(position, popupWindow));
+
+        // Set event for Delete button
+        deleteSection.setOnClickListener(v -> handleDeleteAction(position, popupWindow));
+
+        // Show the PopupWindow
+        popupWindow.setElevation(10); // Set shadow nếu cần
+        popupWindow.showAsDropDown(anchorView, 0, 30);
+    }
+
+    // Method to handle edit action
+    private void handleEditAction(int position, PopupWindow popupWindow) {
+        if (fragment != null) {
+            int getIdCourse = courseList.get(position).getCourseId();
+            fragment.openAddClassPopup(getIdCourse); // Open edit popup
+        }
+        popupWindow.dismiss(); // Close popup menu
+    }
+
+    // Method to handle delete action
+    private void handleDeleteAction(int position, PopupWindow popupWindow) {
+        DialogHelper.showDeleteConfirmationDialog(
+                fragment.getActivity(),
+                "Are you sure you want to delete course \"" + courseList.get(position).getCourseName() + "\"?",
+                () -> {
+                    // Delete course and refresh list
+                    courseService.deleteCourse(courseList.get(position).getCourseId());
+                    courseList.remove(position);
+                    notifyItemRemoved(position);
+                    notifyItemRangeChanged(position, courseList.size());
+
+                    fragment.loadCourseFromDatabase();
+                    DialogHelper.showSuccessDialog(fragment.getActivity(), "Course removed successfully!");
+                }
+        );
+        popupWindow.dismiss(); // Close popup menu
+    }
+
+
+    @Override
+    public int getItemCount() {
+        return courseList.size();
+    }
+
+    // ViewHolder class for Course items
+    public static class YogaClassViewHolder extends RecyclerView.ViewHolder {
+
+        TextView className, dayOfWeek, time, duration, capacity, genre, price, see_more_button;
+        ImageView taskMenu;
+
+        public YogaClassViewHolder(@NonNull View itemView) {
+            super(itemView);
+            className = itemView.findViewById(R.id.class_name);
+            dayOfWeek = itemView.findViewById(R.id.day_of_the_week); // New field for day of week
+            time = itemView.findViewById(R.id.timeStart); // New field for class time
+            duration = itemView.findViewById(R.id.duration);
+            capacity = itemView.findViewById(R.id.capacity);
+            genre = itemView.findViewById(R.id.genre);
+            price = itemView.findViewById(R.id.price);
+            taskMenu = itemView.findViewById(R.id.courseMenu);
+            see_more_button = itemView.findViewById(R.id.see_more_button);
+        }
+    }
+
+    // Method to update the course list
+    public void updateCourseList(List<Course> updatedList) {
+        this.courseList = updatedList;  // Update the course list
+        notifyDataSetChanged();  // Refresh the adapter
+    }
+}

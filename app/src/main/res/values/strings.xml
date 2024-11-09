@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">Yin Yoga</string>
+    <string name="menu">Menu</string> <!-- Chuỗi cho icon menu -->
+    <string name="notification">Notification</string> <!-- Chuỗi cho chuông thông báo -->
+    <string name="booking">Booking</string> <!-- Chuỗi cho icon Booking -->
+    <string name="open">Open Navigation Drawer</string>
+    <string name="close">Close Navigation Drawer</string>
+
+    <string-array name="class_type_options">
+        <item>Flow Yoga</item>
+        <item>Yin Yoga</item>
+        <item>Hatha Yoga</item>
+        <item>Add New Type...</item> <!-- Tùy chọn thêm loại mới -->
+    </string-array>
+
+    <string-array name="day_of_the_week">
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+        <item>Sunday</item>
+    </string-array>
+
+
+    <!-- Array với danh sách các giáo viên và ID -->
+    <string-array name="teacher_options">
+        <item>101 - John Doe</item>
+        <item>102 - Jane Smith</item>
+        <item>103 - Harry Potter</item>
+        <item>104 - Hermione Granger</item>
+        <item>105 - Albus Dumbledore</item>
+    </string-array>
+
+</resources>

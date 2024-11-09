@@ -1,0 +1,5 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="@color/main" />  <!-- Màu nền chính của nút (màu nâu nhạt như hình) -->
+    <size android:width="40dp" android:height="40dp" />  <!-- Đảm bảo kích thước hình tròn -->
+</shape>
