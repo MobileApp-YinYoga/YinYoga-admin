@@ -28,11 +28,12 @@ import com.example.yinyoga.models.Course;
 import com.example.yinyoga.service.CourseService;
 import com.example.yinyoga.utils.DialogHelper;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ManageCoursesFragment extends Fragment{
+public class ManageCoursesFragment extends Fragment {
     private Dialog dialog;
     private RecyclerView recyclerView;
     private CourseAdapter coursesAdapter;
@@ -40,7 +41,7 @@ public class ManageCoursesFragment extends Fragment{
     private LinearLayout add_task;
     private Spinner spinnerDayOfTheWeek, courseTypeSpinner;
     private ArrayAdapter<String> spinnerAdapter;
-    private EditText edCourseName, edTime, edDuration, edCapacity, edPrice;
+    private EditText edCourseName, edTime, edDuration, edCapacity, edPrice, edDescription, edCreatedAt, edImageUrl;
     private EditText searchInput;
     private TextView tvCourseId, tvTitle, tvSubtitle, tvClearSearch;
     private CourseService courseService;
@@ -100,9 +101,12 @@ public class ManageCoursesFragment extends Fragment{
         String capacityStr = edCapacity.getText().toString().trim();
         String priceStr = edPrice.getText().toString().trim();
         String courseType = courseTypeSpinner.getSelectedItem().toString();
+        String description = edDescription.getText().toString().trim();
+        String createdAt = edCreatedAt.getText().toString().trim();
+        String imageUrl = edImageUrl.getText().toString().trim();
 
         // Kiểm tra tính hợp lệ của dữ liệu đầu vào
-        if (isValidateInput(courseName, dayOfWeek, timeStr, durationStr, capacityStr, priceStr)) {
+        if (isValidateInput(courseName, dayOfWeek, timeStr, durationStr, capacityStr, priceStr, description)) {
             int duration = Integer.parseInt(durationStr);
             int capacity = Integer.parseInt(capacityStr);
             double price = Double.parseDouble(priceStr);
@@ -110,10 +114,10 @@ public class ManageCoursesFragment extends Fragment{
             // Kiểm tra thêm hoặc cập nhật khóa học
             if (courseId < 0) {
                 // Thêm lớp học mới vào cơ sở dữ liệu
-                courseService.addCourse(courseName, dayOfWeek, timeStr, capacity, duration, price, courseType);
+                courseService.addCourse(courseName, courseType, createdAt, dayOfWeek, description, capacity, duration, imageUrl, price, timeStr);
             } else {
                 // Cập nhật lớp học hiện có
-                courseService.updateCourse(courseId, courseName, dayOfWeek, timeStr, capacity, duration, price, courseType);
+                courseService.updateCourse(courseId, courseName, courseType, createdAt, dayOfWeek, description, capacity, duration, imageUrl, price, timeStr);
             }
 
             DialogHelper.showSuccessDialog(getActivity(), "Course saved successfully!");
@@ -144,11 +148,14 @@ public class ManageCoursesFragment extends Fragment{
                 edDuration.setText(String.valueOf(findCourse.getDuration()));
                 edCapacity.setText(String.valueOf(findCourse.getCapacity()));
                 edPrice.setText(String.valueOf(findCourse.getPrice()));
+                edDescription.setText(findCourse.getDescription());
+                edCreatedAt.setText(findCourse.getCreatedAt());
+                edImageUrl.setText(findCourse.getImageUrl());
 
                 // Set Spinner positions
                 spinnerDayOfTheWeek.setSelection(getArrayPosition("getDate", findCourse.getDayOfWeek()));
                 courseTypeSpinner.setSelection(getArrayPosition("getGenre", findCourse.getCourseType()));
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace(); // In lỗi ra log để kiểm tra
                 DialogHelper.showErrorDialog(getActivity(), e.getMessage());
             }
@@ -160,7 +167,7 @@ public class ManageCoursesFragment extends Fragment{
     private int getArrayPosition(String action, String value) {
         int position = 0;
         try {
-            int arrayId = action == "getDate" ? R.array.day_of_the_week : R.array.class_type_options;
+            int arrayId = action.equals("getDate") ? R.array.day_of_the_week : R.array.class_type_options;
 
             // Lấy mảng từ string-array trong XML
             String[] optionsArray = getResources().getStringArray(arrayId);
@@ -170,7 +177,7 @@ public class ManageCoursesFragment extends Fragment{
 
             // Tìm vị trí của courseType trong danh sách
             position = optionsList.indexOf(value);
-        }catch (Exception e){
+        } catch (Exception e) {
             DialogHelper.showErrorDialog(getActivity(), "Error while getting array for spinner.");
         }
 
@@ -178,7 +185,7 @@ public class ManageCoursesFragment extends Fragment{
         return position;
     }
 
-    private boolean isValidateInput(String courseName, String dayOfWeek, String timeStr, String durationStr, String capacityStr, String priceStr) {
+    private boolean isValidateInput(String courseName, String dayOfWeek, String timeStr, String durationStr, String capacityStr, String priceStr, String description) {
         boolean isValid = true;
 
         // Kiểm tra từng trường
@@ -190,7 +197,7 @@ public class ManageCoursesFragment extends Fragment{
         if (timeStr.isEmpty()) {
             edTime.setError("Please enter time");
             isValid = false;
-        } else if (!timeStr.contains(":")){
+        } else if (!timeStr.contains(":")) {
             edTime.setError("Invalid format time, e.g: 08:30");
             isValid = false;
         }
@@ -232,6 +239,11 @@ public class ManageCoursesFragment extends Fragment{
             isValid = false;
         }
 
+        if (description.isEmpty()) {
+            edDescription.setError("Please enter a description");
+            isValid = false;
+        }
+
         return isValid;
     }
 
@@ -244,20 +256,24 @@ public class ManageCoursesFragment extends Fragment{
             do {
                 int id = cursor.getInt(0);
                 String courseName = cursor.getString(1);
-                String dayOfWeek = cursor.getString(2);
-                String time = cursor.getString(3);
-                int capacity = cursor.getInt(4);
-                int duration = cursor.getInt(5);
-                double price = cursor.getDouble(6);
-                String courseType = cursor.getString(7);
+                String courseType = cursor.getString(2);
+                String createdAt = cursor.getString(3);
+                String dayOfWeek = cursor.getString(4);
+                String description = cursor.getString(5);
+                int capacity = cursor.getInt(6);
+                int duration = cursor.getInt(7);
+                String imageUrl = cursor.getString(8);
+                double price = cursor.getDouble(9);
+                String time = cursor.getString(10);
 
                 // Thêm course trong database vào danh sách
-                courseLists.add(new Course(id, courseName, dayOfWeek, time, capacity, duration, price, courseType));
+                courseLists.add(new Course(id, courseName, courseType, createdAt, dayOfWeek, description, capacity, duration, imageUrl, price, time));
             } while (cursor.moveToNext());
         } else {
             // Nếu không có dữ liệu, thêm dữ liệu mẫu (nếu cần) hoặc hiển thị TextView "Không có dữ liệu"
-            courseService.addCourse("Flow Yoga", "Monday", "10:00", 20, 60, 15.0, "Flow Yoga");
-            courseService.addCourse("Yin Yoga", "Tuesday", "12:00", 15, 75, 20.0, "Yin Yoga");
+            String currentDate = LocalDate.now().toString(); // Lấy ngày hiện tại
+            courseService.addCourse("Flow Yoga", "Beginner", currentDate, "Monday", "A calming beginner yoga class", 20, 60, "flow_yoga.jpg", 15.0, "10:00");
+            courseService.addCourse("Yin Yoga", "Intermediate", currentDate, "Tuesday", "A deep stretch yoga class focusing on flexibility", 15, 75, "yin_yoga.jpg", 20.0, "12:00");
         }
 
         if (cursor != null) {
@@ -359,6 +375,8 @@ public class ManageCoursesFragment extends Fragment{
         edDuration = dialog.findViewById(R.id.edDuration);
         edCapacity = dialog.findViewById(R.id.edCapacity);
         edPrice = dialog.findViewById(R.id.edPrice);
+        edDescription = dialog.findViewById(R.id.edDescription);
+        edImageUrl = dialog.findViewById(R.id.edUploadUrl);
         spinnerDayOfTheWeek = dialog.findViewById(R.id.spinnerDayofTheWeek);
         courseTypeSpinner = dialog.findViewById(R.id.courseTypeSpinner);
     }
@@ -371,6 +389,9 @@ public class ManageCoursesFragment extends Fragment{
         edDuration.setText("");
         edCapacity.setText("");
         edPrice.setText("");
+        edDescription.setText("");
+        edCreatedAt.setText("");
+        edImageUrl.setText("");
         courseTypeSpinner.setSelection(0);
 
         DialogHelper.showSuccessDialog(getActivity(), "All fields cleared!");

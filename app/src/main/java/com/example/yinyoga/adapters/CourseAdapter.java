@@ -61,6 +61,13 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.YogaClassV
         holder.genre.setText(course.getCourseType() != null ? course.getCourseType() : "N/A");
         holder.price.setText(course.getPrice() > 0 ? course.getPrice() + " dollars" : "$0.00");
         holder.capacity.setText(course.getCapacity() > 0 ? "Capacity: " + course.getCapacity() + " members" : "Capacity: 0");
+        holder.description.setText(course.getDescription() != null ? course.getDescription() : "N/A");
+        holder.createdAt.setText(course.getCreatedAt() != null ? "Created At: " + course.getCreatedAt() : "N/A");
+
+        // Load image if imageUrl is available
+        String imageUrl = course.getImageUrl();
+        holder.courseImage.setImageResource(R.drawable.yoga_1);
+
 
         holder.see_more_button.setOnClickListener(v -> showClassInstance());
         // Open menu for edit or delete options
@@ -129,7 +136,6 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.YogaClassV
         popupWindow.dismiss(); // Close popup menu
     }
 
-
     @Override
     public int getItemCount() {
         return courseList.size();
@@ -138,18 +144,20 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.YogaClassV
     // ViewHolder class for Course items
     public static class YogaClassViewHolder extends RecyclerView.ViewHolder {
 
-        TextView className, dayOfWeek, time, duration, capacity, genre, price, see_more_button;
-        ImageView taskMenu;
+        TextView className, dayOfWeek, time, duration, capacity, genre, price, description, createdAt, see_more_button;
+        ImageView taskMenu, courseImage;
 
         public YogaClassViewHolder(@NonNull View itemView) {
             super(itemView);
             className = itemView.findViewById(R.id.class_name);
-            dayOfWeek = itemView.findViewById(R.id.day_of_the_week); // New field for day of week
-            time = itemView.findViewById(R.id.timeStart); // New field for class time
+            dayOfWeek = itemView.findViewById(R.id.day_of_the_week);
+            time = itemView.findViewById(R.id.timeStart);
             duration = itemView.findViewById(R.id.duration);
             capacity = itemView.findViewById(R.id.capacity);
             genre = itemView.findViewById(R.id.genre);
             price = itemView.findViewById(R.id.price);
+            description = itemView.findViewById(R.id.description);
+            courseImage = itemView.findViewById(R.id.course_image);
             taskMenu = itemView.findViewById(R.id.courseMenu);
             see_more_button = itemView.findViewById(R.id.see_more_button);
         }

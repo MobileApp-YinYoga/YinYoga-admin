@@ -14,8 +14,8 @@ public class CourseService {
     }
 
     // Thêm khóa học mới với tất cả các thông tin chi tiết
-    public void addCourse(String courseName, String dayOfWeek, String time, int capacity, int duration, double price, String courseType) {
-        courseRepository.insertCourse(courseName, dayOfWeek, time, capacity, duration, price, courseType);
+    public void addCourse(String courseName, String courseType, String createdAt, String dayOfWeek, String description, int capacity, int duration, String imageUrl, double price, String time) {
+        courseRepository.insertCourse(courseName, courseType, createdAt, dayOfWeek, description, capacity, duration, imageUrl, price, time);
     }
 
     // Lấy khóa học theo ID
@@ -29,8 +29,8 @@ public class CourseService {
     }
 
     // Cập nhật khóa học
-    public void updateCourse(int courseId, String courseName, String dayOfWeek, String time, int capacity, int duration, double price, String courseType) {
-        courseRepository.updateCourse(courseId, courseName, dayOfWeek, time, capacity, duration, price, courseType);
+    public void updateCourse(int courseId, String courseName, String courseType, String createdAt, String dayOfWeek, String description, int capacity, int duration, String imageUrl, double price, String time) {
+        courseRepository.updateCourse(courseId, courseName, courseType, createdAt, dayOfWeek, description, capacity, duration, imageUrl, price, time);
     }
 
     // Xóa khóa học theo ID

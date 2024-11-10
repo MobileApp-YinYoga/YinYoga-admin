@@ -91,7 +91,7 @@
 
     <TextView
         android:id="@+id/durationLabel"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="21dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
@@ -124,11 +124,10 @@
 
     <EditText
         android:id="@+id/edTime"
-        android:layout_width="0dp"
+        android:layout_width="400px"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="5dp"
-        android:layout_marginEnd="20dp"
         android:backgroundTint="@color/main"
         android:fontFamily="@font/inter_medium"
         android:hint="e.g. 10:30"
@@ -142,9 +141,8 @@
 
     <EditText
         android:id="@+id/edCapacity"
-        android:layout_width="0dp"
+        android:layout_width="400px"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="20dp"
         android:backgroundTint="@color/main"
@@ -153,13 +151,11 @@
         android:inputType="number"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/teacherLabel" />
 
     <EditText
         android:id="@+id/edPrice"
-        android:layout_width="0dp"
+        android:layout_width="400px"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="5dp"
@@ -209,7 +205,7 @@
     <!-- Nhãn Sức chứa -->
     <TextView
         android:id="@+id/timeLabel"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="21dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
@@ -220,41 +216,40 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/spinnerDayofTheWeek" />
 
-    <TextView
-        android:id="@+id/teacherLabel"
-        android:layout_width="match_parent"
-        android:layout_height="21dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
-        android:fontFamily="@font/poppins_semibold"
-        android:text="Capacity*"
-        android:textColor="@color/main"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edTime" />
-
     <!-- Ô nhập Sức chứa -->
 
     <!-- Nhãn Giá -->
 
     <TextView
-        android:id="@+id/priceLabel"
-        android:layout_width="match_parent"
+        android:id="@+id/teacherLabel"
+        android:layout_width="0dp"
         android:layout_height="21dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginStart="120dp"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/poppins_semibold"
+        android:text="Capacity*"
+        android:textColor="@color/main"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/timeLabel"
+        app:layout_constraintTop_toBottomOf="@id/spinnerDayofTheWeek" />
+
+    <TextView
+        android:id="@+id/priceLabel"
+        android:layout_width="0dp"
+        android:layout_height="21dp"
+        android:layout_marginStart="91dp"
+        android:layout_marginTop="16dp"
         android:fontFamily="@font/poppins_semibold"
         android:text="Price*"
         android:textColor="@color/main"
         android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edDuration" />
+        app:layout_constraintStart_toEndOf="@+id/durationLabel"
+        app:layout_constraintTop_toBottomOf="@id/edCapacity" />
 
     <EditText
         android:id="@+id/edDuration"
-        android:layout_width="0dp"
+        android:layout_width="400px"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="20dp"
         android:backgroundTint="@color/main"
@@ -263,9 +258,7 @@
         android:inputType="number"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/durationLabel" />
+        app:layout_constraintTop_toBottomOf="@id/priceLabel" />
 
     <!-- Ô nhập Giá -->
 
@@ -297,6 +290,83 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/courseTypeLabel" />
 
+    <TextView
+        android:id="@+id/descriptionLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="20dp"
+        android:fontFamily="@font/poppins_semibold"
+        android:text="Description*"
+        android:textColor="@color/main"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/courseTypeSpinner" />
+
+    <EditText
+        android:id="@+id/edDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="20dp"
+        android:backgroundTint="@color/main"
+        android:fontFamily="@font/inter_medium"
+        android:hint="e.g. A brief description of the course..."
+        android:minHeight="45dp"
+        android:padding="12dp"
+        android:inputType="textMultiLine"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/descriptionLabel" />
+
+    <!-- Thêm trường tải ảnh -->
+    <TextView
+        android:id="@+id/uploadImageLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="15dp"
+        android:fontFamily="@font/poppins_semibold"
+        android:text="Upload Image"
+        android:textColor="@color/main"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edDescription" />
+
+    <LinearLayout
+        android:id="@+id/uploadImageContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/uploadImageLabel">
+
+        <!-- Button for uploading an image -->
+        <Button
+            android:id="@+id/btnUploadImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:backgroundTint="@color/main_95"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="Upload File"
+            android:textColor="@color/white" />
+
+        <!-- EditText for displaying upload URL -->
+        <EditText
+            android:id="@+id/edUploadUrl"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="@color/main"
+            android:fontFamily="@font/inter_medium"
+            android:hint="e.g. yoga.png"
+            android:minHeight="45dp"
+            android:padding="12dp" />
+    </LinearLayout>
+
+
     <LinearLayout
         android:id="@+id/linear_class_capacity"
         android:layout_width="match_parent"
@@ -306,7 +376,7 @@
         android:orientation="horizontal"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/courseTypeSpinner">
+        app:layout_constraintTop_toBottomOf="@+id/uploadImageContainer">
 
         <!-- Nút xóa tất cả -->
         <Button

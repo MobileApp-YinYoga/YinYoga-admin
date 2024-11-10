@@ -16,82 +16,91 @@ public class CourseRepository {
         this.database = new Database(context);
     }
 
-    // Thêm khóa học mới
-    public void insertCourse(String courseName, String dayOfWeek, String time, int capacity, int duration, double price, String classType) {
+    // Insert new course
+    public void insertCourse(String courseName, String courseType, String createdAt,
+                             String dayOfWeek, String description, int capacity,
+                             int duration, String imageUrl, double price, String time) {
         SQLiteDatabase db = database.getWritableDatabase();
-        String query = "INSERT INTO Courses (CourseName, DayOfWeek, Time, Capacity, Duration, Price, CourseType) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Courses (CourseName, CourseType, CreatedAt, DayOfWeek, Description, Capacity, Duration, ImageUrl, Price, Time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         SQLiteStatement statement = db.compileStatement(query);
         statement.clearBindings();
         statement.bindString(1, courseName);
-        statement.bindString(2, dayOfWeek);
-        statement.bindString(3, time);
-        statement.bindLong(4, capacity);
-        statement.bindLong(5, duration);
-        statement.bindDouble(6, price);
-        statement.bindString(7, classType);
+        statement.bindString(2, courseType);
+        statement.bindString(3, createdAt);
+        statement.bindString(4, dayOfWeek);
+        statement.bindString(5, description);
+        statement.bindLong(6, capacity);
+        statement.bindLong(7, duration);
+        statement.bindString(8, imageUrl);
+        statement.bindDouble(9, price);
+        statement.bindString(10, time);
         statement.executeInsert();
     }
 
-    // Lấy khóa học theo ID
+    // Get course by ID
     public Course getCourseById(int courseId) {
-        SQLiteDatabase db = this.database.getReadableDatabase();  // Mở cơ sở dữ liệu để đọc
-        Course course = null;  // Đối tượng Course sẽ trả về
+        SQLiteDatabase db = this.database.getReadableDatabase();
+        Course course = null;
 
-        // Truy vấn SELECT để lấy khóa học theo CourseId
         String query = "SELECT * FROM Courses WHERE CourseId = ?";
-        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(courseId)});  // Truyền CourseId vào query
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(courseId)});
 
-        // Kiểm tra nếu cursor có dữ liệu
         if (cursor != null && cursor.moveToFirst()) {
             Log.d("Database", "CourseId: " + cursor.getInt(0) + ", CourseName: " + cursor.getString(1));
 
-            // Lấy các giá trị từ Cursor theo thứ tự cột
-            int id = cursor.getInt(0);  // CourseId
-            String courseName = cursor.getString(1);  // CourseName
-            String dayOfWeek = cursor.getString(2);  // DayOfWeek
-            String time = cursor.getString(3);  // Time
-            int capacity = cursor.getInt(4);  // Capacity
-            int duration = cursor.getInt(5);  // Duration
-            double price = cursor.getDouble(6);  // Price
-            String courseType = cursor.getString(7);  // CourseType
+            // Retrieve values from cursor
+            int id = cursor.getInt(0);
+            String courseName = cursor.getString(1);
+            String courseType = cursor.getString(2);
+            String createdAt = cursor.getString(3);
+            String dayOfWeek = cursor.getString(4);
+            String description = cursor.getString(5);
+            int capacity = cursor.getInt(6);
+            int duration = cursor.getInt(7);
+            String imageUrl = cursor.getString(8);
+            double price = cursor.getDouble(9);
+            String time = cursor.getString(10);
 
-            // Tạo đối tượng Course từ dữ liệu trong Cursor
-            course = new Course(id, courseName, dayOfWeek, time, capacity, duration, price, courseType);
+            // Create Course object
+            course = new Course(id, courseName, courseType, createdAt, dayOfWeek, description, capacity, duration, imageUrl, price, time);
         }
 
-        // Đóng cursor sau khi sử dụng
         if (cursor != null) {
             cursor.close();
         }
 
-        // Trả về đối tượng Course hoặc null nếu không tìm thấy
         return course;
     }
 
-    // Lấy tất cả khóa học
+    // Get all courses
     public Cursor getAllCourses() {
         SQLiteDatabase db = database.getReadableDatabase();
         return db.rawQuery("SELECT * FROM Courses", null);
     }
 
-    // Cập nhật khóa học
-    public void updateCourse(int courseId, String courseName, String dayOfWeek, String time, int capacity, int duration, double price, String courseType) {
+    // Update course
+    public void updateCourse(int courseId, String courseName, String courseType, String createdAt,
+                             String dayOfWeek, String description, int capacity,
+                             int duration, String imageUrl, double price, String time) {
         SQLiteDatabase db = database.getWritableDatabase();
-        String query = "UPDATE Courses SET CourseName = ?, DayOfWeek = ?, Time = ?, Capacity = ?, Duration = ?, Price = ?, CourseType = ? WHERE CourseId = ?";
+        String query = "UPDATE Courses SET CourseName = ?, CourseType = ?, CreatedAt = ?, DayOfWeek = ?, Description = ?, Capacity = ?, Duration = ?, ImageUrl = ?, Price = ?, Time = ? WHERE CourseId = ?";
         SQLiteStatement statement = db.compileStatement(query);
         statement.clearBindings();
         statement.bindString(1, courseName);
-        statement.bindString(2, dayOfWeek);
-        statement.bindString(3, time);
-        statement.bindLong(4, capacity);
-        statement.bindLong(5, duration);
-        statement.bindDouble(6, price);
-        statement.bindString(7, courseType);
-        statement.bindLong(8, courseId);
+        statement.bindString(2, courseType);
+        statement.bindString(3, createdAt);
+        statement.bindString(4, dayOfWeek);
+        statement.bindString(5, description);
+        statement.bindLong(6, capacity);
+        statement.bindLong(7, duration);
+        statement.bindString(8, imageUrl);
+        statement.bindDouble(9, price);
+        statement.bindString(10, time);
+        statement.bindLong(11, courseId);
         statement.executeUpdateDelete();
     }
 
-    // Xóa khóa học
+    // Delete course
     public void deleteCourse(int courseId) {
         SQLiteDatabase db = database.getWritableDatabase();
         String query = "DELETE FROM Courses WHERE CourseId = ?";

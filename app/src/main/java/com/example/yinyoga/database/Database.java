@@ -15,13 +15,15 @@ public class Database extends SQLiteOpenHelper {
     private static final String TABLE_COURSES = "Courses";
     private static final String COLUMN_COURSE_ID = "CourseId";
     private static final String COLUMN_COURSE_NAME = "CourseName";
-    private static final String COLUMN_DAY_OF_WEEK = "DayOfWeek";    // Ngày trong tuần
-    private static final String COLUMN_TIME = "Time";                // Thời gian
-    private static final String COLUMN_CAPACITY = "Capacity";        // Số lượng học viên tối đa
-    private static final String COLUMN_DURATION = "Duration";        // Thời lượng của lớp học (phút)
-    private static final String COLUMN_PRICE = "Price";              // Giá của lớp học
-    private static final String COLUMN_COURSE_TYPE = "CourseType";   // Loại lớp học
-    private static final String COLUMN_DESCRIPTION = "Description";  // Mô tả khóa học
+    private static final String COLUMN_COURSE_TYPE = "CourseType";
+    private static final String COLUMN_CREATED_AT = "CreatedAt";
+    private static final String COLUMN_DAY_OF_WEEK = "DayOfWeek";
+    private static final String COLUMN_DESCRIPTION = "Description";
+    private static final String COLUMN_CAPACITY = "Capacity";
+    private static final String COLUMN_DURATION = "Duration";
+    private static final String COLUMN_IMAGE_URL = "ImageUrl";
+    private static final String COLUMN_PRICE = "Price";
+    private static final String COLUMN_TIME = "Time";
 
     // Bảng Roles
     private static final String TABLE_ROLES = "Roles";
@@ -83,12 +85,15 @@ public class Database extends SQLiteOpenHelper {
             String CREATE_COURSES_TABLE = "CREATE TABLE " + TABLE_COURSES + " ("
                     + COLUMN_COURSE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + COLUMN_COURSE_NAME + " TEXT NOT NULL, "
-                    + COLUMN_DAY_OF_WEEK + " TEXT NOT NULL, "  // Ngày trong tuần
-                    + COLUMN_TIME + " TEXT NOT NULL, "          // Thời gian bắt đầu của khóa học
-                    + COLUMN_CAPACITY + " INTEGER NOT NULL, "   // Sức chứa tối đa
-                    + COLUMN_DURATION + " INTEGER NOT NULL, "   // Thời lượng khóa học
-                    + COLUMN_PRICE + " REAL NOT NULL, "         // Giá mỗi buổi học
-                    + COLUMN_COURSE_TYPE + " TEXT NOT NULL)";            // Mô tả khóa học (không bắt buộc)
+                    + COLUMN_COURSE_TYPE + " TEXT NOT NULL, "
+                    + COLUMN_CREATED_AT + " TEXT, "
+                    + COLUMN_DAY_OF_WEEK + " TEXT, "
+                    + COLUMN_DESCRIPTION + " TEXT, "
+                    + COLUMN_CAPACITY + " INTEGER NOT NULL, "
+                    + COLUMN_DURATION + " INTEGER NOT NULL, "
+                    + COLUMN_IMAGE_URL + " TEXT, "
+                    + COLUMN_PRICE + " REAL NOT NULL, "
+                    + COLUMN_TIME + " TEXT)";
             db.execSQL(CREATE_COURSES_TABLE);
             Log.d("Database", "Table Courses created successfully");
 

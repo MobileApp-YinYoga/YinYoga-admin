@@ -7,13 +7,15 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="10dp"
     android:elevation="5dp"
-    android:padding="10dp">
+    android:padding="5dp">
 
 
     <ImageView
-        android:id="@+id/background_image"
+        android:id="@+id/course_image"
         android:layout_width="match_parent"
-        android:layout_height="347px"
+        android:layout_height="370px"
+        android:paddingTop="30px"
+        android:paddingBottom="30px"
         android:scaleType="centerCrop"
         android:src="@drawable/yoga_1"
         android:alpha="0.7"
@@ -21,13 +23,28 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
+
+    <ImageView
+        android:id="@+id/background_2_image"
+        android:layout_width="match_parent"
+        android:layout_height="370px"
+        android:paddingTop="30px"
+        android:paddingBottom="30px"
+        android:scaleType="centerCrop"
+        android:src="@drawable/yoga_2"
+        android:alpha="0.7"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
     <!-- Tên lớp học -->
     <TextView
         android:id="@+id/class_name"
         android:layout_width="95dp"
         android:layout_height="27dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
         android:fontFamily="@font/poppins_semibold"
         android:text="Yoga Class Name"
         android:textColor="@color/white"
@@ -41,7 +58,7 @@
         android:id="@+id/linear_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="20dp"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/class_name">
@@ -85,41 +102,27 @@
             android:textColor="@color/white"
             android:textSize="10sp"
             android:text="10:30" /> <!-- Thời gian bắt đầu lớp học -->
-    </LinearLayout>
 
-
-
-    <!-- LinearLayout để xếp ngày trong tuần, dấu nối và thời gian thành một hàng -->
-    <LinearLayout
-        android:id="@+id/linear_class_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/linear_date">
-
-        <!-- Ngày trong tuần -->
         <TextView
-            android:id="@+id/label_duration"
+            android:id="@+id/split"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins_medium"
+            android:fontFamily="@font/poppins_light"
+            android:text="180 minutes"
             android:textColor="@color/white"
-            android:textSize="10sp"
-            tools:text="Duaration: " />
+            android:textSize="11sp"
+            tools:text="  |  " />
 
-        <!-- Thời gian lớp học -->
         <TextView
             android:id="@+id/duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins_medium"
-            android:text="180 minutes"
             android:textColor="@color/white"
             android:textSize="10sp"
             tools:text="180 minutes" />
     </LinearLayout>
+
 
 
     <!-- LinearLayout để xếp loại lớp học và từ "type" thành một hàng -->
@@ -127,10 +130,10 @@
         android:id="@+id/linear_class_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="20dp"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/linear_class_time">
+        app:layout_constraintTop_toBottomOf="@id/linear_class_capacity">
 
         <!-- Từ "type" -->
         <TextView
@@ -150,7 +153,70 @@
             android:fontFamily="@font/poppins_medium"
             android:textColor="@color/white"
             android:textSize="10sp"
-            tools:text="Flow Yoga" />
+            tools:text="Advanced" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/linear_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/linear_date">
+
+        <!-- Từ "Price" -->
+        <TextView
+            android:id="@+id/description_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_medium"
+            android:text="Description: "
+            android:textColor="@color/white"
+            android:textSize="10sp" />
+
+        <!-- Giá lớp học -->
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_medium"
+            android:text="A high-intensity yoga..."
+            android:textColor="@color/white"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_class_capacity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginStart="20dp"
+        android:paddingEnd="10dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linear_description">
+
+        <!-- Số lượng học viên -->
+        <TextView
+            android:id="@+id/class_capacity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_medium"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            tools:text="Capacity: " />
+
+        <!-- Từ "members" -->
+        <TextView
+            android:id="@+id/capacity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_medium"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            tools:text="20 members" />
     </LinearLayout>
 
     <!-- LinearLayout để xếp giá lớp học và từ "Price" thành một hàng -->
@@ -158,7 +224,7 @@
         android:id="@+id/linear_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="20dp"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/linear_class_type">
@@ -184,44 +250,13 @@
             android:textSize="10sp" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/linear_class_capacity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-        android:paddingBottom="5dp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linear_price">
 
-        <!-- Số lượng học viên -->
-        <TextView
-            android:id="@+id/class_capacity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins_medium"
-            android:textColor="@color/white"
-            android:textSize="10sp"
-            tools:text="Capacity: " />
 
-        <!-- Từ "members" -->
-        <TextView
-            android:id="@+id/capacity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins_medium"
-            android:textColor="@color/white"
-            android:textSize="10sp"
-            tools:text="20 members" />
-    </LinearLayout>
-
-    <ImageView
+<ImageView
         android:id="@+id/courseMenu"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="20dp"
         android:src="@drawable/ic_menu_manage"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -1,14 +1,17 @@
 package com.example.yinyoga.models;
 
 public class Course {
-    private int courseId;        // Mã khóa học
-    private String courseName;    // Tên khóa học
-    private String dayOfWeek;     // Ngày diễn ra khóa học (ví dụ: Monday, Tuesday)
-    private String time;          // Thời gian diễn ra khóa học
-    private int capacity;         // Số lượng học viên tối đa
-    private int duration;         // Thời lượng của lớp học (phút)
-    private double price;         // Giá của lớp học
-    private String courseType;    // Loại lớp học (Flow Yoga, Yin Yoga, etc.)
+    private int courseId;
+    private String courseName;
+    private String courseType;
+    private String createdAt;
+    private String dayOfWeek;
+    private String description;
+    private int capacity;
+    private int duration;
+    private String imageUrl;
+    private double price;
+    private String time;
 
     public Course() {
     }
@@ -19,18 +22,22 @@ public class Course {
     }
 
     // Constructor
-    public Course(int courseId, String courseName, String dayOfWeek, String time, int capacity, int duration, double price, String courseType) {
+    public Course(int courseId, String courseName, String courseType, String createdAt,
+                  String dayOfWeek, String description, int capacity, int duration,
+                  String imageUrl, double price, String time) {
         this.courseId = courseId;
         this.courseName = courseName;
+        this.courseType = courseType;
+        this.createdAt = createdAt;
         this.dayOfWeek = dayOfWeek;
-        this.time = time;
+        this.description = description;
         this.capacity = capacity;
         this.duration = duration;
+        this.imageUrl = imageUrl;
         this.price = price;
-        this.courseType = courseType;
+        this.time = time;
     }
 
-    // Getters and Setters
     public int getCourseId() {
         return courseId;
     }
@@ -47,6 +54,22 @@ public class Course {
         this.courseName = courseName;
     }
 
+    public String getCourseType() {
+        return courseType;
+    }
+
+    public void setCourseType(String courseType) {
+        this.courseType = courseType;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public String getDayOfWeek() {
         return dayOfWeek;
     }
@@ -55,12 +78,12 @@ public class Course {
         this.dayOfWeek = dayOfWeek;
     }
 
-    public String getTime() {
-        return time;
+    public String getDescription() {
+        return description;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public int getCapacity() {
@@ -79,6 +102,14 @@ public class Course {
         this.duration = duration;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     public double getPrice() {
         return price;
     }
@@ -87,12 +118,11 @@ public class Course {
         this.price = price;
     }
 
-    public String getCourseType() {
-        return courseType;
+    public String getTime() {
+        return time;
     }
 
-    public void setCourseType(String courseType) {
-        this.courseType = courseType;
+    public void setTime(String time) {
+        this.time = time;
     }
-
 }
