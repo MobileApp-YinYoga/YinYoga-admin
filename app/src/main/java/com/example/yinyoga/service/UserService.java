@@ -96,7 +96,6 @@ public class UserService {
             SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
             byte[] hash = keyFactory.generateSecret(spec).getEncoded();
 
-            // Kết hợp salt và hash thành một chuỗi và trả về
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 return Base64.getEncoder().encodeToString(salt) + ":" + Base64.getEncoder().encodeToString(hash);
             }

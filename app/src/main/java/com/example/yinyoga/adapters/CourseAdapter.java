@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -57,21 +58,42 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.YogaClassV
         holder.className.setText(course.getCourseName() != null ? course.getCourseName() : "N/A");
         holder.dayOfWeek.setText(course.getDayOfWeek() != null ? course.getDayOfWeek() : "N/A");
         holder.time.setText(course.getTime() != null ? course.getTime() : "N/A");
-        holder.duration.setText(course.getDuration() > 0 ? "Duration: " + course.getDuration() + " minutes" : "N/A");
+        holder.duration.setText(course.getDuration() > 0 ? "  |  " + course.getDuration() + " minutes" : "N/A");
         holder.genre.setText(course.getCourseType() != null ? course.getCourseType() : "N/A");
         holder.price.setText(course.getPrice() > 0 ? course.getPrice() + " dollars" : "$0.00");
         holder.capacity.setText(course.getCapacity() > 0 ? "Capacity: " + course.getCapacity() + " members" : "Capacity: 0");
-        holder.description.setText(course.getDescription() != null ? course.getDescription() : "N/A");
-        holder.createdAt.setText(course.getCreatedAt() != null ? "Created At: " + course.getCreatedAt() : "N/A");
+
+        // Set shortened description
+        holder.description.setText(getShortenedDescription(course.getDescription()));
 
         // Load image if imageUrl is available
         String imageUrl = course.getImageUrl();
         holder.courseImage.setImageResource(R.drawable.yoga_1);
 
-
         holder.see_more_button.setOnClickListener(v -> showClassInstance());
+
         // Open menu for edit or delete options
         holder.taskMenu.setOnClickListener(v -> showCustomPopupMenu(v, position));
+    }
+
+    // Helper method to get first 5 words of description
+    private String getShortenedDescription(String description) {
+        if (description == null || description.isEmpty()) {
+            return "N/A";
+        }
+        String[] words = description.split(" ");
+        int wordCount = Math.min(words.length, 4);
+        StringBuilder shortenedDescription = new StringBuilder();
+
+        for (int i = 0; i < wordCount; i++) {
+            shortenedDescription.append(words[i]).append(" ");
+        }
+
+        if (words.length > 4) {
+            shortenedDescription.append("...");
+        }
+
+        return shortenedDescription.toString().trim();
     }
 
     private void showClassInstance() {
@@ -89,10 +111,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.YogaClassV
         View popupView = LayoutInflater.from(anchorView.getContext()).inflate(R.layout.menu_edit_delete, null);
 
         // Create the PopupWindow
-        PopupWindow popupWindow = new PopupWindow(popupView,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                true);
+        PopupWindow popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
 
         TextView editSection = popupView.findViewById(R.id.edit_section);
         TextView deleteSection = popupView.findViewById(R.id.delete_section);
@@ -119,20 +138,16 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.YogaClassV
 
     // Method to handle delete action
     private void handleDeleteAction(int position, PopupWindow popupWindow) {
-        DialogHelper.showDeleteConfirmationDialog(
-                fragment.getActivity(),
-                "Are you sure you want to delete course \"" + courseList.get(position).getCourseName() + "\"?",
-                () -> {
-                    // Delete course and refresh list
-                    courseService.deleteCourse(courseList.get(position).getCourseId());
-                    courseList.remove(position);
-                    notifyItemRemoved(position);
-                    notifyItemRangeChanged(position, courseList.size());
+        DialogHelper.showDeleteConfirmationDialog(fragment.getActivity(), "Are you sure you want to delete course \"" + courseList.get(position).getCourseName() + "\"?", () -> {
+            // Delete course and refresh list
+            courseService.deleteCourse(courseList.get(position).getCourseId());
+            courseList.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, courseList.size());
 
-                    fragment.loadCourseFromDatabase();
-                    DialogHelper.showSuccessDialog(fragment.getActivity(), "Course removed successfully!");
-                }
-        );
+            fragment.loadCourseFromDatabase();
+            DialogHelper.showSuccessDialog(fragment.getActivity(), "Course removed successfully!");
+        });
         popupWindow.dismiss(); // Close popup menu
     }
 
@@ -144,7 +159,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.YogaClassV
     // ViewHolder class for Course items
     public static class YogaClassViewHolder extends RecyclerView.ViewHolder {
 
-        TextView className, dayOfWeek, time, duration, capacity, genre, price, description, createdAt, see_more_button;
+        TextView className, dayOfWeek, time, duration, capacity, genre, price, description, see_more_button;
         ImageView taskMenu, courseImage;
 
         public YogaClassViewHolder(@NonNull View itemView) {

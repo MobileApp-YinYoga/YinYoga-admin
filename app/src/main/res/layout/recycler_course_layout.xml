@@ -101,17 +101,7 @@
             android:fontFamily="@font/poppins_medium"
             android:textColor="@color/white"
             android:textSize="10sp"
-            android:text="10:30" /> <!-- Thời gian bắt đầu lớp học -->
-
-        <TextView
-            android:id="@+id/split"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins_light"
-            android:text="180 minutes"
-            android:textColor="@color/white"
-            android:textSize="11sp"
-            tools:text="  |  " />
+            android:text="10:30 AM" /> <!-- Thời gian bắt đầu lớp học -->
 
         <TextView
             android:id="@+id/duration"

@@ -102,9 +102,6 @@ public class UserRepository {
         return user; // Trả về đối tượng User (hoặc null nếu không tìm thấy)
     }
 
-
-
-
     // Lấy tất cả người dùng
     public Cursor getAllUsers() {
         SQLiteDatabase db = database.getReadableDatabase();

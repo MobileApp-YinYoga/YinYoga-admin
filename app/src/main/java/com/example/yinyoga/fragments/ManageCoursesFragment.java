@@ -28,9 +28,12 @@ import com.example.yinyoga.models.Course;
 import com.example.yinyoga.service.CourseService;
 import com.example.yinyoga.utils.DialogHelper;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class ManageCoursesFragment extends Fragment {
@@ -45,6 +48,7 @@ public class ManageCoursesFragment extends Fragment {
     private EditText searchInput;
     private TextView tvCourseId, tvTitle, tvSubtitle, tvClearSearch;
     private CourseService courseService;
+    private Calendar calendar;
 
     @Nullable
     @Override
@@ -270,10 +274,14 @@ public class ManageCoursesFragment extends Fragment {
                 courseLists.add(new Course(id, courseName, courseType, createdAt, dayOfWeek, description, capacity, duration, imageUrl, price, time));
             } while (cursor.moveToNext());
         } else {
-            // Nếu không có dữ liệu, thêm dữ liệu mẫu (nếu cần) hoặc hiển thị TextView "Không có dữ liệu"
-            String currentDate = LocalDate.now().toString(); // Lấy ngày hiện tại
-            courseService.addCourse("Flow Yoga", "Beginner", currentDate, "Monday", "A calming beginner yoga class", 20, 60, "flow_yoga.jpg", 15.0, "10:00");
-            courseService.addCourse("Yin Yoga", "Intermediate", currentDate, "Tuesday", "A deep stretch yoga class focusing on flexibility", 15, 75, "yin_yoga.jpg", 20.0, "12:00");
+
+            Date currentDate = calendar.getTime(); // Lấy ngày hiện tại
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String formattedDate = dateFormat.format(currentDate); // Convert Date to String
+
+            // Pass the formatted date as a String
+            courseService.addCourse("Flow Yoga", "Beginner", formattedDate, "Monday", "A calming beginner yoga class", 20, 60, "flow_yoga.jpg", 15.0, "10:00");
+            courseService.addCourse("Yin Yoga", "Intermediate", formattedDate, "Tuesday", "A deep stretch yoga class focusing on flexibility", 15, 75, "yin_yoga.jpg", 20.0, "12:00");
         }
 
         if (cursor != null) {
@@ -379,6 +387,8 @@ public class ManageCoursesFragment extends Fragment {
         edImageUrl = dialog.findViewById(R.id.edUploadUrl);
         spinnerDayOfTheWeek = dialog.findViewById(R.id.spinnerDayofTheWeek);
         courseTypeSpinner = dialog.findViewById(R.id.courseTypeSpinner);
+
+        calendar =  Calendar.getInstance();
     }
 
     // Phương thức xóa tất cả thông tin nhập vào trong popup

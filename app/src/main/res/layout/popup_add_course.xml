@@ -94,13 +94,13 @@
         android:layout_width="0dp"
         android:layout_height="21dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="16dp"
         android:fontFamily="@font/poppins_semibold"
         android:text="Duration*"
         android:textColor="@color/main"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edCapacity" />
+        app:layout_constraintTop_toBottomOf="@id/edTime" />
 
 
     <!-- Nhãn Thời gian -->
@@ -157,7 +157,6 @@
         android:id="@+id/edPrice"
         android:layout_width="400px"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="20dp"
         android:backgroundTint="@color/main"
@@ -166,8 +165,6 @@
         android:inputType="numberDecimal"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/priceLabel" />
 
     <TextView
@@ -188,11 +185,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="20dp"
-        android:fontFamily="@font/inter_medium"
         android:background="@drawable/edit_text_background"
         android:entries="@array/day_of_the_week"
+        android:fontFamily="@font/inter_medium"
         android:padding="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -246,23 +243,23 @@
         app:layout_constraintStart_toEndOf="@+id/durationLabel"
         app:layout_constraintTop_toBottomOf="@id/edCapacity" />
 
+    <!-- Ô nhập Giá -->
+
+    <!-- Dropdown Loại lớp học -->
     <EditText
         android:id="@+id/edDuration"
         android:layout_width="400px"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="5dp"
-        android:layout_marginEnd="20dp"
         android:backgroundTint="@color/main"
         android:fontFamily="@font/inter_medium"
         android:hint="e.g. 180 (minutes)"
         android:inputType="number"
         android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/priceLabel" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/durationLabel" />
 
-    <!-- Ô nhập Giá -->
-
-    <!-- Dropdown Loại lớp học -->
     <TextView
         android:id="@+id/courseTypeLabel"
         android:layout_width="match_parent"
@@ -281,7 +278,7 @@
         android:layout_width="match_parent"
         android:layout_height="49dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="20dp"
         android:background="@drawable/edit_text_background"
         android:entries="@array/class_type_options"
