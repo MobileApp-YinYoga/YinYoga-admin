@@ -21,15 +21,16 @@ public class ClassInstanceRepository {
     }
 
     // Thêm phiên học mới
-    public void insertClassInstance(String instanceId, int courseId, String date, String teacher) {
+    public void insertClassInstance(String instanceId, int courseId, String date, String teacher, byte[] imageUrl) {
         SQLiteDatabase db = database.getWritableDatabase();
-        String query = "INSERT INTO ClassInstances (InstanceId, CourseId, Date, Teacher) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO ClassInstances (InstanceId, CourseId, Date, Teacher, ImageUrl) VALUES (?, ?, ?, ?, ?)";
         SQLiteStatement statement = db.compileStatement(query);
         statement.clearBindings();
         statement.bindString(1, instanceId);
         statement.bindLong(2, courseId);
         statement.bindString(3, date);
         statement.bindString(4, teacher);
+        statement.bindBlob(5, imageUrl);
         statement.executeInsert();
     }
 
@@ -42,15 +43,16 @@ public class ClassInstanceRepository {
     }
 
     // Cập nhật phiên học
-    public void updateClassInstance(String instanceId, int courseId, String date, String teacher) {
+    public void updateClassInstance(String instanceId, int courseId, String date, String teacher, byte[] imageUrl) {
         SQLiteDatabase db = database.getWritableDatabase();
-        String query = "UPDATE ClassInstances SET CourseId = ?, Date = ?, Teacher = ? WHERE InstanceId = ?";
+        String query = "UPDATE ClassInstances SET CourseId = ?, Date = ?, Teacher = ?, ImageUrl = ? WHERE InstanceId = ?";
         SQLiteStatement statement = db.compileStatement(query);
         statement.clearBindings();
         statement.bindLong(1, courseId);
         statement.bindString(2, date);
         statement.bindString(3, teacher);
-        statement.bindString(4, instanceId);
+        statement.bindBlob(4, imageUrl);
+        statement.bindString(5, instanceId);
         statement.executeUpdateDelete();
     }
 
@@ -77,13 +79,14 @@ public class ClassInstanceRepository {
                 int courseId = cursor.getInt(cursor.getColumnIndexOrThrow("CourseId"));
                 String date = cursor.getString(cursor.getColumnIndexOrThrow("Date"));
                 String teacher = cursor.getString(cursor.getColumnIndexOrThrow("Teacher"));
+                byte[] imageUrl = cursor.getBlob(cursor.getColumnIndexOrThrow("ImageUrl"));
 
                 // Tạo đối tượng Course
                 Course course = new Course();
                 course.setCourseId(courseId);
 
                 // Tạo đối tượng ClassInstance
-                instance = new ClassInstance(instanceId, course, date, teacher);
+                instance = new ClassInstance(instanceId, course, date, teacher, imageUrl);
             }
         } catch (Exception e) {
             // Ghi lại bất kỳ lỗi nào nếu xảy ra khi xử lý cursor hoặc truy vấn
@@ -107,13 +110,14 @@ public class ClassInstanceRepository {
                 String instanceId =  cursor.getString(cursor.getColumnIndexOrThrow("InstanceId"));
                 String date = cursor.getString(cursor.getColumnIndexOrThrow("Date"));
                 String teacher = cursor.getString(cursor.getColumnIndexOrThrow("Teacher"));
+                byte[] imageUrl = cursor.getBlob(cursor.getColumnIndexOrThrow("ImageUrl"));
 
                 // Tạo đối tượng Course
                 Course course = new Course();
                 course.setCourseId(courseId);
 
                 // Tạo đối tượng ClassInstance
-                ClassInstance instance = new ClassInstance(instanceId, course, date, teacher);
+                ClassInstance instance = new ClassInstance(instanceId, course, date, teacher, imageUrl);
 
                 classInstances.add(instance);
             } while (cursor.moveToNext());

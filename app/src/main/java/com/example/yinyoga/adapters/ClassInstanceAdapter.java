@@ -5,8 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -17,16 +15,17 @@ import com.example.yinyoga.fragments.ManageClassInstancesFragment;
 import com.example.yinyoga.models.ClassInstance;
 import com.example.yinyoga.service.ClassInstanceService;
 import com.example.yinyoga.utils.DialogHelper;
+import com.example.yinyoga.utils.ImageHelper;
 
 import java.util.List;
 
-public class CourseInstanceAdapter extends RecyclerView.Adapter<CourseInstanceAdapter.InstanceViewHolder> {
+public class ClassInstanceAdapter extends RecyclerView.Adapter<ClassInstanceAdapter.InstanceViewHolder> {
 
     private List<ClassInstance> instanceList;
     private ManageClassInstancesFragment fragment;
     private ClassInstanceService instanceService;
 
-    public CourseInstanceAdapter(List<ClassInstance> instanceList, ManageClassInstancesFragment fragment) {
+    public ClassInstanceAdapter(List<ClassInstance> instanceList, ManageClassInstancesFragment fragment) {
         this.fragment = fragment;
         this.instanceList = instanceList;
         this.instanceService = new ClassInstanceService(fragment.getContext());
@@ -56,6 +55,8 @@ public class CourseInstanceAdapter extends RecyclerView.Adapter<CourseInstanceAd
 
         // Hiển thị Teacher: Harry Potter
         holder.teacher.setText(String.format("Teacher: %s", instance.getTeacher()));
+
+        holder.classInstanceImage.setImageBitmap(ImageHelper.convertByteArrayToBitmap(instance.getImageUrl()));
 
         holder.instanceMenu.setOnClickListener(v -> showCustomPopupMenu(v, position));
     }
@@ -117,7 +118,7 @@ public class CourseInstanceAdapter extends RecyclerView.Adapter<CourseInstanceAd
 
     public static class InstanceViewHolder extends RecyclerView.ViewHolder {
         TextView courseId, date, teacher;
-        ImageView instanceMenu;
+        ImageView instanceMenu, classInstanceImage;
 
         public InstanceViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -125,12 +126,12 @@ public class CourseInstanceAdapter extends RecyclerView.Adapter<CourseInstanceAd
             courseId = itemView.findViewById(R.id.courseId);
             teacher = itemView.findViewById(R.id.tvTeacher);
             instanceMenu = itemView.findViewById(R.id.instanceMenu);
+            classInstanceImage = itemView.findViewById(R.id.class_instance_image);
 
             Log.d("InstanceViewHolder", "Date TextView: " + date);  // Check xem view này có bị null không
             Log.d("InstanceViewHolder", "CourseID TextView: " + courseId);  // Check xem view này có bị null không
             Log.d("InstanceViewHolder", "Teacher Spinner: " + teacher);  // Check xem view này có bị null không
             Log.d("InstanceViewHolder", "instanceMenu Spinner: " + instanceMenu);  // Check xem view này có bị null không
-
         }
     }
 

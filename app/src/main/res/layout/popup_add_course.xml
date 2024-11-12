@@ -1,409 +1,412 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/popup_background"
-    android:layout_width="380dp"
-    android:padding="10dp"
-    android:elevation="10dp"
-    android:layout_height="match_parent">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
-    <LinearLayout
-        android:id="@+id/btnClose"
-        android:layout_width="wrap_content"
-        android:layout_height="45dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="20dp"
-        android:background="@drawable/circular_button_background"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="8dp"
-        android:paddingStart="15dp"
-        android:paddingEnd="15dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:background="@drawable/popup_background"
+        android:layout_width="380dp"
+        android:padding="10dp"
+        android:elevation="10dp"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/btnClose"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/circular_button_background"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/icon_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableLeft="@drawable/ic_close"
+                tools:ignore="MissingConstraints" />
+        </LinearLayout>
+
+        <!-- Tiêu đề màn hình -->
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="30dp"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="Add new course"
+            android:textColor="@color/main"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/icon_close"
+            android:id="@+id/courseIdStr"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:drawableLeft="@drawable/ic_close"
-            tools:ignore="MissingConstraints" />
-    </LinearLayout>
-
-    <!-- Tiêu đề màn hình -->
-    <TextView
-        android:id="@+id/tvTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="25dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="30dp"
-        android:fontFamily="@font/poppins_semibold"
-        android:text="Add new course"
-        android:textColor="@color/main"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/courseIdStr"
-        android:layout_width="wrap_content"
-        android:layout_height="25dp"
-        android:layout_marginTop="30dp"
-        android:fontFamily="@font/poppins_semibold"
-        android:text="-1"
-        android:visibility="gone"
-        android:textColor="@color/main"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/tvTitle"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tvSubtitle"
-        android:layout_width="261dp"
-        android:layout_height="17dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="5dp"
-        android:fontFamily="@font/poppins_medium"
-        android:text="Create a new course for YinYoga."
-        android:textColor="@color/main"
-        android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvTitle" />
-
-
-    <!-- Nhãn Tên lớp học -->
-    <TextView
-        android:id="@+id/courseIdLabel"
-        android:layout_width="match_parent"
-        android:layout_height="19dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:fontFamily="@font/poppins_semibold"
-        android:text="Course Name*"
-        android:textColor="@color/main"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvSubtitle" />
-
-    <TextView
-        android:id="@+id/durationLabel"
-        android:layout_width="0dp"
-        android:layout_height="21dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="16dp"
-        android:fontFamily="@font/poppins_semibold"
-        android:text="Duration*"
-        android:textColor="@color/main"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edTime" />
-
-
-    <!-- Nhãn Thời gian -->
-    <EditText
-        android:id="@+id/edCourseName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="20dp"
-        android:backgroundTint="@color/main"
-        android:fontFamily="@font/inter_medium"
-        android:hint="e.g. Sivananda Yoga"
-        android:inputType="none"
-        android:minHeight="48dp"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/courseIdLabel" />
-
-    <EditText
-        android:id="@+id/edTime"
-        android:layout_width="400px"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="5dp"
-        android:backgroundTint="@color/main"
-        android:fontFamily="@font/inter_medium"
-        android:hint="e.g. 10:30"
-        android:inputType="time"
-        android:minHeight="48dp"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/timeLabel" />
-
-    <EditText
-        android:id="@+id/edCapacity"
-        android:layout_width="400px"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="20dp"
-        android:backgroundTint="@color/main"
-        android:fontFamily="@font/inter_medium"
-        android:hint="e.g. 20"
-        android:inputType="number"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/teacherLabel" />
-
-    <EditText
-        android:id="@+id/edPrice"
-        android:layout_width="400px"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="20dp"
-        android:backgroundTint="@color/main"
-        android:fontFamily="@font/inter_medium"
-        android:hint="e.g. 15.0"
-        android:inputType="numberDecimal"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/priceLabel" />
-
-    <TextView
-        android:id="@+id/dayLabel"
-        android:layout_width="match_parent"
-        android:layout_height="21dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
-        android:fontFamily="@font/poppins_semibold"
-        android:text="Day of the week*"
-        android:textColor="@color/main"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edCourseName" />
-
-    <Spinner
-        android:id="@+id/spinnerDayofTheWeek"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="20dp"
-        android:background="@drawable/edit_text_background"
-        android:entries="@array/day_of_the_week"
-        android:fontFamily="@font/inter_medium"
-        android:padding="12dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dayLabel" />
-
-
-    <!-- Ô nhập Thời gian -->
-
-    <!-- Nhãn Sức chứa -->
-    <TextView
-        android:id="@+id/timeLabel"
-        android:layout_width="0dp"
-        android:layout_height="21dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
-        android:fontFamily="@font/poppins_semibold"
-        android:text="Time*"
-        android:textColor="@color/main"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/spinnerDayofTheWeek" />
-
-    <!-- Ô nhập Sức chứa -->
-
-    <!-- Nhãn Giá -->
-
-    <TextView
-        android:id="@+id/teacherLabel"
-        android:layout_width="0dp"
-        android:layout_height="21dp"
-        android:layout_marginStart="120dp"
-        android:layout_marginTop="12dp"
-        android:fontFamily="@font/poppins_semibold"
-        android:text="Capacity*"
-        android:textColor="@color/main"
-        android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@+id/timeLabel"
-        app:layout_constraintTop_toBottomOf="@id/spinnerDayofTheWeek" />
-
-    <TextView
-        android:id="@+id/priceLabel"
-        android:layout_width="0dp"
-        android:layout_height="21dp"
-        android:layout_marginStart="91dp"
-        android:layout_marginTop="16dp"
-        android:fontFamily="@font/poppins_semibold"
-        android:text="Price*"
-        android:textColor="@color/main"
-        android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@+id/durationLabel"
-        app:layout_constraintTop_toBottomOf="@id/edCapacity" />
-
-    <!-- Ô nhập Giá -->
-
-    <!-- Dropdown Loại lớp học -->
-    <EditText
-        android:id="@+id/edDuration"
-        android:layout_width="400px"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="5dp"
-        android:backgroundTint="@color/main"
-        android:fontFamily="@font/inter_medium"
-        android:hint="e.g. 180 (minutes)"
-        android:inputType="number"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/durationLabel" />
-
-    <TextView
-        android:id="@+id/courseTypeLabel"
-        android:layout_width="match_parent"
-        android:layout_height="21dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
-        android:fontFamily="@font/poppins_semibold"
-        android:text="Course Type*"
-        android:textColor="@color/main"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edPrice" />
-
-    <Spinner
-        android:id="@+id/courseTypeSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="49dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="20dp"
-        android:background="@drawable/edit_text_background"
-        android:entries="@array/class_type_options"
-        android:padding="12dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/courseTypeLabel" />
-
-    <TextView
-        android:id="@+id/descriptionLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginStart="20dp"
-        android:fontFamily="@font/poppins_semibold"
-        android:text="Description*"
-        android:textColor="@color/main"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/courseTypeSpinner" />
-
-    <EditText
-        android:id="@+id/edDescription"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="20dp"
-        android:backgroundTint="@color/main"
-        android:fontFamily="@font/inter_medium"
-        android:hint="e.g. A brief description of the course..."
-        android:minHeight="45dp"
-        android:padding="12dp"
-        android:inputType="textMultiLine"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/descriptionLabel" />
-
-    <!-- Thêm trường tải ảnh -->
-    <TextView
-        android:id="@+id/uploadImageLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="15dp"
-        android:fontFamily="@font/poppins_semibold"
-        android:text="Upload Image"
-        android:textColor="@color/main"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edDescription" />
-
-    <LinearLayout
-        android:id="@+id/uploadImageContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="5dp"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/uploadImageLabel">
-
-        <!-- Button for uploading an image -->
-        <Button
-            android:id="@+id/btnUploadImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:backgroundTint="@color/main_95"
+            android:layout_height="25dp"
+            android:layout_marginTop="30dp"
             android:fontFamily="@font/poppins_semibold"
-            android:text="Upload File"
-            android:textColor="@color/white" />
+            android:text="-1"
+            android:visibility="gone"
+            android:textColor="@color/main"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/tvTitle"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- EditText for displaying upload URL -->
+        <TextView
+            android:id="@+id/tvSubtitle"
+            android:layout_width="261dp"
+            android:layout_height="17dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/poppins_medium"
+            android:text="Create a new course for YinYoga."
+            android:textColor="@color/main"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+
+
+        <!-- Nhãn Tên lớp học -->
+        <TextView
+            android:id="@+id/courseIdLabel"
+            android:layout_width="match_parent"
+            android:layout_height="19dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="Course Name*"
+            android:textColor="@color/main"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvSubtitle" />
+
+        <TextView
+            android:id="@+id/durationLabel"
+            android:layout_width="0dp"
+            android:layout_height="21dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="Duration*"
+            android:textColor="@color/main"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edTime" />
+
+
+        <!-- Nhãn Thời gian -->
         <EditText
-            android:id="@+id/edUploadUrl"
+            android:id="@+id/edCourseName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="20dp"
             android:backgroundTint="@color/main"
             android:fontFamily="@font/inter_medium"
-            android:hint="e.g. yoga.png"
-            android:minHeight="45dp"
-            android:padding="12dp" />
-    </LinearLayout>
+            android:hint="e.g. Sivananda Yoga"
+            android:inputType="none"
+            android:minHeight="48dp"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/courseIdLabel" />
 
-
-    <LinearLayout
-        android:id="@+id/linear_class_capacity"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:orientation="horizontal"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/uploadImageContainer">
-
-        <!-- Nút xóa tất cả -->
-        <Button
-            android:id="@+id/btnSaveCourse"
-            android:layout_width="120dp"
+        <EditText
+            android:id="@+id/edTime"
+            android:layout_width="400px"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="70dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
             android:backgroundTint="@color/main"
-            android:fontFamily="@font/poppins_semibold"
-            android:padding="10dp"
-            android:text="Save Class"
-            android:textColor="#FFFFFF"
+            android:fontFamily="@font/inter_medium"
+            android:hint="e.g. 10:30"
+            android:inputType="time"
+            android:minHeight="48dp"
+            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/courseTypeSpinner" />
+            app:layout_constraintTop_toBottomOf="@id/timeLabel" />
 
-        <Button
-            android:id="@+id/btnClearAll"
-            android:layout_width="120dp"
+        <EditText
+            android:id="@+id/edCapacity"
+            android:layout_width="400px"
             android:layout_height="wrap_content"
-            android:backgroundTint="#506D674B"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="20dp"
+            android:backgroundTint="@color/main"
+            android:fontFamily="@font/inter_medium"
+            android:hint="e.g. 20"
+            android:inputType="number"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/teacherLabel" />
+
+        <EditText
+            android:id="@+id/edPrice"
+            android:layout_width="400px"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="20dp"
+            android:backgroundTint="@color/main"
+            android:fontFamily="@font/inter_medium"
+            android:hint="e.g. 15.0"
+            android:inputType="numberDecimal"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/priceLabel" />
+
+        <TextView
+            android:id="@+id/dayLabel"
+            android:layout_width="match_parent"
+            android:layout_height="21dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
             android:fontFamily="@font/poppins_semibold"
-            android:padding="10dp"
-            android:text="Clear all"
+            android:text="Day of the week*"
             android:textColor="@color/main"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edCourseName" />
+
+        <Spinner
+            android:id="@+id/spinnerDayofTheWeek"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/edit_text_background"
+            android:entries="@array/day_of_the_week"
+            android:fontFamily="@font/inter_medium"
+            android:padding="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dayLabel" />
+
+
+        <!-- Ô nhập Thời gian -->
+
+        <!-- Nhãn Sức chứa -->
+        <TextView
+            android:id="@+id/timeLabel"
+            android:layout_width="0dp"
+            android:layout_height="21dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="Time*"
+            android:textColor="@color/main"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/spinnerDayofTheWeek" />
+
+        <!-- Ô nhập Sức chứa -->
+
+        <!-- Nhãn Giá -->
+
+        <TextView
+            android:id="@+id/teacherLabel"
+            android:layout_width="0dp"
+            android:layout_height="21dp"
+            android:layout_marginStart="120dp"
+            android:layout_marginTop="12dp"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="Capacity*"
+            android:textColor="@color/main"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/timeLabel"
+            app:layout_constraintTop_toBottomOf="@id/spinnerDayofTheWeek" />
+
+        <TextView
+            android:id="@+id/priceLabel"
+            android:layout_width="0dp"
+            android:layout_height="21dp"
+            android:layout_marginStart="91dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="Price*"
+            android:textColor="@color/main"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/durationLabel"
+            app:layout_constraintTop_toBottomOf="@id/edCapacity" />
+
+        <!-- Ô nhập Giá -->
+
+        <!-- Dropdown Loại lớp học -->
+        <EditText
+            android:id="@+id/edDuration"
+            android:layout_width="400px"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
+            android:backgroundTint="@color/main"
+            android:fontFamily="@font/inter_medium"
+            android:hint="e.g. 180 (minutes)"
+            android:inputType="number"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/durationLabel" />
+
+        <TextView
+            android:id="@+id/courseTypeLabel"
+            android:layout_width="match_parent"
+            android:layout_height="21dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="Course Type*"
+            android:textColor="@color/main"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edPrice" />
+
+        <Spinner
+            android:id="@+id/courseTypeSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/edit_text_background"
+            android:entries="@array/class_type_options"
+            android:padding="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btnSaveCourse" />
+            app:layout_constraintTop_toBottomOf="@+id/courseTypeLabel" />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/descriptionLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="20dp"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="Description*"
+            android:textColor="@color/main"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/courseTypeSpinner" />
+
+        <EditText
+            android:id="@+id/edDescription"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="20dp"
+            android:backgroundTint="@color/main"
+            android:fontFamily="@font/inter_medium"
+            android:hint="e.g. A brief description of the course..."
+            android:minHeight="45dp"
+            android:padding="12dp"
+            android:inputType="textMultiLine"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/descriptionLabel" />
+
+        <!-- Thêm trường tải ảnh -->
+        <TextView
+            android:id="@+id/uploadImageLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="15dp"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="Upload Image"
+            android:textColor="@color/main"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edDescription" />
+
+        <LinearLayout
+            android:id="@+id/uploadImageContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/uploadImageLabel">
+
+            <ImageView
+                android:id="@+id/ivUploadImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:layout_editor_absoluteX="56dp"
+                tools:layout_editor_absoluteY="453dp"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <!-- Button for uploading an image -->
+            <Button
+                android:id="@+id/btnUploadImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:backgroundTint="@color/main_95"
+                android:fontFamily="@font/poppins_semibold"
+                android:text="Upload File"
+                android:textColor="@color/white" />
+        </LinearLayout>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <LinearLayout
+            android:id="@+id/linear_class_capacity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/uploadImageContainer">
+
+            <!-- Nút xóa tất cả -->
+            <Button
+                android:id="@+id/btnSaveCourse"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="70dp"
+                android:backgroundTint="@color/main"
+                android:fontFamily="@font/poppins_semibold"
+                android:padding="10dp"
+                android:text="Save Class"
+                android:textColor="#FFFFFF"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/courseTypeSpinner" />
+
+            <Button
+                android:id="@+id/btnClearAll"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#506D674B"
+                android:fontFamily="@font/poppins_semibold"
+                android:padding="10dp"
+                android:text="Clear all"
+                android:textColor="@color/main"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btnSaveCourse" />
+
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

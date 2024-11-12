@@ -45,6 +45,7 @@ public class Database extends SQLiteOpenHelper {
     private static final String COLUMN_INSTANCE_COURSE_ID = "CourseId";           // Mã khóa học
     private static final String COLUMN_DATES = "Date";                  // Ngày diễn ra phiên học
     private static final String COLUMN_TEACHER = "Teacher";         // Giáo viên phụ trách
+    private static final String COLUMN_INSTANCE_IMAGE_URL = "ImageUrl";
 
     // Bảng Notifications
     private static final String TABLE_NOTIFICATIONS = "Notifications";
@@ -103,6 +104,7 @@ public class Database extends SQLiteOpenHelper {
                     + COLUMN_INSTANCE_COURSE_ID + " INTEGER NOT NULL, "
                     + COLUMN_DATES + " TEXT NOT NULL, "
                     + COLUMN_TEACHER + " TEXT, "
+                    + COLUMN_INSTANCE_IMAGE_URL + " TEXT, "
                     + "FOREIGN KEY(" + COLUMN_INSTANCE_COURSE_ID + ") REFERENCES " + TABLE_COURSES + "(" + COLUMN_COURSE_ID + "))";
 
             db.execSQL(CREATE_CLASS_INSTANCES_TABLE);

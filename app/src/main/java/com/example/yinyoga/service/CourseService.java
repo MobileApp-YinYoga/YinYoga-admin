@@ -14,7 +14,7 @@ public class CourseService {
     }
 
     // Thêm khóa học mới với tất cả các thông tin chi tiết
-    public void addCourse(String courseName, String courseType, String createdAt, String dayOfWeek, String description, int capacity, int duration, String imageUrl, double price, String time) {
+    public void addCourse(String courseName, String courseType, String createdAt, String dayOfWeek, String description, int capacity, int duration, byte[] imageUrl, double price, String time) {
         courseRepository.insertCourse(courseName, courseType, createdAt, dayOfWeek, description, capacity, duration, imageUrl, price, time);
     }
 
@@ -29,7 +29,7 @@ public class CourseService {
     }
 
     // Cập nhật khóa học
-    public void updateCourse(int courseId, String courseName, String courseType, String createdAt, String dayOfWeek, String description, int capacity, int duration, String imageUrl, double price, String time) {
+    public void updateCourse(int courseId, String courseName, String courseType, String createdAt, String dayOfWeek, String description, int capacity, int duration, byte[] imageUrl, double price, String time) {
         courseRepository.updateCourse(courseId, courseName, courseType, createdAt, dayOfWeek, description, capacity, duration, imageUrl, price, time);
     }
 
