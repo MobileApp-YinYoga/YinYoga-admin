@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "40201082959",
+    "project_id": "yinyoga-667d9",
+    "storage_bucket": "yinyoga-667d9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:40201082959:android:1e314baae24c9b58c2b23a",
+        "android_client_info": {
+          "package_name": "com.example.yinyoga"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDm_CqBfAT3DhxP4T1NiG8ixCebM8lrDUY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

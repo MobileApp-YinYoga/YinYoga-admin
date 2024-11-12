@@ -36,6 +36,7 @@ import com.example.yinyoga.service.CourseService;
 import com.example.yinyoga.utils.DatetimeHelper;
 import com.example.yinyoga.utils.DialogHelper;
 import com.example.yinyoga.utils.ImageHelper;
+import com.example.yinyoga.utils.SyncManager;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -178,6 +179,10 @@ public class ManageCoursesFragment extends Fragment {
 
             // Nạp lại danh sách lớp học và cập nhật giao diện
             loadCourseFromDatabase();
+
+            SyncManager syncManager = new SyncManager(ManageCoursesFragment.this.requireContext());
+            syncManager.syncDataToFirestore();
+
             dialog.dismiss();
         }
     }
