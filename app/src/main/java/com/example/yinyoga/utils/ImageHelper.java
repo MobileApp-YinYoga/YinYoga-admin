@@ -48,7 +48,10 @@ public class ImageHelper {
         Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
 
         // Resize the image (e.g., to 200x200 pixels)
-        Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, true);
+        int targetWidth = 434; // adjust based on required size
+        int targetHeight = targetWidth * 9 / 18;
+
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, targetWidth, targetHeight, true);
 
         // Compress to JPEG format with 50% quality to further reduce the size
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
