@@ -43,4 +43,20 @@ public class ImageHelper {
 
         return byteArray.toByteArray();
     }
+
+    public static byte[] compressImage(byte[] imageData) {
+        Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
+
+        // Resize the image (e.g., to 200x200 pixels)
+        int targetWidth = 434; // adjust based on required size
+        int targetHeight = targetWidth * 9 / 18;
+
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, targetWidth, targetHeight, true);
+
+        // Compress to JPEG format with 50% quality to further reduce the size
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 50, outputStream);
+
+        return outputStream.toByteArray();
+    }
 }

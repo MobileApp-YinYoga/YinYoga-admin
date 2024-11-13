@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClassInstanceService {
-    private ClassInstanceRepository classInstanceRepository;
+    private final ClassInstanceRepository classInstanceRepository;
 
     public ClassInstanceService(Context context) {
         this.classInstanceRepository = new ClassInstanceRepository(context);

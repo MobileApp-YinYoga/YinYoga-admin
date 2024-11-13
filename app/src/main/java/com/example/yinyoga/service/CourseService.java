@@ -7,7 +7,7 @@ import com.example.yinyoga.models.Course;
 import com.example.yinyoga.repository.CourseRepository;
 
 public class CourseService {
-    private CourseRepository courseRepository;
+    private final CourseRepository courseRepository;
 
     public CourseService(Context context) {
         this.courseRepository = new CourseRepository(context);

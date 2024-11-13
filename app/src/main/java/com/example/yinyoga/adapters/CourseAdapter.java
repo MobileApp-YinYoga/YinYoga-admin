@@ -64,7 +64,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.YogaClassV
         holder.duration.setText(course.getDuration() > 0 ? "  |  " + course.getDuration() + " minutes" : "N/A");
         holder.genre.setText(course.getCourseType() != null ? course.getCourseType() : "N/A");
         holder.price.setText(course.getPrice() > 0 ? course.getPrice() + " dollars" : "$0.00");
-            holder.capacity.setText(course.getCapacity() > 0 ? "Capacity: " + course.getCapacity() + " members" : "Capacity: 0");
+        holder.capacity.setText(course.getCapacity() > 0 ? "Capacity: " + course.getCapacity() + " members" : "Capacity: 0");
 
         // Set shortened description
         holder.description.setText(getShortenedDescription(course.getDescription()));

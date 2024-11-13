@@ -36,7 +36,7 @@ import com.example.yinyoga.service.CourseService;
 import com.example.yinyoga.utils.DatetimeHelper;
 import com.example.yinyoga.utils.DialogHelper;
 import com.example.yinyoga.utils.ImageHelper;
-import com.example.yinyoga.utils.SyncManager;
+import com.example.yinyoga.sync.SyncCourseManager;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -58,6 +58,7 @@ public class ManageCoursesFragment extends Fragment {
     private CourseService courseService;
     private ImageView imgGallery;
     private byte[] imageBytes;
+    SyncCourseManager syncCourseManager;
 
     @Nullable
     @Override
@@ -71,6 +72,7 @@ public class ManageCoursesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         DialogHelper.showLoadingDialog(this.getContext(), "Loading all courses...");
 
+        syncCourseManager = new SyncCourseManager(requireContext());
         initViews(view);
         setupRecyclerView();
         loadCourseFromDatabase();
@@ -179,9 +181,6 @@ public class ManageCoursesFragment extends Fragment {
 
             // Nạp lại danh sách lớp học và cập nhật giao diện
             loadCourseFromDatabase();
-
-            SyncManager syncManager = new SyncManager(ManageCoursesFragment.this.requireContext());
-            syncManager.syncDataToFirestore();
 
             dialog.dismiss();
         }
@@ -323,12 +322,14 @@ public class ManageCoursesFragment extends Fragment {
                 // Thêm course trong database vào danh sách
                 courseLists.add(new Course(id, courseName, courseType, createdAt, dayOfWeek, description, capacity, duration, imageUrl, price, time));
             } while (cursor.moveToNext());
+            syncCourseManager.syncCoursesToFirestore();
         } else {
-            String formattedDate = DatetimeHelper.getCurrentDatetime();
             // Pass the formatted date as a String
+            String formattedDate = DatetimeHelper.getCurrentDatetime();
             byte[] img = ImageHelper.convertDrawableToByteArray(ManageCoursesFragment.this.requireContext(), R.drawable.bg_course);
             courseService.addCourse("Flow Yoga", "Beginner", formattedDate, "Monday", "A calming beginner yoga class", 20, 60, img, 15.0, "10:00");
             courseService.addCourse("Yin Yoga", "Intermediate", formattedDate, "Tuesday", "A deep stretch yoga class focusing on flexibility", 15, 75, img, 20.0, "12:00");
+            syncCourseManager.syncCourseFromFirestore();
         }
 
         if (cursor != null) {

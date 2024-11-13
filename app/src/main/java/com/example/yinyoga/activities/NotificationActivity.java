@@ -25,6 +25,7 @@ import com.example.yinyoga.R;
 import com.example.yinyoga.adapters.NotificationAdapter;
 import com.example.yinyoga.models.Notification;
 import com.example.yinyoga.service.NotificationService;
+import com.example.yinyoga.sync.SyncNotificationManager;
 import com.example.yinyoga.utils.DialogHelper;
 
 import java.text.SimpleDateFormat;
@@ -40,8 +41,8 @@ public class NotificationActivity extends AppCompatActivity {
     private NotificationAdapter newAdapter, beforeAdapter;
     private List<Notification> newNotifications, beforeNotifications;
     private ImageView menuOptions, backHome;
-
     private NotificationService notificationService;
+    SyncNotificationManager syncNotificationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +77,7 @@ public class NotificationActivity extends AppCompatActivity {
 
         setupRecyclerView();
 
+        syncNotificationManager = new SyncNotificationManager(this);
         DialogHelper.showLoadingDialog(this, "Loading notifications...");
         loadNotifications();
         DialogHelper.dismissLoadingDialog();
@@ -187,6 +189,9 @@ public class NotificationActivity extends AppCompatActivity {
         if (allNotifications.isEmpty()) {
             addSampleNotifications();
             allNotifications = notificationService.getAllNotifications();
+            syncNotificationManager.syncNotificationsFromFirestore();
+        } else {
+            syncNotificationManager.syncNotificationsToFirestore();
         }
 
         for (Notification notification : allNotifications) {
@@ -212,13 +217,13 @@ public class NotificationActivity extends AppCompatActivity {
         calendar.add(Calendar.DAY_OF_YEAR, -3); // Ngày trước đó ba ngày
         String threeDaysAgoDate = dateFormat.format(calendar.getTime());
 
-        notificationService.insertNotification(new Notification("Today's Notification 1", "Description 1", "09:00 AM", false, todayDate));
-        notificationService.insertNotification(new Notification("Today's Notification 2", "Description 2", "10:00 AM", true, todayDate));
-        notificationService.insertNotification(new Notification("Today's Notification 3", "Description 3", "11:00 AM", false, todayDate));
+        notificationService.insertNotification(new Notification("trannq2003@gmail.com", "Today's Notification 1", "Description 1", "09:00 AM", false, todayDate));
+        notificationService.insertNotification(new Notification("trannq2003@gmail.com", "Today's Notification 2", "Description 2", "10:00 AM", true, todayDate));
+        notificationService.insertNotification(new Notification("trannq2003@gmail.com", "Today's Notification 3", "Description 3", "11:00 AM", false, todayDate));
 
-        notificationService.insertNotification(new Notification("Old Notification 1", "Description 1", "09:00 AM", true, yesterdayDate));
-        notificationService.insertNotification(new Notification("Old Notification 2", "Description 2", "10:00 AM", true, yesterdayDate));
-        notificationService.insertNotification(new Notification("Old Notification 3", "Description 3", "11:00 AM", false, threeDaysAgoDate));
-        notificationService.insertNotification(new Notification("Old Notification 4", "Description 4", "12:00 PM", false, threeDaysAgoDate));
+        notificationService.insertNotification(new Notification("trannq2003@gmail.com", "Old Notification 1", "Description 1", "09:00 AM", true, yesterdayDate));
+        notificationService.insertNotification(new Notification("trannq2003@gmail.com", "Old Notification 2", "Description 2", "10:00 AM", true, yesterdayDate));
+        notificationService.insertNotification(new Notification("trannq2003@gmail.com", "Old Notification 3", "Description 3", "11:00 AM", false, threeDaysAgoDate));
+        notificationService.insertNotification(new Notification("trannq2003@gmail.com", "Old Notification 4", "Description 4", "12:00 PM", false, threeDaysAgoDate));
     }
 }

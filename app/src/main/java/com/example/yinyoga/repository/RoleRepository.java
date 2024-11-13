@@ -17,12 +17,12 @@ public class RoleRepository {
 
     public Cursor getAllRoles() {
         SQLiteDatabase db = database.getReadableDatabase();
-        return db.rawQuery("SELECT * FROM Roles", null);
+        return db.rawQuery("SELECT * FROM roles", null);
     }
 
     public void insertRole(String roleName, String des) {
         SQLiteDatabase db = database.getWritableDatabase();
-        String query = "INSERT INTO Roles (RoleName, Description) VALUES (?, ?)";
+        String query = "INSERT INTO roles (roleName, description) VALUES (?, ?)";
         SQLiteStatement statement = db.compileStatement(query);
         statement.clearBindings();
         statement.bindString(1, roleName);
@@ -36,7 +36,7 @@ public class RoleRepository {
         Role role = null;
 
         // Câu truy vấn SQL để lấy vai trò theo ID
-        String query = "SELECT RoleId, RoleName, Description FROM Roles WHERE RoleId = ?";
+        String query = "SELECT roleId, roleName, description FROM roles WHERE roleId = ?";
         Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(roleId)});
 
         if (cursor != null) {
@@ -60,7 +60,7 @@ public class RoleRepository {
         Role role = null;
 
         // Câu truy vấn SQL để lấy vai trò theo ID
-        String query = "SELECT RoleId, RoleName, Description FROM Roles WHERE RoleName = ?";
+        String query = "SELECT roleId, roleName, description FROM roles WHERE roleName = ?";
         Cursor cursor = db.rawQuery(query, new String[]{roleName});
 
         if (cursor != null) {
