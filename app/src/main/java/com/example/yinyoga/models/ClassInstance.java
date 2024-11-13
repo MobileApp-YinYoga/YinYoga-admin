@@ -5,12 +5,14 @@ public class ClassInstance {
     private Course course;
     private String date;
     private String teacher;
+    private byte[] imageUrl;
 
-    public ClassInstance(String instanceId, Course course, String date, String teacher) {
+    public ClassInstance(String instanceId, Course course, String date, String teacher, byte[] imageUrl) {
         this.instanceId = instanceId;
         this.course = course;
         this.date = date;
         this.teacher = teacher;
+        this.imageUrl = imageUrl;
     }
 
     public String getInstanceId() {
@@ -43,5 +45,13 @@ public class ClassInstance {
 
     public void setTeacher(String teacher) {
         this.teacher = teacher;
+    }
+
+    public byte[] getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(byte[] imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

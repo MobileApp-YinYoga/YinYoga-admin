@@ -2,6 +2,8 @@ package com.example.yinyoga.adapters;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -22,6 +24,7 @@ import com.example.yinyoga.fragments.ManageCoursesFragment;
 import com.example.yinyoga.models.Course;
 import com.example.yinyoga.service.CourseService;
 import com.example.yinyoga.utils.DialogHelper;
+import com.example.yinyoga.utils.ImageHelper;
 
 import java.util.List;
 
@@ -61,14 +64,13 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.YogaClassV
         holder.duration.setText(course.getDuration() > 0 ? "  |  " + course.getDuration() + " minutes" : "N/A");
         holder.genre.setText(course.getCourseType() != null ? course.getCourseType() : "N/A");
         holder.price.setText(course.getPrice() > 0 ? course.getPrice() + " dollars" : "$0.00");
-        holder.capacity.setText(course.getCapacity() > 0 ? "Capacity: " + course.getCapacity() + " members" : "Capacity: 0");
+            holder.capacity.setText(course.getCapacity() > 0 ? "Capacity: " + course.getCapacity() + " members" : "Capacity: 0");
 
         // Set shortened description
         holder.description.setText(getShortenedDescription(course.getDescription()));
 
         // Load image if imageUrl is available
-        String imageUrl = course.getImageUrl();
-        holder.courseImage.setImageResource(R.drawable.yoga_1);
+        holder.courseImage.setImageBitmap(ImageHelper.convertByteArrayToBitmap(course.getImageUrl()));
 
         holder.see_more_button.setOnClickListener(v -> showClassInstance());
 

@@ -11,6 +11,20 @@
     android:layout_marginBottom="10dp"
     android:elevation="4dp">
 
+    <ImageView
+        android:id="@+id/class_instance_image"
+        android:layout_width="match_parent"
+        android:layout_height="200px"
+        android:paddingTop="30px"
+        android:paddingBottom="30px"
+        android:scaleType="centerCrop"
+        android:src="@drawable/yoga_2"
+        android:alpha="0.7"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
     <!-- Tên lớp học -->
     <TextView
         android:id="@+id/courseId"

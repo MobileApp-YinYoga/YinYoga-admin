@@ -9,7 +9,7 @@ public class Course {
     private String description;
     private int capacity;
     private int duration;
-    private String imageUrl;
+    private byte[] imageUrl;
     private double price;
     private String time;
 
@@ -24,7 +24,7 @@ public class Course {
     // Constructor
     public Course(int courseId, String courseName, String courseType, String createdAt,
                   String dayOfWeek, String description, int capacity, int duration,
-                  String imageUrl, double price, String time) {
+                  byte[] imageUrl, double price, String time) {
         this.courseId = courseId;
         this.courseName = courseName;
         this.courseType = courseType;
@@ -102,11 +102,11 @@ public class Course {
         this.duration = duration;
     }
 
-    public String getImageUrl() {
+    public byte[] getImageUrl() {
         return imageUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
+    public void setImageUrl(byte[] imageUrl) {
         this.imageUrl = imageUrl;
     }
 

@@ -1,24 +1,31 @@
 package com.example.yinyoga.fragments;
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -26,15 +33,17 @@ import com.example.yinyoga.R;
 import com.example.yinyoga.adapters.CourseAdapter;
 import com.example.yinyoga.models.Course;
 import com.example.yinyoga.service.CourseService;
+import com.example.yinyoga.utils.DatetimeHelper;
 import com.example.yinyoga.utils.DialogHelper;
+import com.example.yinyoga.utils.ImageHelper;
+import com.example.yinyoga.utils.SyncManager;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class ManageCoursesFragment extends Fragment {
     private Dialog dialog;
@@ -43,12 +52,12 @@ public class ManageCoursesFragment extends Fragment {
     private List<Course> courseLists;
     private LinearLayout add_task;
     private Spinner spinnerDayOfTheWeek, courseTypeSpinner;
-    private ArrayAdapter<String> spinnerAdapter;
-    private EditText edCourseName, edTime, edDuration, edCapacity, edPrice, edDescription, edCreatedAt, edImageUrl;
+    private EditText edCourseName, edTime, edDuration, edCapacity, edPrice, edDescription;
     private EditText searchInput;
     private TextView tvCourseId, tvTitle, tvSubtitle, tvClearSearch;
     private CourseService courseService;
-    private Calendar calendar;
+    private ImageView imgGallery;
+    private byte[] imageBytes;
 
     @Nullable
     @Override
@@ -63,7 +72,7 @@ public class ManageCoursesFragment extends Fragment {
         DialogHelper.showLoadingDialog(this.getContext(), "Loading all courses...");
 
         initViews(view);
-        setupRecyclerView(view);
+        setupRecyclerView();
         loadCourseFromDatabase();
 
         // Xử lý sự kiện search
@@ -75,11 +84,14 @@ public class ManageCoursesFragment extends Fragment {
 
     // Mở popup để thêm hoặc cập nhật lớp học
     public void openAddClassPopup(int courseId) {
-        dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_rounded_border);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(R.drawable.dialog_rounded_border);
 
         LinearLayout btnClosePopup = dialog.findViewById(R.id.btnClose);
         Button btnSave = dialog.findViewById(R.id.btnSaveCourse);
         Button btnClearAllPopup = dialog.findViewById(R.id.btnClearAll);
+        Button btnUploadImage = dialog.findViewById(R.id.btnUploadImage);
+
+        btnUploadImage.setOnClickListener(this::chooseImage);
 
         setPopupEventListeners(btnClosePopup, btnClearAllPopup);
         setPopupAddOrUpdate(courseId);
@@ -87,6 +99,43 @@ public class ManageCoursesFragment extends Fragment {
         btnSave.setOnClickListener(v -> saveCourse(courseId));
 
         dialog.show();
+    }
+
+    private final ActivityResultLauncher<Intent> chooseImageLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    if (data != null) {
+                        Uri imageFileBath = data.getData();
+                        Bitmap imageToStore;
+                        try {
+                            imageToStore = MediaStore.Images.Media.getBitmap(ManageCoursesFragment.this.requireContext().getContentResolver(), imageFileBath);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                        imgGallery.setImageBitmap(imageToStore);
+
+                        imageBytes = ImageHelper.getImageBytes(imgGallery);
+
+                        FileOutputStream fileOutputStream;
+                        try {
+                            fileOutputStream = new FileOutputStream("image.png");
+                            fileOutputStream.write(imageBytes);
+                            fileOutputStream.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+    );
+
+    public void chooseImage(View view) {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        chooseImageLauncher.launch(intent);
     }
 
     // Thiết lập sự kiện cho nút đóng và xóa
@@ -106,11 +155,10 @@ public class ManageCoursesFragment extends Fragment {
         String priceStr = edPrice.getText().toString().trim();
         String courseType = courseTypeSpinner.getSelectedItem().toString();
         String description = edDescription.getText().toString().trim();
-        String createdAt = edCreatedAt.getText().toString().trim();
-        String imageUrl = edImageUrl.getText().toString().trim();
+        String createdAt = DatetimeHelper.getCurrentDatetime();
 
         // Kiểm tra tính hợp lệ của dữ liệu đầu vào
-        if (isValidateInput(courseName, dayOfWeek, timeStr, durationStr, capacityStr, priceStr, description)) {
+        if (isValidateInput(courseName, timeStr, durationStr, capacityStr, priceStr, description)) {
             int duration = Integer.parseInt(durationStr);
             int capacity = Integer.parseInt(capacityStr);
             double price = Double.parseDouble(priceStr);
@@ -118,10 +166,10 @@ public class ManageCoursesFragment extends Fragment {
             // Kiểm tra thêm hoặc cập nhật khóa học
             if (courseId < 0) {
                 // Thêm lớp học mới vào cơ sở dữ liệu
-                courseService.addCourse(courseName, courseType, createdAt, dayOfWeek, description, capacity, duration, imageUrl, price, timeStr);
+                courseService.addCourse(courseName, courseType, createdAt, dayOfWeek, description, capacity, duration, imageBytes, price, timeStr);
             } else {
                 // Cập nhật lớp học hiện có
-                courseService.updateCourse(courseId, courseName, courseType, createdAt, dayOfWeek, description, capacity, duration, imageUrl, price, timeStr);
+                courseService.updateCourse(courseId, courseName, courseType, createdAt, dayOfWeek, description, capacity, duration, imageBytes, price, timeStr);
             }
 
             DialogHelper.showSuccessDialog(getActivity(), "Course saved successfully!");
@@ -131,6 +179,10 @@ public class ManageCoursesFragment extends Fragment {
 
             // Nạp lại danh sách lớp học và cập nhật giao diện
             loadCourseFromDatabase();
+
+            SyncManager syncManager = new SyncManager(ManageCoursesFragment.this.requireContext());
+            syncManager.syncDataToFirestore();
+
             dialog.dismiss();
         }
     }
@@ -153,8 +205,6 @@ public class ManageCoursesFragment extends Fragment {
                 edCapacity.setText(String.valueOf(findCourse.getCapacity()));
                 edPrice.setText(String.valueOf(findCourse.getPrice()));
                 edDescription.setText(findCourse.getDescription());
-                edCreatedAt.setText(findCourse.getCreatedAt());
-                edImageUrl.setText(findCourse.getImageUrl());
 
                 // Set Spinner positions
                 spinnerDayOfTheWeek.setSelection(getArrayPosition("getDate", findCourse.getDayOfWeek()));
@@ -189,7 +239,7 @@ public class ManageCoursesFragment extends Fragment {
         return position;
     }
 
-    private boolean isValidateInput(String courseName, String dayOfWeek, String timeStr, String durationStr, String capacityStr, String priceStr, String description) {
+    private boolean isValidateInput(String courseName, String timeStr, String durationStr, String capacityStr, String priceStr, String description) {
         boolean isValid = true;
 
         // Kiểm tra từng trường
@@ -266,7 +316,7 @@ public class ManageCoursesFragment extends Fragment {
                 String description = cursor.getString(5);
                 int capacity = cursor.getInt(6);
                 int duration = cursor.getInt(7);
-                String imageUrl = cursor.getString(8);
+                byte[] imageUrl = cursor.getBlob(8);
                 double price = cursor.getDouble(9);
                 String time = cursor.getString(10);
 
@@ -274,14 +324,11 @@ public class ManageCoursesFragment extends Fragment {
                 courseLists.add(new Course(id, courseName, courseType, createdAt, dayOfWeek, description, capacity, duration, imageUrl, price, time));
             } while (cursor.moveToNext());
         } else {
-
-            Date currentDate = calendar.getTime(); // Lấy ngày hiện tại
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            String formattedDate = dateFormat.format(currentDate); // Convert Date to String
-
+            String formattedDate = DatetimeHelper.getCurrentDatetime();
             // Pass the formatted date as a String
-            courseService.addCourse("Flow Yoga", "Beginner", formattedDate, "Monday", "A calming beginner yoga class", 20, 60, "flow_yoga.jpg", 15.0, "10:00");
-            courseService.addCourse("Yin Yoga", "Intermediate", formattedDate, "Tuesday", "A deep stretch yoga class focusing on flexibility", 15, 75, "yin_yoga.jpg", 20.0, "12:00");
+            byte[] img = ImageHelper.convertDrawableToByteArray(ManageCoursesFragment.this.requireContext(), R.drawable.bg_course);
+            courseService.addCourse("Flow Yoga", "Beginner", formattedDate, "Monday", "A calming beginner yoga class", 20, 60, img, 15.0, "10:00");
+            courseService.addCourse("Yin Yoga", "Intermediate", formattedDate, "Tuesday", "A deep stretch yoga class focusing on flexibility", 15, 75, img, 20.0, "12:00");
         }
 
         if (cursor != null) {
@@ -295,7 +342,7 @@ public class ManageCoursesFragment extends Fragment {
     }
 
     // Cấu hình RecyclerView với dữ liệu mẫu
-    private void setupRecyclerView(View view) {
+    private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // Dữ liệu mẫu cho các lớp học
@@ -339,7 +386,7 @@ public class ManageCoursesFragment extends Fragment {
         }
 
         // Kiểm tra nếu không tìm thấy khóa học nào phù hợp
-        if (filteredCourses.size() <= 0) {
+        if (filteredCourses.isEmpty()) {
             // Hiển thị thông báo không tìm thấy khóa học
             recyclerView.setVisibility(View.GONE);
         } else {
@@ -368,7 +415,7 @@ public class ManageCoursesFragment extends Fragment {
         searchInput = view.findViewById(R.id.searchInput);
 
         // Khởi tạo dialog khi cần thiết
-        dialog = new Dialog(getContext());
+        dialog = new Dialog(requireContext());
         dialog.setContentView(R.layout.popup_add_course);
 
         courseLists = new ArrayList<>();
@@ -384,11 +431,9 @@ public class ManageCoursesFragment extends Fragment {
         edCapacity = dialog.findViewById(R.id.edCapacity);
         edPrice = dialog.findViewById(R.id.edPrice);
         edDescription = dialog.findViewById(R.id.edDescription);
-        edImageUrl = dialog.findViewById(R.id.edUploadUrl);
         spinnerDayOfTheWeek = dialog.findViewById(R.id.spinnerDayofTheWeek);
         courseTypeSpinner = dialog.findViewById(R.id.courseTypeSpinner);
-
-        calendar =  Calendar.getInstance();
+        imgGallery = dialog.findViewById(R.id.ivUploadImage);
     }
 
     // Phương thức xóa tất cả thông tin nhập vào trong popup
@@ -400,8 +445,6 @@ public class ManageCoursesFragment extends Fragment {
         edCapacity.setText("");
         edPrice.setText("");
         edDescription.setText("");
-        edCreatedAt.setText("");
-        edImageUrl.setText("");
         courseTypeSpinner.setSelection(0);
 
         DialogHelper.showSuccessDialog(getActivity(), "All fields cleared!");

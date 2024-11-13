@@ -18,9 +18,9 @@ public class ClassInstanceService {
         this.classInstanceRepository = new ClassInstanceRepository(context);
     }
 
-    public void addClassInstance(String instanceId, int courseId, String date, String teacher) {
+    public void addClassInstance(String instanceId, int courseId, String date, String teacher, byte[] imageUrl) {
         try {
-            classInstanceRepository.insertClassInstance(instanceId, courseId, date, teacher);
+            classInstanceRepository.insertClassInstance(instanceId, courseId, date, teacher, imageUrl);
         } catch (Exception e) {
             Log.e("addClassInstance", "Error adding class instance: " + e.getMessage()); // Ghi log lỗi
         }
@@ -58,9 +58,9 @@ public class ClassInstanceService {
 
 
     // Cập nhật phiên học
-    public void updateClassInstance(String instanceId, int courseId, String date, String teacher) {
+    public void updateClassInstance(String instanceId, int courseId, String date, String teacher, byte[] imageUrl) {
         try {
-            classInstanceRepository.updateClassInstance(instanceId, courseId, date, teacher);
+            classInstanceRepository.updateClassInstance(instanceId, courseId, date, teacher, imageUrl);
         } catch (Exception e) {
             Log.e("updateClassInstance", "Error updating class instance: " + e.getMessage()); // Ghi log lỗi
         }

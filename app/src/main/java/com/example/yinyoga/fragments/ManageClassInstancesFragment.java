@@ -1,9 +1,14 @@
 package com.example.yinyoga.fragments;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -13,11 +18,14 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -25,15 +33,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.yinyoga.R;
-import com.example.yinyoga.adapters.CourseInstanceAdapter;
+import com.example.yinyoga.adapters.ClassInstanceAdapter;
 import com.example.yinyoga.adapters.MenuCourseAdapter;
 import com.example.yinyoga.models.ClassInstance;
 import com.example.yinyoga.models.Course;
 import com.example.yinyoga.service.ClassInstanceService;
 import com.example.yinyoga.service.CourseService;
 import com.example.yinyoga.utils.DialogHelper;
+import com.example.yinyoga.utils.ImageHelper;
 
-import java.text.ParseException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,18 +59,20 @@ import java.util.Objects;
 public class ManageClassInstancesFragment extends Fragment {
     private Dialog dialog;
     private RecyclerView recyclerView;
-    private CourseInstanceAdapter instanceAdapter;
+    private ClassInstanceAdapter instanceAdapter;
     private List<ClassInstance> instanceLists;
     private LinearLayout add_task, dropdown;
     private Spinner spTeacher, spCourseId;
-    private ArrayAdapter<String> spinnerAdapter;
     private EditText edDate, edInstanceId;
     private EditText searchInput;
     private TextView tvInstanceId, tvTitle, tvSubtitle, tvClearSearch;
-    private String selectedField, instanceId, courseIdStr, dateStr, teacher, dayOfTheWeek;
+    private String selectedField;
+    private String dateStr;
     private ClassInstanceService instanceService;
     private CourseService courseService;
     private List<String> arrayCourseSpinner;
+    private ImageView imgGallery;
+    private byte[] imageBytes;
 
     @Nullable
     @Override
@@ -76,7 +88,7 @@ public class ManageClassInstancesFragment extends Fragment {
         DialogHelper.showLoadingDialog(this.getContext(), "Loading all class instances...");
 
         initViews(view);
-        setupRecyclerView(view);
+        setupRecyclerView();
         loadInstancesFromDatabase();
 
         setEventTextChangeForSearch();  // Xử lý sự kiện search
@@ -207,7 +219,7 @@ public class ManageClassInstancesFragment extends Fragment {
     private void showDatePickerDialog() {
         Calendar calendar = Calendar.getInstance();
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), (view, year, month, dayOfMonth) -> {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(), (view, year, month, dayOfMonth) -> {
             // Định dạng ngày đã chọn với định dạng "January 30th, 2024"
             String monthName = new SimpleDateFormat("MMMM", Locale.getDefault()).format(new GregorianCalendar(year, month, dayOfMonth).getTime());
             String daySuffix = getDaySuffix(dayOfMonth);
@@ -265,15 +277,18 @@ public class ManageClassInstancesFragment extends Fragment {
 
     // Mở popup để thêm hoặc cập nhật phiên học
     public void openAddInstancePopup(String instanceId) {
-        dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_rounded_border);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(R.drawable.dialog_rounded_border);
 
         // Thiết lập sự kiện cho nút đóng
         LinearLayout btnClosePopup = dialog.findViewById(R.id.btn_close);
         Button btnSave = dialog.findViewById(R.id.btn_save);
         Button btnClearAllPopup = dialog.findViewById(R.id.btn_clear);
+        Button btnUploadImage = dialog.findViewById(R.id.btnUploadImage);
 
         // Đặt sự kiện cho nút đóng và xóa
         setPopupEventListeners(btnClosePopup, btnClearAllPopup);
+
+        btnUploadImage.setOnClickListener(this::chooseImage);
 
         clearAllInputs();
 
@@ -288,6 +303,43 @@ public class ManageClassInstancesFragment extends Fragment {
 
         // Mở popup
         dialog.show();
+    }
+
+    private final ActivityResultLauncher<Intent> chooseImageLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    if (data != null) {
+                        Uri imageFileBath = data.getData();
+                        Bitmap imageToStore;
+                        try {
+                            imageToStore = MediaStore.Images.Media.getBitmap(ManageClassInstancesFragment.this.requireContext().getContentResolver(), imageFileBath);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                        imgGallery.setImageBitmap(imageToStore);
+
+                        imageBytes = ImageHelper.getImageBytes(imgGallery);
+
+                        FileOutputStream fileOutputStream;
+                        try {
+                            fileOutputStream = new FileOutputStream("image.png");
+                            fileOutputStream.write(imageBytes);
+                            fileOutputStream.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+    );
+
+    public void chooseImage(View view) {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        chooseImageLauncher.launch(intent);
     }
 
     private void isInstanceIdExists() {
@@ -333,9 +385,9 @@ public class ManageClassInstancesFragment extends Fragment {
     // Thêm hoặc cập nhật phiên học
     private void saveInstance(String instanceId) {
         // Lấy thông tin từ các trường trong popup
-        courseIdStr = spCourseId.getSelectedItem().toString();
+        String courseIdStr = spCourseId.getSelectedItem().toString();
         dateStr = edDate.getText().toString().trim();
-        teacher = spTeacher.getSelectedItem().toString();
+        String teacher = spTeacher.getSelectedItem().toString();
 
         String[] splitCourseId = courseIdStr.split(" - ");
         String getCourse = splitCourseId[0];
@@ -344,13 +396,13 @@ public class ManageClassInstancesFragment extends Fragment {
         // Kiểm tra tính hợp lệ của dữ liệu đầu vào
         if (isValidateInput() && !Objects.equals(instanceId, "")) {
             // Cập nhật phiên học hiện có
-            instanceService.updateClassInstance(instanceId, courseId, dateStr, teacher);
+            instanceService.updateClassInstance(instanceId, courseId, dateStr, teacher, imageBytes);
             DialogHelper.showSuccessDialog(getActivity(), "Course instance updated successfully!");
         } else {
             instanceId = edInstanceId.getText().toString().trim();
 
             // Thêm phiên học mới vào cơ sở dữ liệu
-            instanceService.addClassInstance(instanceId, courseId, dateStr, teacher);
+            instanceService.addClassInstance(instanceId, courseId, dateStr, teacher, imageBytes);
             DialogHelper.showSuccessDialog(getActivity(), "Course instance saved successfully!");
         }
 
@@ -363,7 +415,7 @@ public class ManageClassInstancesFragment extends Fragment {
     private void setPopupAddOrUpdate(String instanceId) {
         edInstanceId.setEnabled(true);
 
-        if (instanceId != "") { // update
+        if (!Objects.equals(instanceId, "")) { // update
             try {
                 ClassInstance findInstance = instanceService.getClassInstance(instanceId);
 
@@ -437,7 +489,8 @@ public class ManageClassInstancesFragment extends Fragment {
                 int courseId = cursor.getInt(1);
                 String date = cursor.getString(2);
                 String teacher = cursor.getString(3);
-                String courseName = cursor.getString(4);
+                byte[] imageUrl = cursor.getBlob(4);
+                String courseName = cursor.getString(5);
 
                 // Tạo đối tượng Course và gán CourseId, CourseName
                 Course course = new Course();
@@ -445,12 +498,13 @@ public class ManageClassInstancesFragment extends Fragment {
                 course.setCourseName(courseName);
 
                 // Thêm instance vào danh sách
-                instanceLists.add(new ClassInstance(instanceId, course, date, teacher));
+                instanceLists.add(new ClassInstance(instanceId, course, date, teacher, imageUrl));
             } while (cursor.moveToNext());
         } else {
-            instanceService.addClassInstance("YOGA101", 1,"January, 30th 2024", "John Doe");
-            instanceService.addClassInstance("YOGA102", 1, "February, 15th 2024", "Jane Smith");
-            instanceService.addClassInstance("YOGA103", 1,"March, 5st 2024", "Albus Dumbledore");
+            byte[] img = ImageHelper.convertDrawableToByteArray(ManageClassInstancesFragment.this.requireContext(), R.drawable.bg_course);
+            instanceService.addClassInstance("YOGA101", 1,"January, 30th 2024", "John Doe", img);
+            instanceService.addClassInstance("YOGA102", 1, "February, 15th 2024", "Jane Smith", img);
+            instanceService.addClassInstance("YOGA103", 1,"March, 5st 2024", "Albus Dumbledore", img);
         }
 
         if (cursor != null) {
@@ -459,17 +513,17 @@ public class ManageClassInstancesFragment extends Fragment {
 
         DialogHelper.dismissLoadingDialog();
         // Cập nhật giao diện với dữ liệu mới
-        instanceAdapter = new CourseInstanceAdapter(instanceLists, this);
+        instanceAdapter = new ClassInstanceAdapter(instanceLists, this);
         recyclerView.setAdapter(instanceAdapter);
     }
 
     // Cấu hình RecyclerView với dữ liệu mẫu
-    private void setupRecyclerView(View view) {
+    private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // Dữ liệu mẫu cho các phiên học
         instanceLists = new ArrayList<>();
-        instanceAdapter = new CourseInstanceAdapter(instanceLists, this);
+        instanceAdapter = new ClassInstanceAdapter(instanceLists, this);
         recyclerView.setAdapter(instanceAdapter);
     }
 
@@ -486,7 +540,7 @@ public class ManageClassInstancesFragment extends Fragment {
         courseService = new CourseService(getContext());
 
         // Khởi tạo dialog khi cần thiết
-        dialog = new Dialog(getContext());
+        dialog = new Dialog(requireContext());
         dialog.setContentView(R.layout.popup_add_instance);
 
         // Khởi tạo EditText trong popup
@@ -497,6 +551,7 @@ public class ManageClassInstancesFragment extends Fragment {
         spCourseId = dialog.findViewById(R.id.spCourseIdFK);
         edDate = dialog.findViewById(R.id.edDateInstance);
         spTeacher = dialog.findViewById(R.id.spinnerTeacher);
+        imgGallery = dialog.findViewById(R.id.ivUploadImageClassInstance);
 
         arrayCourseSpinner = new ArrayList<>();
 
@@ -619,13 +674,13 @@ public class ManageClassInstancesFragment extends Fragment {
             } while (cursor.moveToNext());
 
             // Sau khi có danh sách, đưa vào Spinner
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, arrayCourseSpinner);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, arrayCourseSpinner);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spCourseId.setAdapter(adapter); // spinnerCoursePKId là Spinner của bạn
         } else {
             // Nếu không có dữ liệu, hiển thị thông báo không có dữ liệu và vô hiệu hóa Spinner
             arrayCourseSpinner.add("No data available");
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, arrayCourseSpinner);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, arrayCourseSpinner);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spCourseId.setAdapter(adapter);
             spCourseId.setEnabled(false); // Vô hiệu hóa Spinner nếu không có dữ liệu

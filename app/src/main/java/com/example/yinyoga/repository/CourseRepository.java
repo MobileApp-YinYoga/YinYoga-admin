@@ -19,7 +19,7 @@ public class CourseRepository {
     // Insert new course
     public void insertCourse(String courseName, String courseType, String createdAt,
                              String dayOfWeek, String description, int capacity,
-                             int duration, String imageUrl, double price, String time) {
+                             int duration, byte[] imageUrl, double price, String time) {
         SQLiteDatabase db = database.getWritableDatabase();
         String query = "INSERT INTO Courses (CourseName, CourseType, CreatedAt, DayOfWeek, Description, Capacity, Duration, ImageUrl, Price, Time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         SQLiteStatement statement = db.compileStatement(query);
@@ -31,7 +31,7 @@ public class CourseRepository {
         statement.bindString(5, description);
         statement.bindLong(6, capacity);
         statement.bindLong(7, duration);
-        statement.bindString(8, imageUrl);
+        statement.bindBlob(8, imageUrl);
         statement.bindDouble(9, price);
         statement.bindString(10, time);
         statement.executeInsert();
@@ -57,7 +57,7 @@ public class CourseRepository {
             String description = cursor.getString(5);
             int capacity = cursor.getInt(6);
             int duration = cursor.getInt(7);
-            String imageUrl = cursor.getString(8);
+            byte[] imageUrl = cursor.getBlob(8);
             double price = cursor.getDouble(9);
             String time = cursor.getString(10);
 
@@ -81,7 +81,7 @@ public class CourseRepository {
     // Update course
     public void updateCourse(int courseId, String courseName, String courseType, String createdAt,
                              String dayOfWeek, String description, int capacity,
-                             int duration, String imageUrl, double price, String time) {
+                             int duration, byte[] imageUrl, double price, String time) {
         SQLiteDatabase db = database.getWritableDatabase();
         String query = "UPDATE Courses SET CourseName = ?, CourseType = ?, CreatedAt = ?, DayOfWeek = ?, Description = ?, Capacity = ?, Duration = ?, ImageUrl = ?, Price = ?, Time = ? WHERE CourseId = ?";
         SQLiteStatement statement = db.compileStatement(query);
@@ -93,7 +93,7 @@ public class CourseRepository {
         statement.bindString(5, description);
         statement.bindLong(6, capacity);
         statement.bindLong(7, duration);
-        statement.bindString(8, imageUrl);
+        statement.bindBlob(8, imageUrl);
         statement.bindDouble(9, price);
         statement.bindString(10, time);
         statement.bindLong(11, courseId);
