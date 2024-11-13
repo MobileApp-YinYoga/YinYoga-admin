@@ -22,14 +22,15 @@ public class NotificationRepository {
     // Thêm thông báo mới vào cơ sở dữ liệu
     public void inseartNotification(Notification notification) {
         try (SQLiteDatabase db = database.getWritableDatabase()) {
-            String query = "INSERT INTO notifications (title, description, time, isRead, createdDate) VALUES (?, ?, ?, ?, ?)";
+            String query = "INSERT INTO notifications (email, title, description, time, isRead, createdDate) VALUES (?, ?, ?, ?, ?, ?)";
             SQLiteStatement statement = db.compileStatement(query);
             statement.clearBindings();
-            statement.bindString(1, notification.getTitle());
-            statement.bindString(2, notification.getDescription());
-            statement.bindString(3, notification.getTime());
-            statement.bindLong(4, notification.isRead() ? 1 : 0);
-            statement.bindString(5, notification.getCreatedDate());
+            statement.bindString(1, notification.getEmail());
+            statement.bindString(2, notification.getTitle());
+            statement.bindString(3, notification.getDescription());
+            statement.bindString(4, notification.getTime());
+            statement.bindLong(5, notification.isRead() ? 1 : 0);
+            statement.bindString(6, notification.getCreatedDate());
             statement.executeInsert();
         }
     }
@@ -47,8 +48,9 @@ public class NotificationRepository {
                         cursor.getString(1),
                         cursor.getString(2),
                         cursor.getString(3),
-                        cursor.getInt(4) == 1,
-                        cursor.getString(5)
+                        cursor.getString(4),
+                        cursor.getInt(5) == 1,
+                        cursor.getString(6)
                 );
                 notifications.add(notification);
             }

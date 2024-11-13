@@ -50,6 +50,7 @@ public class Database extends SQLiteOpenHelper {
     // Bảng notifications
     private static final String TABLE_NOTIFICATIONS = "notifications";
     private static final String COLUMN_NOTIFICATION_ID = "notificationId";
+    private static final String COLUMN_NOTIFICATION_EMAIL = "email";
     private static final String COLUMN_NOTIFICATION_TITLE = "title";
     private static final String COLUMN_NOTIFICATION_DESCRIPTION = "description";
     private static final String COLUMN_NOTIFICATION_TIME = "time";
@@ -135,6 +136,7 @@ public class Database extends SQLiteOpenHelper {
             // Tạo bảng notifications
             String CREATE_NOTIFICATIONS_TABLE = "CREATE TABLE " + TABLE_NOTIFICATIONS + " ("
                     + COLUMN_NOTIFICATION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + COLUMN_NOTIFICATION_EMAIL + " TEXT NOT NULL, "
                     + COLUMN_NOTIFICATION_TITLE + " TEXT NOT NULL, "
                     + COLUMN_NOTIFICATION_DESCRIPTION + " TEXT, "
                     + COLUMN_NOTIFICATION_TIME + " TEXT NOT NULL, "
@@ -150,7 +152,7 @@ public class Database extends SQLiteOpenHelper {
                     + COLUMN_CART_EMAIL + " TEXT NOT NULL, "
                     + COLUMN_CART_INSTANCE_ID + " TEXT NOT NULL)";
             db.execSQL(CREATE_CARTS_TABLE);
-            Log.d("Database", "Table carts created successfully");
+            Log.d("Database", "Table arts created successfully");
 
             // Tạo bảng Booking
             String CREATE_BOOKINGS_TABLE = "CREATE TABLE " + TABLE_BOOKINGS + " ("

@@ -217,13 +217,13 @@ public class NotificationActivity extends AppCompatActivity {
         calendar.add(Calendar.DAY_OF_YEAR, -3); // Ngày trước đó ba ngày
         String threeDaysAgoDate = dateFormat.format(calendar.getTime());
 
-        notificationService.insertNotification(new Notification("Today's Notification 1", "Description 1", "09:00 AM", false, todayDate));
-        notificationService.insertNotification(new Notification("Today's Notification 2", "Description 2", "10:00 AM", true, todayDate));
-        notificationService.insertNotification(new Notification("Today's Notification 3", "Description 3", "11:00 AM", false, todayDate));
+        notificationService.insertNotification(new Notification("trannq2003@gmail.com", "Today's Notification 1", "Description 1", "09:00 AM", false, todayDate));
+        notificationService.insertNotification(new Notification("trannq2003@gmail.com", "Today's Notification 2", "Description 2", "10:00 AM", true, todayDate));
+        notificationService.insertNotification(new Notification("trannq2003@gmail.com", "Today's Notification 3", "Description 3", "11:00 AM", false, todayDate));
 
-        notificationService.insertNotification(new Notification("Old Notification 1", "Description 1", "09:00 AM", true, yesterdayDate));
-        notificationService.insertNotification(new Notification("Old Notification 2", "Description 2", "10:00 AM", true, yesterdayDate));
-        notificationService.insertNotification(new Notification("Old Notification 3", "Description 3", "11:00 AM", false, threeDaysAgoDate));
-        notificationService.insertNotification(new Notification("Old Notification 4", "Description 4", "12:00 PM", false, threeDaysAgoDate));
+        notificationService.insertNotification(new Notification("trannq2003@gmail.com", "Old Notification 1", "Description 1", "09:00 AM", true, yesterdayDate));
+        notificationService.insertNotification(new Notification("trannq2003@gmail.com", "Old Notification 2", "Description 2", "10:00 AM", true, yesterdayDate));
+        notificationService.insertNotification(new Notification("trannq2003@gmail.com", "Old Notification 3", "Description 3", "11:00 AM", false, threeDaysAgoDate));
+        notificationService.insertNotification(new Notification("trannq2003@gmail.com", "Old Notification 4", "Description 4", "12:00 PM", false, threeDaysAgoDate));
     }
 }

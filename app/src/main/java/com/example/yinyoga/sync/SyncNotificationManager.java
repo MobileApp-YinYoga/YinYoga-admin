@@ -39,6 +39,7 @@ public class SyncNotificationManager {
             // Prepare the data for Firestore
             Map<String, Object> notificationMap = new HashMap<>();
 
+            notificationMap.put("email", notification.getEmail());
             notificationMap.put("title", notification.getTitle());
             notificationMap.put("description", notification.getDescription());
             notificationMap.put("time", notification.getTime());
@@ -60,6 +61,7 @@ public class SyncNotificationManager {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             String notificationId = document.getId();
+                            String email = document.getString("email");
                             String title = document.getString("title");
                             String description = document.getString("description");
                             String time = document.getString("time");
@@ -70,6 +72,7 @@ public class SyncNotificationManager {
                             SQLiteDatabase db = dbHelper.getWritableDatabase();
                             ContentValues values = new ContentValues();
                             values.put("notificationId", notificationId);
+                            values.put("email", email);
                             values.put("title", title);
                             values.put("description", description);
                             values.put("time", time);
