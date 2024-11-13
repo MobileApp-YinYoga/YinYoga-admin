@@ -21,7 +21,7 @@ public class CourseRepository {
                              String dayOfWeek, String description, int capacity,
                              int duration, byte[] imageUrl, double price, String time) {
         SQLiteDatabase db = database.getWritableDatabase();
-        String query = "INSERT INTO Courses (CourseName, CourseType, CreatedAt, DayOfWeek, Description, Capacity, Duration, ImageUrl, Price, Time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO courses (courseName, courseType, createdAt, dayOfWeek, description, capacity, duration, imageUrl, price, time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         SQLiteStatement statement = db.compileStatement(query);
         statement.clearBindings();
         statement.bindString(1, courseName);
@@ -42,11 +42,11 @@ public class CourseRepository {
         SQLiteDatabase db = this.database.getReadableDatabase();
         Course course = null;
 
-        String query = "SELECT * FROM Courses WHERE CourseId = ?";
+        String query = "SELECT * FROM courses WHERE courseId = ?";
         Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(courseId)});
 
         if (cursor != null && cursor.moveToFirst()) {
-            Log.d("Database", "CourseId: " + cursor.getInt(0) + ", CourseName: " + cursor.getString(1));
+            Log.d("Database", "courseId: " + cursor.getInt(0) + ", courseName: " + cursor.getString(1));
 
             // Retrieve values from cursor
             int id = cursor.getInt(0);
@@ -75,7 +75,7 @@ public class CourseRepository {
     // Get all courses
     public Cursor getAllCourses() {
         SQLiteDatabase db = database.getReadableDatabase();
-        return db.rawQuery("SELECT * FROM Courses", null);
+        return db.rawQuery("SELECT * FROM courses", null);
     }
 
     // Update course
@@ -83,7 +83,7 @@ public class CourseRepository {
                              String dayOfWeek, String description, int capacity,
                              int duration, byte[] imageUrl, double price, String time) {
         SQLiteDatabase db = database.getWritableDatabase();
-        String query = "UPDATE Courses SET CourseName = ?, CourseType = ?, CreatedAt = ?, DayOfWeek = ?, Description = ?, Capacity = ?, Duration = ?, ImageUrl = ?, Price = ?, Time = ? WHERE CourseId = ?";
+        String query = "UPDATE courses SET courseName = ?, courseType = ?, createdAt = ?, dayOfWeek = ?, description = ?, capacity = ?, duration = ?, imageUrl = ?, price = ?, time = ? WHERE courseId = ?";
         SQLiteStatement statement = db.compileStatement(query);
         statement.clearBindings();
         statement.bindString(1, courseName);
@@ -103,7 +103,7 @@ public class CourseRepository {
     // Delete course
     public void deleteCourse(int courseId) {
         SQLiteDatabase db = database.getWritableDatabase();
-        String query = "DELETE FROM Courses WHERE CourseId = ?";
+        String query = "DELETE FROM courses WHERE courseId = ?";
         SQLiteStatement statement = db.compileStatement(query);
         statement.bindLong(1, courseId);
         statement.executeUpdateDelete();

@@ -39,6 +39,7 @@ import com.example.yinyoga.models.ClassInstance;
 import com.example.yinyoga.models.Course;
 import com.example.yinyoga.service.ClassInstanceService;
 import com.example.yinyoga.service.CourseService;
+import com.example.yinyoga.sync.SyncClassInstanceManager;
 import com.example.yinyoga.utils.DialogHelper;
 import com.example.yinyoga.utils.ImageHelper;
 
@@ -73,6 +74,7 @@ public class ManageClassInstancesFragment extends Fragment {
     private List<String> arrayCourseSpinner;
     private ImageView imgGallery;
     private byte[] imageBytes;
+    SyncClassInstanceManager syncClassInstanceManager;
 
     @Nullable
     @Override
@@ -87,6 +89,7 @@ public class ManageClassInstancesFragment extends Fragment {
 
         DialogHelper.showLoadingDialog(this.getContext(), "Loading all class instances...");
 
+        syncClassInstanceManager = new SyncClassInstanceManager(requireContext());
         initViews(view);
         setupRecyclerView();
         loadInstancesFromDatabase();
@@ -492,7 +495,7 @@ public class ManageClassInstancesFragment extends Fragment {
                 byte[] imageUrl = cursor.getBlob(4);
                 String courseName = cursor.getString(5);
 
-                // Tạo đối tượng Course và gán CourseId, CourseName
+                // Tạo đối tượng Course và gán courseId, courseName
                 Course course = new Course();
                 course.setCourseId(courseId);
                 course.setCourseName(courseName);
@@ -500,11 +503,13 @@ public class ManageClassInstancesFragment extends Fragment {
                 // Thêm instance vào danh sách
                 instanceLists.add(new ClassInstance(instanceId, course, date, teacher, imageUrl));
             } while (cursor.moveToNext());
+            syncClassInstanceManager.syncClassInstanceToFirestore();
         } else {
             byte[] img = ImageHelper.convertDrawableToByteArray(ManageClassInstancesFragment.this.requireContext(), R.drawable.bg_course);
             instanceService.addClassInstance("YOGA101", 1,"January, 30th 2024", "John Doe", img);
             instanceService.addClassInstance("YOGA102", 1, "February, 15th 2024", "Jane Smith", img);
             instanceService.addClassInstance("YOGA103", 1,"March, 5st 2024", "Albus Dumbledore", img);
+            syncClassInstanceManager.syncClassInstanceFromFirestore();
         }
 
         if (cursor != null) {
@@ -555,7 +560,7 @@ public class ManageClassInstancesFragment extends Fragment {
 
         arrayCourseSpinner = new ArrayList<>();
 
-        // Lấy CourseId - CourseName vào array
+        // Lấy courseId - courseName vào array
         fillToSpinnerCourseIdPopup();
         // Khi nhấp vào ô ngày
         edDate.setOnClickListener(v -> showDayPickerDialog(getDayFromCourse()));
@@ -656,7 +661,7 @@ public class ManageClassInstancesFragment extends Fragment {
 
     private void fillToSpinnerCourseIdPopup() {
         arrayCourseSpinner.clear();
-        // Khởi tạo danh sách để lưu các giá trị CourseId - CourseName
+        // Khởi tạo danh sách để lưu các giá trị courseId - courseName
         arrayCourseSpinner = new ArrayList<>();
 
         // Lấy dữ liệu từ courseService
@@ -665,10 +670,10 @@ public class ManageClassInstancesFragment extends Fragment {
         if (cursor != null && cursor.moveToFirst()) {
             // Nếu có dữ liệu, nạp vào danh sách
             do {
-                int id = cursor.getInt(0); // Lấy CourseId
-                String courseName = cursor.getString(1); // Lấy CourseName
+                int id = cursor.getInt(0); // Lấy courseId
+                String courseName = cursor.getString(1); // Lấy courseName
 
-                // Thêm CourseId - CourseName vào danh sách
+                // Thêm courseId - courseName vào danh sách
                 arrayCourseSpinner.add(id + " - " + courseName);
 
             } while (cursor.moveToNext());

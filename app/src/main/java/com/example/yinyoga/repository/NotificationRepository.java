@@ -22,7 +22,7 @@ public class NotificationRepository {
     // Thêm thông báo mới vào cơ sở dữ liệu
     public void inseartNotification(Notification notification) {
         try (SQLiteDatabase db = database.getWritableDatabase()) {
-            String query = "INSERT INTO Notifications (Title, Description, Time, IsRead, CreatedDate) VALUES (?, ?, ?, ?, ?)";
+            String query = "INSERT INTO notifications (title, description, time, isRead, createdDate) VALUES (?, ?, ?, ?, ?)";
             SQLiteStatement statement = db.compileStatement(query);
             statement.clearBindings();
             statement.bindString(1, notification.getTitle());
@@ -37,7 +37,7 @@ public class NotificationRepository {
     // Lấy tất cả thông báo từ cơ sở dữ liệu
     public List<Notification> getAllNotifications() {
         List<Notification> notifications = new ArrayList<>();
-        String query = "SELECT * FROM Notifications ORDER BY CreatedDate DESC";
+        String query = "SELECT * FROM notifications ORDER BY createdDate DESC";
 
         try (SQLiteDatabase db = database.getReadableDatabase();
              Cursor cursor = db.rawQuery(query, null)) {
@@ -60,22 +60,22 @@ public class NotificationRepository {
     public void markAllAsRead() {
         try (SQLiteDatabase db = database.getWritableDatabase()) {
             ContentValues values = new ContentValues();
-            values.put("IsRead", 1);
-            db.update("Notifications", values, null, null);
+            values.put("isRead", 1);
+            db.update("notifications", values, null, null);
         }
     }
 
     // Xóa tất cả thông báo cũ hơn 1 năm
     public void deleteOldNotifications(String oneYearAgoDate) {
         try (SQLiteDatabase db = database.getWritableDatabase()) {
-            db.delete("Notifications", "CreatedDate < ?", new String[]{oneYearAgoDate});
+            db.delete("notifications", "createdDate < ?", new String[]{oneYearAgoDate});
         }
     }
 
     // Xóa tất cả thông báo
     public void clearAllNotifications() {
         try (SQLiteDatabase db = database.getWritableDatabase()) {
-            db.delete("Notifications", null, null);
+            db.delete("notifications", null, null);
         }
     }
 }

@@ -25,6 +25,7 @@ import com.example.yinyoga.R;
 import com.example.yinyoga.adapters.NotificationAdapter;
 import com.example.yinyoga.models.Notification;
 import com.example.yinyoga.service.NotificationService;
+import com.example.yinyoga.sync.SyncNotificationManager;
 import com.example.yinyoga.utils.DialogHelper;
 
 import java.text.SimpleDateFormat;
@@ -40,8 +41,8 @@ public class NotificationActivity extends AppCompatActivity {
     private NotificationAdapter newAdapter, beforeAdapter;
     private List<Notification> newNotifications, beforeNotifications;
     private ImageView menuOptions, backHome;
-
     private NotificationService notificationService;
+    SyncNotificationManager syncNotificationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +77,7 @@ public class NotificationActivity extends AppCompatActivity {
 
         setupRecyclerView();
 
+        syncNotificationManager = new SyncNotificationManager(this);
         DialogHelper.showLoadingDialog(this, "Loading notifications...");
         loadNotifications();
         DialogHelper.dismissLoadingDialog();
@@ -187,6 +189,9 @@ public class NotificationActivity extends AppCompatActivity {
         if (allNotifications.isEmpty()) {
             addSampleNotifications();
             allNotifications = notificationService.getAllNotifications();
+            syncNotificationManager.syncNotificationsFromFirestore();
+        } else {
+            syncNotificationManager.syncNotificationsToFirestore();
         }
 
         for (Notification notification : allNotifications) {

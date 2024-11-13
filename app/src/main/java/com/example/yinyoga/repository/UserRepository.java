@@ -22,7 +22,7 @@ public class UserRepository {
     // Thêm người dùng mới
     public void insertUser(String username, String fullName, String email, String password, int roleId) {
         SQLiteDatabase db = database.getWritableDatabase();
-        String query = "INSERT INTO Users (Username, FullName, Email, Password, RoleId) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO users (username, fullName, email, password, roleId) VALUES (?, ?, ?, ?, ?)";
         SQLiteStatement statement = db.compileStatement(query);
         statement.clearBindings();
         statement.bindString(1, username);
@@ -36,17 +36,17 @@ public class UserRepository {
     // Lấy người dùng từ email
     public User getUserByEmail(String email) {
         SQLiteDatabase db = database.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM Users WHERE Email = ?", new String[]{email}); // Chú ý rằng cần sử dụng chữ "Email" hoa
+        Cursor cursor = db.rawQuery("SELECT * FROM users WHERE email = ?", new String[]{email}); // Chú ý rằng cần sử dụng chữ "Email" hoa
 
         if (cursor.moveToFirst()) {
             int roleId = cursor.getInt(4); // Lấy roleId từ cursor
             Role role = getRoleById(roleId); // Gọi hàm lấy Role dựa trên roleId
 
             User user = new User(
-                    cursor.getString(0),  // Username
+                    cursor.getString(0),  // username
                     cursor.getString(1),  // Full Name
-                    cursor.getString(2),  // Email
-                    cursor.getString(3),  // Password
+                    cursor.getString(2),  // email
+                    cursor.getString(3),  // password
                     role                   // Role được lấy từ database
             );
             cursor.close();
@@ -59,7 +59,7 @@ public class UserRepository {
     // Hàm lấy đối tượng Role từ roleId
     private Role getRoleById(int roleId) {
         SQLiteDatabase db = database.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM Roles WHERE RoleId = ?", new String[]{String.valueOf(roleId)});
+        Cursor cursor = db.rawQuery("SELECT * FROM roles WHERE roleId = ?", new String[]{String.valueOf(roleId)});
         if (cursor.moveToFirst()) {
             Role role = new Role(
                     cursor.getInt(0),   // roleId
@@ -78,7 +78,7 @@ public class UserRepository {
         SQLiteDatabase db = database.getReadableDatabase();
         User user = null;
 
-        String query = "SELECT Username, FullName, Email, Password, RoleId FROM Users WHERE Username = ?";
+        String query = "SELECT username, fullName, email, password, roleId FROM users WHERE username = ?";
         Cursor cursor = db.rawQuery(query, new String[]{userId});
 
         if (cursor != null) {
@@ -105,13 +105,13 @@ public class UserRepository {
     // Lấy tất cả người dùng
     public Cursor getAllUsers() {
         SQLiteDatabase db = database.getReadableDatabase();
-        return db.rawQuery("SELECT * FROM Users", null);
+        return db.rawQuery("SELECT * FROM users", null);
     }
 
     // Cập nhật thông tin người dùng
     public void updateUser(String username, String fullName, String email, String oldUsername) {
         SQLiteDatabase db = database.getWritableDatabase();
-        String query = "UPDATE Users SET Username = ?, FullName = ?, Email = ? WHERE Username = ?";
+        String query = "UPDATE users SET username = ?, fullName = ?, email = ? WHERE username = ?";
         SQLiteStatement statement = db.compileStatement(query);
         statement.clearBindings();
         statement.bindString(1, username);
@@ -124,7 +124,7 @@ public class UserRepository {
     // Cập nhật mật khẩu
     public void updatePassword(String username, String newPassword) {
         SQLiteDatabase db = database.getWritableDatabase();
-        String query = "UPDATE Users SET Password = ? WHERE Username = ?";
+        String query = "UPDATE users SET password = ? WHERE username = ?";
         SQLiteStatement statement = db.compileStatement(query);
         statement.clearBindings();
         statement.bindString(1, newPassword);
@@ -135,7 +135,7 @@ public class UserRepository {
     // Xóa người dùng
     public void deleteUser(String username) {
         SQLiteDatabase db = database.getWritableDatabase();
-        String query = "DELETE FROM Users WHERE Username = ?";
+        String query = "DELETE FROM users WHERE username = ?";
         SQLiteStatement statement = db.compileStatement(query);
         statement.bindString(1, username);
         statement.executeUpdateDelete();

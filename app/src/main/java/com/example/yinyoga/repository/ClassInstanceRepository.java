@@ -23,7 +23,7 @@ public class ClassInstanceRepository {
     // Thêm phiên học mới
     public void insertClassInstance(String instanceId, int courseId, String date, String teacher, byte[] imageUrl) {
         SQLiteDatabase db = database.getWritableDatabase();
-        String query = "INSERT INTO ClassInstances (InstanceId, CourseId, Date, Teacher, ImageUrl) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO classInstances (instanceId, courseId, date, teacher, imageUrl) VALUES (?, ?, ?, ?, ?)";
         SQLiteStatement statement = db.compileStatement(query);
         statement.clearBindings();
         statement.bindString(1, instanceId);
@@ -37,15 +37,15 @@ public class ClassInstanceRepository {
     // Lấy tất cả các phiên học
     public Cursor getAllClassInstances() {
         SQLiteDatabase db = database.getReadableDatabase();
-        return db.rawQuery("SELECT ClassInstances.*, Courses.CourseName " +
-                "FROM ClassInstances " +
-                "JOIN Courses ON ClassInstances.CourseId = Courses.CourseId", null);
+        return db.rawQuery("SELECT classInstances.*, courses.courseName " +
+                "FROM classInstances " +
+                "JOIN courses ON classInstances.courseId = courses.courseId", null);
     }
 
     // Cập nhật phiên học
     public void updateClassInstance(String instanceId, int courseId, String date, String teacher, byte[] imageUrl) {
         SQLiteDatabase db = database.getWritableDatabase();
-        String query = "UPDATE ClassInstances SET CourseId = ?, Date = ?, Teacher = ?, ImageUrl = ? WHERE InstanceId = ?";
+        String query = "UPDATE classInstances SET courseId = ?, date = ?, teacher = ?, imageUrl = ? WHERE instanceId = ?";
         SQLiteStatement statement = db.compileStatement(query);
         statement.clearBindings();
         statement.bindLong(1, courseId);
@@ -59,7 +59,7 @@ public class ClassInstanceRepository {
     // Xóa phiên học
     public void deleteClassInstance(String instanceId) {
         SQLiteDatabase db = database.getWritableDatabase();
-        String query = "DELETE FROM ClassInstances WHERE InstanceId = ?";
+        String query = "DELETE FROM classInstances WHERE instanceId = ?";
         SQLiteStatement statement = db.compileStatement(query);
         statement.bindString(1, instanceId);
         statement.executeUpdateDelete();
@@ -70,16 +70,16 @@ public class ClassInstanceRepository {
         SQLiteDatabase db = database.getReadableDatabase();
         ClassInstance instance = null;
 
-        String query = "SELECT * FROM ClassInstances WHERE InstanceId = ?";
+        String query = "SELECT * FROM classInstances WHERE instanceId = ?";
         Cursor cursor = db.rawQuery(query, new String[]{instanceId});
 
         try {
             if (cursor != null && cursor.moveToFirst()) {
-                // Đảm bảo kiểm tra kỹ vị trí của các cột trong bảng ClassInstances
-                int courseId = cursor.getInt(cursor.getColumnIndexOrThrow("CourseId"));
-                String date = cursor.getString(cursor.getColumnIndexOrThrow("Date"));
-                String teacher = cursor.getString(cursor.getColumnIndexOrThrow("Teacher"));
-                byte[] imageUrl = cursor.getBlob(cursor.getColumnIndexOrThrow("ImageUrl"));
+                // Đảm bảo kiểm tra kỹ vị trí của các cột trong bảng classInstances
+                int courseId = cursor.getInt(cursor.getColumnIndexOrThrow("courseId"));
+                String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
+                String teacher = cursor.getString(cursor.getColumnIndexOrThrow("teacher"));
+                byte[] imageUrl = cursor.getBlob(cursor.getColumnIndexOrThrow("imageUrl"));
 
                 // Tạo đối tượng Course
                 Course course = new Course();
@@ -104,13 +104,13 @@ public class ClassInstanceRepository {
         List<ClassInstance> classInstances = new ArrayList<>();
         SQLiteDatabase db = database.getReadableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT * FROM ClassInstances WHERE courseId = ?", new String[]{String.valueOf(courseId)});
+        Cursor cursor = db.rawQuery("SELECT * FROM classInstances WHERE courseId = ?", new String[]{String.valueOf(courseId)});
         if (cursor.moveToFirst()) {
             do {
-                String instanceId =  cursor.getString(cursor.getColumnIndexOrThrow("InstanceId"));
-                String date = cursor.getString(cursor.getColumnIndexOrThrow("Date"));
-                String teacher = cursor.getString(cursor.getColumnIndexOrThrow("Teacher"));
-                byte[] imageUrl = cursor.getBlob(cursor.getColumnIndexOrThrow("ImageUrl"));
+                String instanceId =  cursor.getString(cursor.getColumnIndexOrThrow("instanceId"));
+                String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
+                String teacher = cursor.getString(cursor.getColumnIndexOrThrow("teacher"));
+                byte[] imageUrl = cursor.getBlob(cursor.getColumnIndexOrThrow("imageUrl"));
 
                 // Tạo đối tượng Course
                 Course course = new Course();
