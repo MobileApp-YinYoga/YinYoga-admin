@@ -2,19 +2,19 @@ package com.example.yinyoga.sync;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Base64;
 import android.util.Log;
 
 import com.example.yinyoga.database.Database;
+import com.example.yinyoga.models.ClassInstance;
 import com.example.yinyoga.repository.ClassInstanceRepository;
-import com.example.yinyoga.repository.CourseRepository;
 import com.example.yinyoga.utils.ImageHelper;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SyncClassInstanceManager {
@@ -28,6 +28,7 @@ public class SyncClassInstanceManager {
         dbHelper = new Database(context);
         this.classInstanceRepository = new ClassInstanceRepository(context);
     }
+
     public void resetInFirestore() {
         // Reset classInstances collection
         db.collection("classInstances")
@@ -69,32 +70,23 @@ public class SyncClassInstanceManager {
 
     public void syncClassInstanceToFirestore() {
         // Query your SQLite database to get the data
-        Cursor cursor = classInstanceRepository.getAllClassInstances();
+        List<ClassInstance> classInstanceList = classInstanceRepository.getAllClassInstances();
 
-        if (cursor != null && cursor.moveToFirst()) {
-            do {
-                String instanceId = cursor.getString(0);
-                int courseId = cursor.getInt(1);
-                String date = cursor.getString(2);
-                String teacher = cursor.getString(3);
-                byte[] imageUrl = cursor.getBlob(4);
+        for (ClassInstance classInstance : classInstanceList) {
+            byte[] compressedImage = ImageHelper.compressImage(classInstance.getImageUrl());
+            // Prepare the data for Firestore
+            Map<String, Object> classInstanceMap = new HashMap<>();
+            classInstanceMap.put("instanceId", classInstance.getInstanceId());
+            classInstanceMap.put("courseId", classInstance.getCourse().getCourseId());
+            classInstanceMap.put("date", classInstance.getDate());
+            classInstanceMap.put("teacher", classInstance.getTeacher());
+            classInstanceMap.put("imageUrl", Base64.encodeToString(compressedImage, Base64.DEFAULT));
 
-                byte[] compressedImage = ImageHelper.compressImage(imageUrl);
-                // Prepare the data for Firestore
-                Map<String, Object> classInstanceMap = new HashMap<>();
-                classInstanceMap.put("instanceId", instanceId);
-                classInstanceMap.put("courseId", courseId);
-                classInstanceMap.put("date", date);
-                classInstanceMap.put("teacher", teacher);
-                classInstanceMap.put("imageUrl", Base64.encodeToString(compressedImage, Base64.DEFAULT));
-
-                // Push to Firestore
-                db.collection("classInstances").document(instanceId)
-                        .set(classInstanceMap)
-                        .addOnSuccessListener(aVoid -> Log.d("SyncClassInstanceManager", "Class instance synced to Firestore: " + instanceId))
-                        .addOnFailureListener(e -> Log.w("SyncClassInstanceManager", "Error syncing data", e));
-            } while (cursor.moveToNext());
-            cursor.close();
+            // Push to Firestore
+            db.collection("classInstances").document(classInstance.getInstanceId())
+                    .set(classInstanceMap)
+                    .addOnSuccessListener(aVoid -> Log.d("SyncClassInstanceManager", "Class instance synced to Firestore: " + classInstance.getInstanceId()))
+                    .addOnFailureListener(e -> Log.w("SyncClassInstanceManager", "Error syncing data", e));
         }
     }
 
@@ -132,6 +124,7 @@ public class SyncClassInstanceManager {
                     }
                 });
     }
+
     public void deleteClassInstance(String instanceId) {
         // Delete the record from SQLite first
         SQLiteDatabase sqliteDb = dbHelper.getWritableDatabase(); // Renamed for clarity

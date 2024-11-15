@@ -39,7 +39,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         holder.description.setText(notification.getDescription());
         holder.time.setText(notification.getCreatedDate());
 
-        // Kiểm tra trạng thái `isRead` để thay đổi màu nền
         if (notification.isRead()) {
             holder.itemView.setBackgroundColor(context.getResources().getColor(android.R.color.white));
         } else {

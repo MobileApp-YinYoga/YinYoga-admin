@@ -18,9 +18,7 @@ public class UserSessionManager {
     private static final String KEY_ROLE = "role";
     private static final String KEY_IS_LOGGED_IN = "is_logged_in";
     private static final String KEY_IS_REMEMBERED = "isRemembered";
-
-    private static final String SESSION_UPDATE_ACTION = "SESSION_UPDATED"; // Action để phát tín hiệu cập nhật session
-
+    private static final String SESSION_UPDATE_ACTION = "SESSION_UPDATED";
     private static UserSessionManager instance;
     private final SharedPreferences sharedPreferences;
     private final SharedPreferences.Editor editor;
@@ -44,7 +42,6 @@ public class UserSessionManager {
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
-    // Lưu phiên đăng nhập
     public void saveLoginState(String username, String fullName, String email, String password, String role, boolean isRememberMe) {
         editor.putString(KEY_USERNAME, username);
         editor.putString(KEY_FULL_NAME, fullName);
@@ -60,10 +57,9 @@ public class UserSessionManager {
         }
 
         editor.apply();
-        sendSessionUpdateBroadcast();  // Phát tín hiệu sau khi lưu session
+        sendSessionUpdateBroadcast();
     }
 
-    // Phương thức cập nhật từng thông tin cá nhân trong session
     public void updateUsername(String username) {
         editor.putString(KEY_USERNAME, username);
         editor.apply();
@@ -148,6 +144,6 @@ public class UserSessionManager {
 
         editor.putBoolean(KEY_IS_LOGGED_IN, false);
         editor.apply();
-        sendSessionUpdateBroadcast();  // Phát tín hiệu sau khi đăng xuất
+        sendSessionUpdateBroadcast();
     }
 }

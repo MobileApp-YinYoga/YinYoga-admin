@@ -13,9 +13,9 @@ import com.example.yinyoga.utils.DialogHelper;
 import java.util.List;
 
 public class DateAdapter extends RecyclerView.Adapter<DateAdapter.DateViewHolder> {
-    private List<String> dateList;
-    private DialogHelper.OnDateSelectedListener listener;
-    private Dialog dialog;
+    private final List<String> dateList;
+    private final DialogHelper.OnDateSelectedListener listener;
+    private final Dialog dialog;
 
     public DateAdapter(List<String> dateList, DialogHelper.OnDateSelectedListener listener, Dialog dialog) {
         this.dateList = dateList;
@@ -36,9 +36,7 @@ public class DateAdapter extends RecyclerView.Adapter<DateAdapter.DateViewHolder
         holder.dateTextView.setText(date);
 
         holder.itemView.setOnClickListener(v -> {
-            // Gọi listener khi người dùng chọn ngày
             listener.onDateSelected(date);
-            // Đóng dialog sau khi chọn
             dialog.dismiss();
         });
     }

@@ -44,13 +44,9 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.white));
         }
 
-        // Initialize views
         initView();
-
-        // Back button action
         ic_back.setOnClickListener(v -> finish());
 
-        // Continue button action
         btnSubmit.setOnClickListener(v -> {
             String action = btnSubmit.getText().toString().trim();
             if (action.equals("Verify")) {
@@ -114,11 +110,15 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             errorText.setText("Email cannot be empty.");
             errorText.setVisibility(View.VISIBLE);
             return false;
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        }
+
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             errorText.setText("Invalid email format.");
             errorText.setVisibility(View.VISIBLE);
             return false;
-        } else if (!userService.checkEmailExists(email)) {
+        }
+
+        if (!userService.checkEmailExists(email)) {
             errorText.setText("This email is not registered.");
             errorText.setVisibility(View.VISIBLE);
             return false;
@@ -126,6 +126,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
         currentUser = userService.getUserByMail(email);
         errorText.setVisibility(View.GONE);
+
         return true;
     }
 
@@ -161,6 +162,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
     private boolean isValidPassword(String newPassword, String confirmPassword) {
         boolean isValid = true;
+
         // Kiểm tra độ dài mật khẩu mới
         if (newPassword.isEmpty() || newPassword.length() < 6) {
             errorText.setText("New password must be at least 6 characters.");

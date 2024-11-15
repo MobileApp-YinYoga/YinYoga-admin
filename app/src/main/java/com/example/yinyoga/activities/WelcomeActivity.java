@@ -32,17 +32,14 @@ public class WelcomeActivity extends AppCompatActivity {
             getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.white));
         }
 
-        // Ánh xạ nút Get Started
         Button getStartButton = findViewById(R.id.getStart);
 
-        // Thiết lập sự kiện nhấn nút
         getStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Chuyển sang LoginActivity
                 Intent intent = new Intent(WelcomeActivity.this, LoginActivity.class);
                 startActivity(intent);
-                finish(); // Kết thúc WelcomeActivity
+                finish();
             }
         });
     }

@@ -27,7 +27,6 @@ public class NotificationService {
         notificationRepository.clearAllNotifications();
     }
 
-    // Phương thức để kiểm tra xem ngày thông báo có phải là ngày hôm nay không
     public boolean isToday(String createdDate) {
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
@@ -47,23 +46,19 @@ public class NotificationService {
         }
     }
 
-    // Lấy tất cả thông báo
     public List<Notification> getAllNotifications() {
         return notificationRepository.getAllNotifications();
     }
 
-    // Đánh dấu tất cả thông báo là đã đọc
     public void markAllAsRead() {
         notificationRepository.markAllAsRead();
     }
 
-    // Xóa thông báo cũ hơn 1 năm
     public void deleteOldNotifications() {
         String oneYearAgoDate = getOneYearAgoDate();
         notificationRepository.deleteOldNotifications(oneYearAgoDate);
     }
 
-    // Lấy ngày cách đây 1 năm dưới định dạng yyyy-MM-dd
     private String getOneYearAgoDate() {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.YEAR, -1);

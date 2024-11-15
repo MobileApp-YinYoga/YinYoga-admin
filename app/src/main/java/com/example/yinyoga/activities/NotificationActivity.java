@@ -54,13 +54,10 @@ public class NotificationActivity extends AppCompatActivity {
             return insets;
         });
 
-
-        // Thiết lập màu nền cho thanh trạng thái thành màu trắng
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.white));
         }
 
-        // Thiết lập biểu tượng thanh trạng thái thành màu đen (light status bar)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             View decorView = getWindow().getDecorView();
             decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
@@ -72,7 +69,7 @@ public class NotificationActivity extends AppCompatActivity {
         backHome.setOnClickListener(v -> {
             Intent intent = new Intent(NotificationActivity.this, MainActivity.class);
             startActivity(intent);
-            finish(); // Kết thúc NotificationActivity để quay lại MainActivity mà không quay lại NotificationActivity khi nhấn back
+            finish();
         });
 
         setupRecyclerView();
@@ -84,15 +81,12 @@ public class NotificationActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        // Khởi tạo NotificationService
         notificationService = new NotificationService(this);
         notificationService.deleteOldNotifications(); // Xóa thông báo cũ hơn 1 năm
 
-        // Khởi tạo RecyclerView và các thành phần khác
         recyclerNewNotifications = findViewById(R.id.recycler_new_notifications);
         recyclerBeforeNotifications = findViewById(R.id.recycler_before_notifications);
 
-        // Khởi tạo ImageView cho backHome và menuOptions
         backHome = findViewById(R.id.ic_back);
         menuOptions = findViewById(R.id.menu_options_search);
     }
@@ -113,19 +107,17 @@ public class NotificationActivity extends AppCompatActivity {
     }
 
     private void showCustomMenu(View anchor) {
-        // Inflate layout cho PopupWindow
+        // Inflate layout for PopupWindow
         View popupView = LayoutInflater.from(this).inflate(R.layout.menu_notification, null);
 
-        // Tạo PopupWindow
         PopupWindow popupWindow = new PopupWindow(popupView,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 true);
 
-        // Cài đặt background để bấm ngoài Popup sẽ tự động đóng
+        // Set background to close the Popup when clicking outside
         popupWindow.setOutsideTouchable(true);
 
-        // Thiết lập các sự kiện cho các item trong menu
         TextView tvMarkAllRead = popupView.findViewById(R.id.tv_mark_all_read);
         TextView tvClearAll = popupView.findViewById(R.id.tv_clear_all);
 
@@ -149,7 +141,7 @@ public class NotificationActivity extends AppCompatActivity {
             popupWindow.dismiss();
         });
 
-        // Hiển thị PopupWindow tại vị trí của anchor
+        // Show PopupWindow at the position of anchor
         popupWindow.showAsDropDown(anchor, 0, 10);
     }
 

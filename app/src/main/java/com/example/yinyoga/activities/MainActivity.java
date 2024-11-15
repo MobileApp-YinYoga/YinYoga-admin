@@ -38,8 +38,6 @@ public class MainActivity extends AppCompatActivity {
     private Database database;
     private TextView username, roleName;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,28 +59,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        // Khởi tạo database
+        // Initialize the database
         database = new Database(this);
         SQLiteDatabase db = database.getWritableDatabase();
 
-        // Khởi tạo các view từ layout
+        // Initialize views from the layout
         drawerLayout = findViewById(R.id.drawer_layout);
         menuIcon = findViewById(R.id.menu_icon);
         notificationIcon = findViewById(R.id.notification_icon);
         navigationView = findViewById(R.id.navigation_view);
 
-        // Thiết lập Drawer Toggle để mở và đóng thanh điều hướng
+        // Set up the Drawer Toggle to open and close the navigation bar
         toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        // Truy cập vào NavigationView
+        // Access the NavigationView
         navigationView = findViewById(R.id.navigation_view);
 
-        // Lấy header view từ NavigationView
+        // Get the header view from the NavigationView
         View headerView = navigationView.getHeaderView(0);
 
-        // Truy cập vào các TextView trong nav_header
+        // Access TextViews in nav_header
         username = headerView.findViewById(R.id.user_name);
         roleName = headerView.findViewById(R.id.user_role);
     }
@@ -90,49 +88,47 @@ public class MainActivity extends AppCompatActivity {
     private void authentication(Bundle savedInstanceState) {
         UserSessionManager sessionManager = new UserSessionManager(this);
 
-        // Kiểm tra nếu người dùng đã đăng nhập
+        // Check if the user is logged in
         if (sessionManager.isLoggedIn()) {
             username.setText(sessionManager.getUsername());
             roleName.setText(sessionManager.getRole());
 
-            setEventMenu(savedInstanceState); // Thiết lập sự kiện cho menu (nếu có)
+            setEventMenu(savedInstanceState);
         } else {
-            // Nếu chưa đăng nhập, chuyển về LoginActivity
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
-            finish(); // Đóng MainActivity để người dùng không quay lại
+            finish();
         }
     }
-
 
     private void setEventMenu(Bundle savedInstanceState) {
         menuIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                    drawerLayout.closeDrawer(GravityCompat.START); // Đóng nếu đang mở
+                    drawerLayout.closeDrawer(GravityCompat.START); // Close the navigation bar
                 } else {
-                    drawerLayout.openDrawer(GravityCompat.START); // Mở thanh điều hướng
+                    drawerLayout.openDrawer(GravityCompat.START); // Open the navigation bar
                 }
             }
         });
 
-        // Thiết lập sự kiện khi chọn item từ thanh điều hướng
+        // Set event when selecting an item from the navigation bar
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Fragment selectedFragment = null;
-                int id = item.getItemId(); // Lấy id của item được chọn
+                int id = item.getItemId();
 
                 if (id == R.id.nav_manage_classes) {
                     selectedFragment = new ManageCoursesFragment();
                 } else if (id == R.id.nav_manage_class_instances) {
                     selectedFragment = new ManageClassInstancesFragment();
-                }else if (id == R.id.nav_profile) {
-                    // Khởi chạy Activity cho trang hồ sơ người dùng
+                } else if (id == R.id.nav_profile) {
+                    // Start the Activity for the user profile page
                     Intent intent = new Intent(MainActivity.this, ManageUserActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_notifications) {
-                    // Khởi chạy Activity cho trang thông báo
+                    // Start the Activity for the notification page
                     Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_logout) {
@@ -142,40 +138,36 @@ public class MainActivity extends AppCompatActivity {
                             new DialogHelper.DeleteConfirmationListener() {
                                 @Override
                                 public void onConfirm() {
-                                    // Thực hiện đăng xuất khi người dùng xác nhận
                                     UserSessionManager sessionManager = new UserSessionManager(MainActivity.this);
                                     sessionManager.logout();
 
-                                    // Điều hướng về LoginActivity
                                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(intent);
-                                    finish(); // Đóng MainActivity sau khi đăng xuất
+                                    finish();
                                 }
                             }
                     );
                 }
 
-                // Thay thế Fragment trong FrameLayout nếu có Fragment được chọn
+                // Replace the Fragment in the FrameLayout if a Fragment is selected
                 if (selectedFragment != null) {
                     replaceFragment(selectedFragment);
                 }
 
-                drawerLayout.closeDrawer(GravityCompat.START); // Đóng thanh điều hướng sau khi chọn
+                drawerLayout.closeDrawer(GravityCompat.START); // Close the navigation bar
                 return true;
             }
         });
 
-        // Mặc định mở ManageCoursesFragment khi mở ứng dụng
+        // By default, open the ManageCoursesFragment when the app is opened
         if (savedInstanceState == null) {
             replaceFragment(new ManageCoursesFragment()); // Hiển thị ManageCoursesFragment mặc định
         }
-
     }
 
 
     private void setEventNotification() {
-        // Xử lý sự kiện khi nhấn vào biểu tượng chuông thông báo
         notificationIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -185,7 +177,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // Phương thức để thay thế Fragment trong FrameLayout
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
