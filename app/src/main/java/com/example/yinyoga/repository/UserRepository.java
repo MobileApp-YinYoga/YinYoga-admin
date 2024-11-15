@@ -18,7 +18,10 @@ public class UserRepository {
         this.database = new Database(context);
         this.roleRepository = new RoleRepository(context);
     }
+    public void resetDatabase() {
+        database.resetDatabase();
 
+    }
     // Thêm người dùng mới
     public void insertUser(String username, String fullName, String email, String password, int roleId) {
         SQLiteDatabase db = database.getWritableDatabase();

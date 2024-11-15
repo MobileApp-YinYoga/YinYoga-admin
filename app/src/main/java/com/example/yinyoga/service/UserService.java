@@ -6,6 +6,7 @@ import android.os.Build;
 
 import com.example.yinyoga.models.User;
 import com.example.yinyoga.repository.UserRepository;
+import com.example.yinyoga.sync.SyncClassInstanceManager;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -22,6 +23,10 @@ public class UserService {
     public UserService(Context context) {
         this.userRepository = new UserRepository(context);
     }
+    public void resetDatabase(){
+        userRepository.resetDatabase();
+    }
+
 
     // Thêm người dùng mới
     public void addUser(String username, String fullName, String email, String password, int roleId) {

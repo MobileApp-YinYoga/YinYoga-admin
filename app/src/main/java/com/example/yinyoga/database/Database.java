@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -86,27 +87,8 @@ public class Database extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         try {
-            // Tạo bảng roles
-            String CREATE_ROLES_TABLE = "CREATE TABLE " + TABLE_ROLES + " ("
-                    + COLUMN_ROLE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    + COLUMN_ROLE_NAME + " TEXT, "
-                    + COLUMN_ROLE_DESCRIPTION + " TEXT)";
-            db.execSQL(CREATE_ROLES_TABLE);
-            Log.d("Database", "Table roles created successfully");
-
-            // Tạo bảng users
-            String CREATE_USERS_TABLE = "CREATE TABLE " + TABLE_USERS + " (" +
-                    COLUMN_USERNAME + " TEXT PRIMARY KEY , " +
-                    COLUMN_FULL_NAME + " TEXT, " + // Thêm cột Họ và Tên
-                    COLUMN_EMAIL + " TEXT, " +
-                    COLUMN_PASSWORD + " TEXT, " +
-                    COLUMN_ROLE_ID_FK + " INTEGER, " +
-                    "FOREIGN KEY(" + COLUMN_ROLE_ID_FK + ") REFERENCES " + TABLE_ROLES + "(" + COLUMN_ROLE_ID + "))";
-            db.execSQL(CREATE_USERS_TABLE);
-            Log.d("Database", "Table users created successfully");
-
             // Tạo bảng courses
-            String CREATE_COURSES_TABLE = "CREATE TABLE " + TABLE_COURSES + " ("
+            String CREATE_COURSES_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_COURSES + " ("
                     + COLUMN_COURSE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + COLUMN_COURSE_NAME + " TEXT NOT NULL, "
                     + COLUMN_COURSE_TYPE + " TEXT NOT NULL, "
@@ -122,7 +104,7 @@ public class Database extends SQLiteOpenHelper {
             Log.d("Database", "Table courses created successfully");
 
             // Tạo bảng classInstances
-            String CREATE_CLASS_INSTANCES_TABLE = "CREATE TABLE " + TABLE_CLASS_INSTANCES + " ("
+            String CREATE_CLASS_INSTANCES_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_CLASS_INSTANCES + " ("
                     + COLUMN_INSTANCE_ID + " TEXT PRIMARY KEY, "
                     + COLUMN_INSTANCE_COURSE_ID + " INTEGER NOT NULL, "
                     + COLUMN_DATES + " TEXT NOT NULL, "
@@ -134,7 +116,7 @@ public class Database extends SQLiteOpenHelper {
             Log.d("Database", "Table Class Instances created successfully");
 
             // Tạo bảng notifications
-            String CREATE_NOTIFICATIONS_TABLE = "CREATE TABLE " + TABLE_NOTIFICATIONS + " ("
+            String CREATE_NOTIFICATIONS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NOTIFICATIONS + " ("
                     + COLUMN_NOTIFICATION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + COLUMN_NOTIFICATION_EMAIL + " TEXT NOT NULL, "
                     + COLUMN_NOTIFICATION_TITLE + " TEXT NOT NULL, "
@@ -146,7 +128,7 @@ public class Database extends SQLiteOpenHelper {
             Log.d("Database", "Table notifications created successfully");
 
             // Tạo bảng Cart
-            String CREATE_CARTS_TABLE = "CREATE TABLE " + TABLE_CARTS + " ("
+            String CREATE_CARTS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_CARTS + " ("
                     + COLUMN_CART_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + COLUMN_CART_CREATED_DATE + " TEXT NOT NULL, "
                     + COLUMN_CART_EMAIL + " TEXT NOT NULL, "
@@ -155,7 +137,7 @@ public class Database extends SQLiteOpenHelper {
             Log.d("Database", "Table arts created successfully");
 
             // Tạo bảng Booking
-            String CREATE_BOOKINGS_TABLE = "CREATE TABLE " + TABLE_BOOKINGS + " ("
+            String CREATE_BOOKINGS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_BOOKINGS + " ("
                     + COLUMN_BOOKING_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + COLUMN_BOOKING_DATE + " TEXT NOT NULL, "
                     + COLUMN_BOOKING_EMAIL + " TEXT NOT NULL, "
@@ -165,13 +147,32 @@ public class Database extends SQLiteOpenHelper {
             Log.d("Database", "Table Bookings created successfully");
 
             // Tạo bảng BookingDetails
-            String CREATE_BOOKING_DETAILS_TABLE = "CREATE TABLE " + TABLE_BOOKING_DETAILS + " ("
+            String CREATE_BOOKING_DETAILS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_BOOKING_DETAILS + " ("
                     + COLUMN_BOOKING_DETAIL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + COLUMN_BOOKING_DETAIL_BOOKING_ID + " INTEGER NOT NULL, "
                     + COLUMN_BOOKING_DETAIL_INSTANCE_ID + " TEXT NOT NULL, "
                     + COLUMN_BOOKING_DETAIL_PRICE + " REAL NOT NULL, "
                     + "FOREIGN KEY(" + COLUMN_BOOKING_DETAIL_BOOKING_ID + ") REFERENCES " + TABLE_BOOKINGS + "(" + COLUMN_BOOKING_ID + "))";
             db.execSQL(CREATE_BOOKING_DETAILS_TABLE);
+
+            // Tạo bảng roles
+            String CREATE_ROLES_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_ROLES + " ("
+                    + COLUMN_ROLE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + COLUMN_ROLE_NAME + " TEXT, "
+                    + COLUMN_ROLE_DESCRIPTION + " TEXT)";
+            db.execSQL(CREATE_ROLES_TABLE);
+            Log.d("Database", "Table roles created successfully");
+
+            // Tạo bảng users
+            String CREATE_USERS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_USERS + " (" +
+                    COLUMN_USERNAME + " TEXT PRIMARY KEY , " +
+                    COLUMN_FULL_NAME + " TEXT, " + // Thêm cột Họ và Tên
+                    COLUMN_EMAIL + " TEXT, " +
+                    COLUMN_PASSWORD + " TEXT, " +
+                    COLUMN_ROLE_ID_FK + " INTEGER, " +
+                    "FOREIGN KEY(" + COLUMN_ROLE_ID_FK + ") REFERENCES " + TABLE_ROLES + "(" + COLUMN_ROLE_ID + "))";
+            db.execSQL(CREATE_USERS_TABLE);
+            Log.d("Database", "Table users created successfully");
 
         } catch (Exception e) {
             Log.e("Database", "Error creating tables: " + e.getMessage());
@@ -195,4 +196,26 @@ public class Database extends SQLiteOpenHelper {
             Log.e("Database", "Error upgrading database: " + e.getMessage());
         }
     }
+
+    public void resetDatabase() {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        try {
+            // Bỏ qua bảng Users
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_COURSES);
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_CLASS_INSTANCES);
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_NOTIFICATIONS);
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_BOOKINGS);
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_BOOKING_DETAILS);
+
+            // Tạo lại các bảng
+            onCreate(db);
+
+            // Hiển thị thông báo khi reset thành công
+            Log.d("Database", "Database reset successfully (except Users table)");
+        } catch (Exception e) {
+            Log.e("Database", "Error resetting database: " + e.getMessage());
+        }
+    }
+
 }

@@ -26,6 +26,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.example.yinyoga.R;
 import com.example.yinyoga.models.User;
 import com.example.yinyoga.service.UserService;
+import com.example.yinyoga.sync.SyncClassInstanceManager;
 import com.example.yinyoga.utils.DialogHelper;
 import com.example.yinyoga.utils.UserSessionManager;
 
@@ -255,6 +256,8 @@ public class ManageUserActivity extends AppCompatActivity {
     }
 
     private void resetDatabase() {
+        userService.resetDatabase();
+        new SyncClassInstanceManager(this).resetInFirestore();
         Toast.makeText(this, "Database reset successfully", Toast.LENGTH_SHORT).show();
     }
 }

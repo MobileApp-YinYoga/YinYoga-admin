@@ -187,8 +187,6 @@ public class NotificationActivity extends AppCompatActivity {
         beforeNotifications.clear();
 
         if (allNotifications.isEmpty()) {
-            addSampleNotifications();
-            allNotifications = notificationService.getAllNotifications();
             syncNotificationManager.syncNotificationsFromFirestore();
         } else {
             syncNotificationManager.syncNotificationsToFirestore();

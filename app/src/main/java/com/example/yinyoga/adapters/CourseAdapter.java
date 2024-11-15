@@ -23,6 +23,7 @@ import com.example.yinyoga.R;
 import com.example.yinyoga.fragments.ManageCoursesFragment;
 import com.example.yinyoga.models.Course;
 import com.example.yinyoga.service.CourseService;
+import com.example.yinyoga.sync.SyncClassInstanceManager;
 import com.example.yinyoga.utils.DialogHelper;
 import com.example.yinyoga.utils.ImageHelper;
 
@@ -141,6 +142,11 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.YogaClassV
     // Method to handle delete action
     private void handleDeleteAction(int position, PopupWindow popupWindow) {
         DialogHelper.showDeleteConfirmationDialog(fragment.getActivity(), "Are you sure you want to delete course \"" + courseList.get(position).getCourseName() + "\"?", () -> {
+//            SyncClassInstanceManager syncClassInstanceManager = new SyncClassInstanceManager(fragment.getContext());
+//            syncClassInstanceManager.deleteCourse(courseList.get(position).getCourseId());
+//            DialogHelper.showSuccessDialog(fragment.getActivity(), "Course removed successfully!");
+
+
             // Delete course and refresh list
             courseService.deleteCourse(courseList.get(position).getCourseId());
             courseList.remove(position);

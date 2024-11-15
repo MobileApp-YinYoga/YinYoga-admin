@@ -123,9 +123,7 @@ public class MainActivity extends AppCompatActivity {
                 Fragment selectedFragment = null;
                 int id = item.getItemId(); // Lấy id của item được chọn
 
-                if (id == R.id.nav_statistic) {
-//                    selectedFragment = new StatisticFragment();
-                } else if (id == R.id.nav_manage_classes) {
+                if (id == R.id.nav_manage_classes) {
                     selectedFragment = new ManageCoursesFragment();
                 } else if (id == R.id.nav_manage_class_instances) {
                     selectedFragment = new ManageClassInstancesFragment();
@@ -181,9 +179,8 @@ public class MainActivity extends AppCompatActivity {
         notificationIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Thực hiện hành động khi nhấn vào biểu tượng thông báo
-                // Ví dụ: mở trang thông báo
-                DialogHelper.showSuccessDialog(MainActivity.this, "Your work has been saved!");
+                Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
+                startActivity(intent);
             }
         });
     }

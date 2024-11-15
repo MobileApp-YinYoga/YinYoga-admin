@@ -28,6 +28,44 @@ public class SyncClassInstanceManager {
         dbHelper = new Database(context);
         this.classInstanceRepository = new ClassInstanceRepository(context);
     }
+    public void resetInFirestore() {
+        // Reset classInstances collection
+        db.collection("classInstances")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String docId = document.getId();
+                            db.collection("classInstances").document(docId)
+                                    .delete()
+                                    .addOnSuccessListener(aVoid -> Log.d("SyncManager", "Document " + docId + " deleted from classInstances"))
+                                    .addOnFailureListener(e -> Log.w("SyncManager", "Error deleting document from classInstances", e));
+                        }
+                        Log.d("SyncManager", "All documents in 'classInstances' collection deleted");
+                    } else {
+                        Log.w("SyncManager", "Error fetching documents from classInstances for deletion.", task.getException());
+                    }
+                });
+
+        // Reset courses collection
+        db.collection("courses")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String docId = document.getId();
+                            db.collection("courses").document(docId)
+                                    .delete()
+                                    .addOnSuccessListener(aVoid -> Log.d("SyncManager", "Document " + docId + " deleted from courses"))
+                                    .addOnFailureListener(e -> Log.w("SyncManager", "Error deleting document from courses", e));
+                        }
+                        Log.d("SyncManager", "All documents in 'courses' collection deleted");
+                    } else {
+                        Log.w("SyncManager", "Error fetching documents from courses for deletion.", task.getException());
+                    }
+                });
+    }
+
 
     public void syncClassInstanceToFirestore() {
         // Query your SQLite database to get the data
@@ -94,4 +132,36 @@ public class SyncClassInstanceManager {
                     }
                 });
     }
+    public void deleteClassInstance(String instanceId) {
+        // Delete the record from SQLite first
+        SQLiteDatabase sqliteDb = dbHelper.getWritableDatabase(); // Renamed for clarity
+        int rowsAffected = sqliteDb.delete("classInstances", "instanceId = ?", new String[]{instanceId});
+
+        if (rowsAffected > 0) {
+            // If deletion is successful in SQLite, proceed to delete from Firestore
+            db.collection("classInstances").document(instanceId)
+                    .delete()
+                    .addOnSuccessListener(aVoid -> Log.d("SyncClassInstanceManager", "Class instance deleted from Firestore: " + instanceId))
+                    .addOnFailureListener(e -> Log.w("SyncClassInstanceManager", "Error deleting class instance from Firestore", e));
+        } else {
+            Log.w("SyncClassInstanceManager", "No matching class instance found to delete in SQLite for instanceId: " + instanceId);
+        }
+    }
+
+    public void deleteCourse(int courseId) {
+        // Delete the record from SQLite first
+        SQLiteDatabase sqliteDb = dbHelper.getWritableDatabase(); // Renamed for clarity
+        int rowsAffected = sqliteDb.delete("courses", "id = ?", new String[]{String.valueOf(courseId)});
+
+        if (rowsAffected > 0) {
+            // If deletion is successful in SQLite, proceed to delete from Firestore
+            db.collection("courses").document(String.valueOf(courseId))
+                    .delete()
+                    .addOnSuccessListener(aVoid -> Log.d("SyncClassInstanceManager", "Course deleted from Firestore: " + courseId))
+                    .addOnFailureListener(e -> Log.w("SyncClassInstanceManager", "Error deleting course from Firestore", e));
+        } else {
+            Log.w("SyncClassInstanceManager", "No matching course found to delete in SQLite for courseId: " + courseId);
+        }
+    }
+
 }

@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -396,8 +397,11 @@ public class ManageClassInstancesFragment extends Fragment {
         String getCourse = splitCourseId[0];
         int courseId = Integer.parseInt(getCourse);
 
+        if (!isValidateInput()) {
+            return; // Nếu không hợp lệ, không thực hiện lưu
+        }
         // Kiểm tra tính hợp lệ của dữ liệu đầu vào
-        if (isValidateInput() && !Objects.equals(instanceId, "")) {
+        if (!Objects.equals(instanceId, "")) {
             // Cập nhật phiên học hiện có
             instanceService.updateClassInstance(instanceId, courseId, dateStr, teacher, imageBytes);
             DialogHelper.showSuccessDialog(getActivity(), "Course instance updated successfully!");
@@ -473,13 +477,27 @@ public class ManageClassInstancesFragment extends Fragment {
     private boolean isValidateInput() {
         boolean isValid = true;
 
-        if (dateStr.isEmpty()) {
-            edDate.setError("Please enter date");
+        // Kiểm tra nếu InstanceId rỗng
+        if (edInstanceId.getText().toString().trim().isEmpty()) {
+            edInstanceId.setError("Please enter Instance ID");
+            isValid = false;
+        }
+
+        // Kiểm tra nếu ngày (date) rỗng
+        if (edDate.getText().toString().trim().isEmpty()) {
+            edDate.setError("Please enter Date");
+            isValid = false;
+        }
+
+        // Kiểm tra nếu chưa chọn hình ảnh
+        if (imageBytes == null) {
+            Toast.makeText(getActivity(), "Please upload an image", Toast.LENGTH_SHORT).show();
             isValid = false;
         }
 
         return isValid;
     }
+
 
     public void loadInstancesFromDatabase() {
         instanceLists.clear();
