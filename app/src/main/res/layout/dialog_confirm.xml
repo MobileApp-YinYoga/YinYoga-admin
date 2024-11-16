@@ -17,7 +17,7 @@
         android:src="@drawable/ic_warning" />
 
     <TextView
-        android:id="@+id/dialog_title"
+        android:id="@+id/dialog_confirm_title"
         android:layout_width="252dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -28,11 +28,8 @@
         android:textSize="18sp" />
 
     <!-- Message -->
-
-    <!-- Button container -->
-
     <TextView
-        android:id="@+id/dialog_message"
+        android:id="@+id/dialog_confirm_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/poppins_light"
@@ -41,6 +38,13 @@
         android:text="You won’t be able to revert this!"
         android:textColor="@color/main"
         android:textSize="14sp" />
+
+    <ImageView
+        android:id="@+id/dialog_confirm_image"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:scaleType="centerCrop"
+        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="wrap_content"

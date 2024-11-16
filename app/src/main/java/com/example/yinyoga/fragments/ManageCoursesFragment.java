@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.yinyoga.R;
 import com.example.yinyoga.adapters.ClassInstanceAdapter;
@@ -62,8 +63,8 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
     private CourseService courseService;
     private ImageView imgGallery;
     private byte[] imageBytes;
-    SyncCourseManager syncCourseManager;
-    ClassInstanceService classInstanceService;
+    private SyncCourseManager syncCourseManager;
+    private ClassInstanceService classInstanceService;
 
     @Nullable
     @Override
@@ -142,10 +143,14 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
 
     private void setPopupEventListeners(View btnClosePopup, View btnClearAllPopup) {
         btnClosePopup.setOnClickListener(v -> dialog.dismiss());
-        btnClearAllPopup.setOnClickListener(v -> clearAllInputs());
+        btnClearAllPopup.setOnClickListener(v -> clearAllInputs(true));
     }
 
     private void saveCourse(int courseId) {
+        if (!isValidateInput()) {
+            return;
+        }
+
         String courseName = edCourseName.getText().toString().trim();
         String dayOfWeek = spinnerDayOfTheWeek.getSelectedItem().toString();
         String timeStr = edTime.getText().toString().trim();
@@ -156,24 +161,43 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
         String description = edDescription.getText().toString().trim();
         String createdAt = DatetimeHelper.getCurrentDatetime();
 
-        if (isValidateInput(courseName, timeStr, durationStr, capacityStr, priceStr, description)) {
-            int duration = Integer.parseInt(durationStr);
-            int capacity = Integer.parseInt(capacityStr);
-            double price = Double.parseDouble(priceStr);
+        String message = "Your inputted data:";
+        message += "\nName: " + courseName;
+        message += "\nDay of the week: " + dayOfWeek;
+        message += "\nTime: " + timeStr;
+        message += "\nDuration: " + durationStr;
+        message += "\nCapacity: " + capacityStr;
+        message += "\nPrice: " + priceStr;
+        message += "\nType: " + courseType;
+        message += "\nDescription: " + description;
+        message += "\nDo you want to save this course?";
 
-            if (courseId < 0) {
-                courseService.addCourse(new Course(courseName, courseType, createdAt, dayOfWeek, description, capacity, duration, imageBytes, price, timeStr));
-            } else {
-                courseService.updateCourse(new Course(courseId, courseName, courseType, createdAt, dayOfWeek, description, capacity, duration, imageBytes, price, timeStr));
-            }
+        DialogHelper.showConfirmationDialog(
+                requireActivity(),
+                "Confirm your course!",
+                message,
+                imageBytes,
+                () -> {
+                    int duration = Integer.parseInt(durationStr);
+                    int capacity = Integer.parseInt(capacityStr);
+                    double price = Double.parseDouble(priceStr);
 
-            DialogHelper.showSuccessDialog(getActivity(), "Course saved successfully!");
+                    Course course = new Course(courseName, courseType, createdAt, dayOfWeek, description, capacity, duration, imageBytes, price, timeStr);
 
-            clearAllInputs();
-            loadCourseFromDatabase();
+                    if (courseId < 0) {
+                        courseService.addCourse(course);
+                    } else {
+                        course.setCourseId(courseId);
+                        courseService.updateCourse(course);
+                    }
 
-            dialog.dismiss();
-        }
+                    DialogHelper.showSuccessDialog(getActivity(), "Course saved successfully!");
+
+                    clearAllInputs(false);
+                    loadCourseFromDatabase();
+
+                    dialog.dismiss();
+                });
     }
 
     private void setPopupAddOrUpdate(int courseId) {
@@ -226,8 +250,15 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
         return position;
     }
 
-    private boolean isValidateInput(String courseName, String timeStr, String durationStr, String capacityStr, String priceStr, String description) {
+    private boolean isValidateInput() {
         boolean isValid = true;
+
+        String courseName = edCourseName.getText().toString().trim();
+        String timeStr = edTime.getText().toString().trim();
+        String durationStr = edDuration.getText().toString().trim();
+        String capacityStr = edCapacity.getText().toString().trim();
+        String priceStr = edPrice.getText().toString().trim();
+        String description = edDescription.getText().toString().trim();
 
         if (courseName.isEmpty()) {
             edCourseName.setError("Please enter course name");
@@ -281,6 +312,11 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
 
         if (description.isEmpty()) {
             edDescription.setError("Please enter a description");
+            isValid = false;
+        }
+
+        if (imageBytes == null) {
+            Toast.makeText(getActivity(), "Please upload an image", Toast.LENGTH_SHORT).show();
             isValid = false;
         }
 
@@ -392,7 +428,7 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
         imgGallery = dialog.findViewById(R.id.ivUploadImage);
     }
 
-    private void clearAllInputs() {
+    private void clearAllInputs(boolean showNotification) {
         edCourseName.setText("");
         spinnerDayOfTheWeek.setSelection(0);
         edTime.setText("");
@@ -402,7 +438,9 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
         edDescription.setText("");
         courseTypeSpinner.setSelection(0);
 
-        DialogHelper.showSuccessDialog(getActivity(), "All fields cleared!");
+        if (showNotification) {
+            DialogHelper.showSuccessDialog(getActivity(), "All inputs cleared successfully!");
+        }
     }
 
     @Override

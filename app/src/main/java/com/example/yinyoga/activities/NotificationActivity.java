@@ -42,7 +42,7 @@ public class NotificationActivity extends AppCompatActivity {
     private List<Notification> newNotifications, beforeNotifications;
     private ImageView menuOptions, backHome;
     private NotificationService notificationService;
-    SyncNotificationManager syncNotificationManager;
+    private SyncNotificationManager syncNotificationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,16 +127,15 @@ public class NotificationActivity extends AppCompatActivity {
         });
 
         tvClearAll.setOnClickListener(v -> {
-            DialogHelper.showDeleteConfirmationDialog(
+            DialogHelper.showConfirmationDialog(
                     this,
                     "Are you sure you want to delete all notifications?",
-                    new DialogHelper.DeleteConfirmationListener() {
-                        @Override
-                        public void onConfirm() {
-                            clearAllNotifications();
-                            loadNotifications();
-                            DialogHelper.showSuccessDialog(NotificationActivity.this, "All notifications removed successfully!");
-                        }
+                    null,
+                    null,
+                    () -> {
+                        clearAllNotifications();
+                        loadNotifications();
+                        DialogHelper.showSuccessDialog(NotificationActivity.this, "All notifications removed successfully!");
                     });
             popupWindow.dismiss();
         });

@@ -132,20 +132,19 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_logout) {
-                    DialogHelper.showDeleteConfirmationDialog(
+                    DialogHelper.showConfirmationDialog(
                             MainActivity.this,
                             "Are you sure you want to log out?",
-                            new DialogHelper.DeleteConfirmationListener() {
-                                @Override
-                                public void onConfirm() {
-                                    UserSessionManager sessionManager = new UserSessionManager(MainActivity.this);
-                                    sessionManager.logout();
+                            null,
+                            null,
+                            () -> {
+                                UserSessionManager sessionManager = new UserSessionManager(MainActivity.this);
+                                sessionManager.logout();
 
-                                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    startActivity(intent);
-                                    finish();
-                                }
+                                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                                finish();
                             }
                     );
                 }
