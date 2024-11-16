@@ -50,13 +50,12 @@ public class ManageUserActivity extends AppCompatActivity {
             return insets;
         });
 
-
-        // Thiết lập màu nền cho thanh trạng thái thành màu trắng
+        // Set the status bar background color to white
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.white));
         }
 
-        // Thiết lập biểu tượng thanh trạng thái thành màu đen (light status bar)
+        // Set the status bar icon to be black (light status bar)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             View decorView = getWindow().getDecorView();
             decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
@@ -67,7 +66,6 @@ public class ManageUserActivity extends AppCompatActivity {
         loadUserData();
     }
 
-    // Khởi tạo các View
     private void initView() {
         sessionManager = new UserSessionManager(this);
         userService = new UserService(this);
@@ -92,7 +90,6 @@ public class ManageUserActivity extends AppCompatActivity {
         username = sessionManager.getUsername();
     }
 
-    // Thiết lập các listener cho các nút
     private void setupListeners() {
         findViewById(R.id.btn_edit_profile).setOnClickListener(v -> showSection("profile"));
         findViewById(R.id.btn_change_password).setOnClickListener(v -> showSection("change_password"));

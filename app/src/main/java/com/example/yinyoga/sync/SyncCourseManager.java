@@ -2,18 +2,19 @@ package com.example.yinyoga.sync;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Base64;
 import android.util.Log;
 
 import com.example.yinyoga.database.Database;
+import com.example.yinyoga.models.Course;
 import com.example.yinyoga.repository.CourseRepository;
 import com.example.yinyoga.utils.ImageHelper;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SyncCourseManager {
@@ -30,43 +31,28 @@ public class SyncCourseManager {
 
     public void syncCoursesToFirestore() {
         // Query your SQLite database to get the data
-        Cursor cursor = courseRepository.getAllCourses();
+        List<Course> courseList = courseRepository.getAllCourses();
 
-        if (cursor != null && cursor.moveToFirst()) {
-            do {
-                int courseId = cursor.getInt(0);
-                String courseName = cursor.getString(1);
-                String courseType = cursor.getString(2);
-                String createdAt = cursor.getString(3);
-                String dayOfWeek = cursor.getString(4);
-                String description = cursor.getString(5);
-                int capacity = cursor.getInt(6);
-                int duration = cursor.getInt(7);
-                byte[] imageUrl = cursor.getBlob(8);
-                double price = cursor.getDouble(9);
-                String time = cursor.getString(10);
+        for (Course course : courseList) {
+            byte[] compressedImage = ImageHelper.compressImage(course.getImageUrl());
+            // Prepare the data for Firestore
+            Map<String, Object> courseMap = new HashMap<>();
+            courseMap.put("courseName", course.getCourseName());
+            courseMap.put("courseType", course.getCourseType());
+            courseMap.put("createdAt", course.getCreatedAt());
+            courseMap.put("dayOfWeek", course.getDayOfWeek());
+            courseMap.put("description", course.getDescription());
+            courseMap.put("capacity", course.getCapacity());
+            courseMap.put("duration", course.getDuration());
+            courseMap.put("imageUrl", Base64.encodeToString(compressedImage, Base64.DEFAULT));
+            courseMap.put("price", course.getPrice());
+            courseMap.put("time", course.getTime());
 
-                byte[] compressedImage = ImageHelper.compressImage(imageUrl);
-                // Prepare the data for Firestore
-                Map<String, Object> courseMap = new HashMap<>();
-                courseMap.put("courseName", courseName);
-                courseMap.put("courseType", courseType);
-                courseMap.put("createdAt", createdAt);
-                courseMap.put("dayOfWeek", dayOfWeek);
-                courseMap.put("description", description);
-                courseMap.put("capacity", capacity);
-                courseMap.put("duration", duration);
-                courseMap.put("imageUrl", Base64.encodeToString(compressedImage, Base64.DEFAULT));
-                courseMap.put("price", price);
-                courseMap.put("time", time);
-
-                // Push to Firestore
-                db.collection("courses").document(String.valueOf(courseId))
-                        .set(courseMap)
-                        .addOnSuccessListener(aVoid -> Log.d("SyncCourseManager", "Course synced to Firestore: " + courseId))
-                        .addOnFailureListener(e -> Log.w("SyncCourseManager", "Error syncing course", e));
-            } while (cursor.moveToNext());
-            cursor.close();
+            // Push to Firestore
+            db.collection("courses").document(String.valueOf(course.getCourseId()))
+                    .set(courseMap)
+                    .addOnSuccessListener(aVoid -> Log.d("SyncCourseManager", "Course synced to Firestore: " + course.getCourseId()))
+                    .addOnFailureListener(e -> Log.w("SyncCourseManager", "Error syncing course", e));
         }
     }
 

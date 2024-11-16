@@ -18,15 +18,14 @@ public class ClassInstanceService {
         this.classInstanceRepository = new ClassInstanceRepository(context);
     }
 
-    public void addClassInstance(String instanceId, int courseId, String date, String teacher, byte[] imageUrl) {
+    public void addClassInstance(ClassInstance classInstance) {
         try {
-            classInstanceRepository.insertClassInstance(instanceId, courseId, date, teacher, imageUrl);
+            classInstanceRepository.insertClassInstance(classInstance);
         } catch (Exception e) {
             Log.e("addClassInstance", "Error adding class instance: " + e.getMessage()); // Ghi log lỗi
         }
     }
 
-    // Lấy phiên học theo ID
     public ClassInstance getClassInstance(String instanceId) {
         try {
             return classInstanceRepository.getClassInstanceById(instanceId);
@@ -36,7 +35,6 @@ public class ClassInstanceService {
         }
     }
 
-    // Lấy phiên học theo Course ID
     public List<ClassInstance> getClassInstancesByCourseId(int courseId) {
         try {
             return classInstanceRepository.getClassInstancesByCourseId(courseId);
@@ -46,8 +44,7 @@ public class ClassInstanceService {
         }
     }
 
-    // Lấy tất cả các phiên học
-    public Cursor getAllClassInstances() {
+    public List<ClassInstance> getAllClassInstances() {
         try {
             return classInstanceRepository.getAllClassInstances();
         } catch (Exception e) {
@@ -56,17 +53,14 @@ public class ClassInstanceService {
         }
     }
 
-
-    // Cập nhật phiên học
-    public void updateClassInstance(String instanceId, int courseId, String date, String teacher, byte[] imageUrl) {
+    public void updateClassInstance(ClassInstance classInstance) {
         try {
-            classInstanceRepository.updateClassInstance(instanceId, courseId, date, teacher, imageUrl);
+            classInstanceRepository.updateClassInstance(classInstance);
         } catch (Exception e) {
             Log.e("updateClassInstance", "Error updating class instance: " + e.getMessage()); // Ghi log lỗi
         }
     }
 
-    // Xóa phiên học
     public void deleteClassInstance(String instanceId) {
         try {
             classInstanceRepository.deleteClassInstance(instanceId);

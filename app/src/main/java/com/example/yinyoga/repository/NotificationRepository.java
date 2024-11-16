@@ -13,13 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NotificationRepository {
-    private Database database;
+    private final Database database;
 
     public NotificationRepository(Context context) {
         this.database = new Database(context);
     }
 
-    // Thêm thông báo mới vào cơ sở dữ liệu
     public void inseartNotification(Notification notification) {
         try (SQLiteDatabase db = database.getWritableDatabase()) {
             String query = "INSERT INTO notifications (email, title, description, time, isRead, createdDate) VALUES (?, ?, ?, ?, ?, ?)";
@@ -35,7 +34,6 @@ public class NotificationRepository {
         }
     }
 
-    // Lấy tất cả thông báo từ cơ sở dữ liệu
     public List<Notification> getAllNotifications() {
         List<Notification> notifications = new ArrayList<>();
         String query = "SELECT * FROM notifications ORDER BY createdDate DESC";
@@ -58,7 +56,6 @@ public class NotificationRepository {
         return notifications;
     }
 
-    // Đánh dấu tất cả thông báo là đã đọc
     public void markAllAsRead() {
         try (SQLiteDatabase db = database.getWritableDatabase()) {
             ContentValues values = new ContentValues();
@@ -67,14 +64,12 @@ public class NotificationRepository {
         }
     }
 
-    // Xóa tất cả thông báo cũ hơn 1 năm
     public void deleteOldNotifications(String oneYearAgoDate) {
         try (SQLiteDatabase db = database.getWritableDatabase()) {
             db.delete("notifications", "createdDate < ?", new String[]{oneYearAgoDate});
         }
     }
 
-    // Xóa tất cả thông báo
     public void clearAllNotifications() {
         try (SQLiteDatabase db = database.getWritableDatabase()) {
             db.delete("notifications", null, null);
