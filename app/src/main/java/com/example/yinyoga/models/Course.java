@@ -38,6 +38,21 @@ public class Course {
         this.time = time;
     }
 
+    public Course(String courseName, String courseType, String createdAt,
+                  String dayOfWeek, String description, int capacity, int duration,
+                  byte[] imageUrl, double price, String time) {
+        this.courseName = courseName;
+        this.courseType = courseType;
+        this.createdAt = createdAt;
+        this.dayOfWeek = dayOfWeek;
+        this.description = description;
+        this.capacity = capacity;
+        this.duration = duration;
+        this.imageUrl = imageUrl;
+        this.price = price;
+        this.time = time;
+    }
+
     public int getCourseId() {
         return courseId;
     }

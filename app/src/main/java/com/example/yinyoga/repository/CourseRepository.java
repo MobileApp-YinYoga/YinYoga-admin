@@ -9,35 +9,34 @@ import android.util.Log;
 import com.example.yinyoga.database.Database;
 import com.example.yinyoga.models.Course;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CourseRepository {
-    private Database database;
+    private final Database database;
 
     public CourseRepository(Context context) {
         this.database = new Database(context);
     }
 
-    // Insert new course
-    public void insertCourse(String courseName, String courseType, String createdAt,
-                             String dayOfWeek, String description, int capacity,
-                             int duration, byte[] imageUrl, double price, String time) {
+    public void insertCourse(Course course) {
         SQLiteDatabase db = database.getWritableDatabase();
         String query = "INSERT INTO courses (courseName, courseType, createdAt, dayOfWeek, description, capacity, duration, imageUrl, price, time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         SQLiteStatement statement = db.compileStatement(query);
         statement.clearBindings();
-        statement.bindString(1, courseName);
-        statement.bindString(2, courseType);
-        statement.bindString(3, createdAt);
-        statement.bindString(4, dayOfWeek);
-        statement.bindString(5, description);
-        statement.bindLong(6, capacity);
-        statement.bindLong(7, duration);
-        statement.bindBlob(8, imageUrl);
-        statement.bindDouble(9, price);
-        statement.bindString(10, time);
+        statement.bindString(1, course.getCourseName());
+        statement.bindString(2, course.getCourseType());
+        statement.bindString(3, course.getCreatedAt());
+        statement.bindString(4, course.getDayOfWeek());
+        statement.bindString(5, course.getDescription());
+        statement.bindLong(6, course.getCapacity());
+        statement.bindLong(7, course.getDuration());
+        statement.bindBlob(8, course.getImageUrl());
+        statement.bindDouble(9, course.getPrice());
+        statement.bindString(10, course.getTime());
         statement.executeInsert();
     }
 
-    // Get course by ID
     public Course getCourseById(int courseId) {
         SQLiteDatabase db = this.database.getReadableDatabase();
         Course course = null;
@@ -48,7 +47,6 @@ public class CourseRepository {
         if (cursor != null && cursor.moveToFirst()) {
             Log.d("Database", "courseId: " + cursor.getInt(0) + ", courseName: " + cursor.getString(1));
 
-            // Retrieve values from cursor
             int id = cursor.getInt(0);
             String courseName = cursor.getString(1);
             String courseType = cursor.getString(2);
@@ -61,7 +59,6 @@ public class CourseRepository {
             double price = cursor.getDouble(9);
             String time = cursor.getString(10);
 
-            // Create Course object
             course = new Course(id, courseName, courseType, createdAt, dayOfWeek, description, capacity, duration, imageUrl, price, time);
         }
 
@@ -72,35 +69,52 @@ public class CourseRepository {
         return course;
     }
 
-    // Get all courses
-    public Cursor getAllCourses() {
+    public List<Course> getAllCourses() {
+        List<Course> courseList = new ArrayList<>();
         SQLiteDatabase db = database.getReadableDatabase();
-        return db.rawQuery("SELECT * FROM courses", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM courses", null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(0);
+                String courseName = cursor.getString(1);
+                String courseType = cursor.getString(2);
+                String createdAt = cursor.getString(3);
+                String dayOfWeek = cursor.getString(4);
+                String description = cursor.getString(5);
+                int capacity = cursor.getInt(6);
+                int duration = cursor.getInt(7);
+                byte[] imageUrl = cursor.getBlob(8);
+                double price = cursor.getDouble(9);
+                String time = cursor.getString(10);
+
+                courseList.add(new Course(id, courseName, courseType, createdAt, dayOfWeek, description, capacity, duration, imageUrl, price, time));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        return courseList;
     }
 
-    // Update course
-    public void updateCourse(int courseId, String courseName, String courseType, String createdAt,
-                             String dayOfWeek, String description, int capacity,
-                             int duration, byte[] imageUrl, double price, String time) {
+    public void updateCourse(Course course) {
         SQLiteDatabase db = database.getWritableDatabase();
         String query = "UPDATE courses SET courseName = ?, courseType = ?, createdAt = ?, dayOfWeek = ?, description = ?, capacity = ?, duration = ?, imageUrl = ?, price = ?, time = ? WHERE courseId = ?";
         SQLiteStatement statement = db.compileStatement(query);
         statement.clearBindings();
-        statement.bindString(1, courseName);
-        statement.bindString(2, courseType);
-        statement.bindString(3, createdAt);
-        statement.bindString(4, dayOfWeek);
-        statement.bindString(5, description);
-        statement.bindLong(6, capacity);
-        statement.bindLong(7, duration);
-        statement.bindBlob(8, imageUrl);
-        statement.bindDouble(9, price);
-        statement.bindString(10, time);
-        statement.bindLong(11, courseId);
+        statement.bindString(1, course.getCourseName());
+        statement.bindString(2, course.getCourseType());
+        statement.bindString(3, course.getCreatedAt());
+        statement.bindString(4, course.getDayOfWeek());
+        statement.bindString(5, course.getDescription());
+        statement.bindLong(6, course.getCapacity());
+        statement.bindLong(7, course.getDuration());
+        statement.bindBlob(8, course.getImageUrl());
+        statement.bindDouble(9, course.getPrice());
+        statement.bindString(10, course.getTime());
+        statement.bindLong(11, course.getCourseId());
         statement.executeUpdateDelete();
     }
 
-    // Delete course
     public void deleteCourse(int courseId) {
         SQLiteDatabase db = database.getWritableDatabase();
         String query = "DELETE FROM courses WHERE courseId = ?";

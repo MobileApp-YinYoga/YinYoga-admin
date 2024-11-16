@@ -17,32 +17,42 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.yinyoga.R;
 import com.example.yinyoga.fragments.ManageCoursesFragment;
+import com.example.yinyoga.models.ClassInstance;
 import com.example.yinyoga.models.Course;
+import com.example.yinyoga.service.ClassInstanceService;
 import com.example.yinyoga.service.CourseService;
 import com.example.yinyoga.sync.SyncClassInstanceManager;
 import com.example.yinyoga.utils.DialogHelper;
 import com.example.yinyoga.utils.ImageHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.YogaClassViewHolder> {
+    public interface CustomListeners {
+        void onSeeMoreClick(int courseId);
+    }
 
     private List<Course> courseList;
     private ManageCoursesFragment fragment;
     private CourseService courseService;
+    private CustomListeners customListeners;
 
-    // Constructor with fragment and courseList
     public CourseAdapter(List<Course> courseList, ManageCoursesFragment fragment) {
         this.fragment = fragment;
         this.courseList = courseList;
         this.courseService = new CourseService(fragment.getContext());
     }
 
-    // Constructor without fragment
+    public void setCustomListeners(CustomListeners customListeners) {
+        this.customListeners = customListeners;
+    }
+
     public CourseAdapter(List<Course> courseList) {
         this.courseList = courseList;
     }
@@ -73,13 +83,16 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.YogaClassV
         // Load image if imageUrl is available
         holder.courseImage.setImageBitmap(ImageHelper.convertByteArrayToBitmap(course.getImageUrl()));
 
-        holder.see_more_button.setOnClickListener(v -> showClassInstance());
+        holder.see_more_button.setOnClickListener(v -> {
+            if (customListeners != null) {
+                customListeners.onSeeMoreClick(course.getCourseId());
+            }
+        });
 
         // Open menu for edit or delete options
         holder.taskMenu.setOnClickListener(v -> showCustomPopupMenu(v, position));
     }
 
-    // Helper method to get first 5 words of description
     private String getShortenedDescription(String description) {
         if (description == null || description.isEmpty()) {
             return "N/A";
@@ -99,16 +112,6 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.YogaClassV
         return shortenedDescription.toString().trim();
     }
 
-    private void showClassInstance() {
-        // Khởi tạo dialog khi cần thiết
-        Dialog dialog = new Dialog(fragment.getContext());
-        dialog.setContentView(R.layout.popup_view_detail);
-        dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_rounded_border);
-
-        dialog.show();
-    }
-
-    // Method to show the popup menu for editing and deleting a course
     private void showCustomPopupMenu(View anchorView, int position) {
         // Inflate the custom layout
         View popupView = LayoutInflater.from(anchorView.getContext()).inflate(R.layout.menu_edit_delete, null);
@@ -130,7 +133,6 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.YogaClassV
         popupWindow.showAsDropDown(anchorView, 0, 30);
     }
 
-    // Method to handle edit action
     private void handleEditAction(int position, PopupWindow popupWindow) {
         if (fragment != null) {
             int getIdCourse = courseList.get(position).getCourseId();

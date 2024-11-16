@@ -1,16 +1,12 @@
 package com.example.yinyoga.activities;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Patterns;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,15 +16,10 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.yinyoga.R;
-import com.example.yinyoga.models.Course;
 import com.example.yinyoga.models.Role;
-import com.example.yinyoga.models.User;
 import com.example.yinyoga.repository.RoleRepository;
 import com.example.yinyoga.service.UserService;
 import com.example.yinyoga.utils.DialogHelper;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -36,11 +27,11 @@ public class RegisterActivity extends AppCompatActivity {
     private Button registerButton;
     private ImageView ic_back;
     private UserService userService;
-    private List<User> userList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_register);
         EdgeToEdge.enable(this);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.activity_register), (v, insets) -> {
@@ -54,28 +45,25 @@ public class RegisterActivity extends AppCompatActivity {
         }
         userService = new UserService(this);  // Khởi tạo userService để thao tác với DB
 
-        initView();  // Ánh xạ các view trong layout
+        initView();
 
-        // Xử lý sự kiện khi nhấn nút đăng ký
         registerButton.setOnClickListener(v -> {
-            // Kiểm tra tính hợp lệ của đầu vào
             if (verifyInput()) {
-                processingRegister();  // Nếu hợp lệ, tiến hành đăng ký
+                processingRegister();
             }
         });
     }
 
-    // Xử lý đăng ký
     private void processingRegister() {
         String user = username.getText().toString().trim();
         String mail = email.getText().toString().trim();
         String pass = password.getText().toString().trim();
         String name = fullName.getText().toString().trim();
 
-        // Mã hóa mật khẩu
+        // Hash the password
         String hashedPassword = userService.hashPassword(pass);
 
-        // Kiểm tra và thêm vai trò "Admin" nếu chưa tồn tại
+        // Check and add the "Admin" role if it doesn't exist
         RoleRepository roleRepository = new RoleRepository(this);
         Role role = roleRepository.getRoleByName("Admin");
         if (role == null) {
@@ -83,17 +71,13 @@ public class RegisterActivity extends AppCompatActivity {
             role = roleRepository.getRoleByName("Admin"); // Lấy lại vai trò sau khi thêm
         }
 
-        // Thêm user vào cơ sở dữ liệu
         userService.addUser(user, name, mail, hashedPassword, role.getRoleId());
 
-        // Hiển thị thông báo thành công và chuyển sang màn hình đăng nhập
         DialogHelper.showSuccessDialog(this, "Register successful!");
         startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-        finish();  // Đóng Activity hiện tại
+        finish();
     }
 
-
-    // Kiểm tra tính hợp lệ của thông tin đầu vào
     private boolean verifyInput() {
         boolean isValid = true;
 
@@ -103,7 +87,6 @@ public class RegisterActivity extends AppCompatActivity {
         String confirmPass = confirmPassword.getText().toString().trim();
         String name = fullName.getText().toString().trim();
 
-        // Kiểm tra username
         if (user.isEmpty()) {
             username.setError("Username cannot be empty.");
             isValid = false;
@@ -115,7 +98,6 @@ public class RegisterActivity extends AppCompatActivity {
             isValid = false;
         }
 
-        // Kiểm tra email
         if (mail.isEmpty()) {
             email.setError("Email cannot be empty.");
             isValid = false;
@@ -127,7 +109,6 @@ public class RegisterActivity extends AppCompatActivity {
             isValid = false;
         }
 
-        // Kiểm tra password
         if (pass.isEmpty()) {
             password.setError("Password cannot be empty.");
             isValid = false;
@@ -148,13 +129,11 @@ public class RegisterActivity extends AppCompatActivity {
             isValid = false;
         }
 
-        // Kiểm tra confirm password khớp với password
         if (!pass.equals(confirmPass)) {
             confirmPassword.setError("Passwords do not match.");
             isValid = false;
         }
 
-        // Kiểm tra tên đầy đủ
         if (name.isEmpty()) {
             fullName.setError("Full name cannot be empty.");
             isValid = false;
@@ -163,14 +142,10 @@ public class RegisterActivity extends AppCompatActivity {
             isValid = false;
         }
 
-        // Nếu tất cả hợp lệ, trả về true
         return isValid;
     }
 
-    // Khởi tạo các view
     private void initView() {
-        userList = new ArrayList<>();
-
         username = findViewById(R.id.register_username);
         fullName = findViewById(R.id.register_fullname);
         email = findViewById(R.id.register_email);
@@ -178,7 +153,6 @@ public class RegisterActivity extends AppCompatActivity {
         confirmPassword = findViewById(R.id.register_confirm_password);
         registerButton = findViewById(R.id.register_button);
         ic_back = findViewById(R.id.ic_back);
-
         ic_back.setOnClickListener(v -> finish());
     }
 }

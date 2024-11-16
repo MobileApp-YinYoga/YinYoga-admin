@@ -7,7 +7,7 @@ public class Notification {
     private String description;
     private String time;
     private boolean isRead;
-    private String createdDate; // Ngày tạo thông báo
+    private String createdDate;
 
     public Notification(int id, String email, String title, String description, String time, boolean isRead, String createdDate) {
         this.id = id;

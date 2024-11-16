@@ -25,6 +25,8 @@ import com.example.yinyoga.service.UserService;
 import com.example.yinyoga.utils.DialogHelper;
 import com.example.yinyoga.utils.UserSessionManager;
 
+import java.util.List;
+
 public class LoginActivity extends AppCompatActivity {
 
     private EditText username, password;
@@ -74,12 +76,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void applyCheckboxColorState() {
-        int[][] states = new int[][] {
-                new int[] { android.R.attr.state_checked },
-                new int[] { -android.R.attr.state_checked }
+        int[][] states = new int[][]{
+                new int[]{android.R.attr.state_checked},
+                new int[]{-android.R.attr.state_checked}
         };
 
-        int[] colors = new int[] {
+        int[] colors = new int[]{
                 ContextCompat.getColor(this, R.color.main),
                 ContextCompat.getColor(this, R.color.unchecked_gray)
         };
@@ -95,7 +97,7 @@ public class LoginActivity extends AppCompatActivity {
                 username.setText(sessionUser.getUsername());
                 password.setText(sessionUser.getPassword());
             }
-        }else {
+        } else {
             rememberMeCheckBox.setChecked(false);
         }
     }
@@ -139,18 +141,20 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void logAllUsers() {
-        Cursor cursor = userService.getAllUsers();
-        if (cursor != null && cursor.moveToFirst()) {
-            do {
-                Log.d("username: ", cursor.getString(0));
-                Log.d("name: ", cursor.getString(1));
-                Log.d("email: ", cursor.getString(2));
-                Log.d("password: ", cursor.getString(3));
-                Log.d("role: ", cursor.getString(4));
-            } while (cursor.moveToNext());
-        } else {
+        List<User> userList = userService.getAllUsers();
+
+        if (userList == null) {
             DialogHelper.showErrorDialog(this, "Database doesn't have any user!");
             startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+            return;
+        }
+
+        for (User user : userList) {
+            Log.d("username: ", user.getUsername());
+            Log.d("name: ", user.getFullName());
+            Log.d("email: ", user.getEmail());
+            Log.d("password: ", user.getPassword());
+            Log.d("role: ", user.getRole().getDescription());
         }
     }
 }

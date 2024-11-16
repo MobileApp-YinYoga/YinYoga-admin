@@ -1,11 +1,11 @@
 package com.example.yinyoga.models;
 
 public class User {
-        private String username;  // Mã định danh lớp học
-        private String fullName;  // Tên lớp học
-        private String email;  // Số lượng học viên tối đa
-        private String password;  // Thời lượng của lớp học (phút)
-        private Role role;
+    private String username;
+    private String fullName;
+    private String email;
+    private String password;
+    private Role role;
 
     public User(String username, String fullName, String email, String password, Role role) {
         this.username = username;

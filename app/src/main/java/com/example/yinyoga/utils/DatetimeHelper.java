@@ -6,9 +6,8 @@ import java.util.Date;
 
 public class DatetimeHelper {
     public static String getCurrentDatetime() {
-        Date currentDate = Calendar.getInstance().getTime(); // Lấy ngày hiện tại
+        Date currentDate = Calendar.getInstance().getTime();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String formattedDate = dateFormat.format(currentDate); // Convert Date to String
-        return formattedDate;
+        return dateFormat.format(currentDate);
     }
 }

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -95,18 +94,16 @@ public class ManageClassInstancesFragment extends Fragment {
         setupRecyclerView();
         loadInstancesFromDatabase();
 
-        setEventTextChangeForSearch();  // Xử lý sự kiện search
-
-        dropdown.setOnClickListener(v -> showCustomPopupMenu(view)); // sự kiện chọn option search
-
-        // Xử lý sự kiện thêm phiên học mới
+        setEventTextChangeForSearch();
+        dropdown.setOnClickListener(v -> showCustomPopupMenu(view));
         add_task.setOnClickListener(v -> openAddInstancePopup(""));
     }
 
     private void setEventTextChangeForSearch() {
         searchInput.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -116,13 +113,13 @@ public class ManageClassInstancesFragment extends Fragment {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
 
-        // Xử lý sự kiện khi nhấn vào icon clear_search
         tvClearSearch.setOnClickListener(v -> {
-            searchInput.setText(""); // Xóa văn bản trong searchInput
-            tvClearSearch.setVisibility(View.GONE); // Ẩn icon clear_search
+            searchInput.setText("");
+            tvClearSearch.setVisibility(View.GONE);
         });
     }
 
@@ -141,11 +138,10 @@ public class ManageClassInstancesFragment extends Fragment {
         TextView dateField = popupView.findViewById(R.id.date_field);
         TextView teacherField = popupView.findViewById(R.id.teacher_field);
 
-        // Lắng nghe sự kiện khi người dùng chọn trường để tìm kiếm
         courseField.setOnClickListener(v -> {
             selectedField = "courseId";
             searchInput.setHint("Choose Course ID");
-            searchInput.setFocusableInTouchMode(false); // Cho phép nhập liệu
+            searchInput.setFocusableInTouchMode(false);
             searchInput.setOnClickListener(view -> showCourseDropdown());
             popupWindow.dismiss();
         });
@@ -153,54 +149,39 @@ public class ManageClassInstancesFragment extends Fragment {
         instanceField.setOnClickListener(v -> {
             selectedField = "instanceId";
             searchInput.setHint("Search by Instance ID");
-            searchInput.setFocusableInTouchMode(true); // Cho phép nhập liệu
-            searchInput.setOnClickListener(null); // Bỏ lắng nghe DatePickerDialog
+            searchInput.setFocusableInTouchMode(true);
+            searchInput.setOnClickListener(null);
             popupWindow.dismiss();
         });
 
         dateField.setOnClickListener(v -> {
             selectedField = "date";
             searchInput.setHint("Click here to select date");
-            searchInput.setFocusable(false); // Không cho phép nhập liệu trực tiếp
-            searchInput.setOnClickListener(view -> showDatePickerDialog()); // Mở DatePickerDialog khi nhấn vào
+            searchInput.setFocusable(false);
+            searchInput.setOnClickListener(view -> showDatePickerDialog());
             popupWindow.dismiss();
         });
 
         teacherField.setOnClickListener(v -> {
             selectedField = "teacher";
             searchInput.setHint("Search by Teacher");
-            searchInput.setFocusableInTouchMode(true); // Cho phép nhập liệu
-            searchInput.setOnClickListener(null); // Bỏ lắng nghe DatePickerDialog
+            searchInput.setFocusableInTouchMode(true);
+            searchInput.setOnClickListener(null);
             popupWindow.dismiss();
         });
 
-        // Show the PopupWindow
         popupWindow.setElevation(10);
         popupWindow.showAsDropDown(anchorView, 720, 350);
     }
 
     private void showCourseDropdown() {
-        // Tạo danh sách khóa học từ cơ sở dữ liệu
-        Cursor cursor = courseService.getAllCourses();
-        List<Course> courseList = new ArrayList<>();
-
-        // Duyệt qua các khóa học trong cơ sở dữ liệu và thêm vào courseList
-        if (cursor != null && cursor.moveToFirst()) {
-            do {
-                int courseId = cursor.getInt(0);
-                String courseName = cursor.getString(1);
-
-                courseList.add(new Course(courseId, courseName)); // Thêm đối tượng Course vào danh sách
-            } while (cursor.moveToNext());
-            cursor.close();
-        }
+        List<Course> courseList = courseService.getAllCourses();
 
         // Inflate layout cho PopupWindow
         View popupView = LayoutInflater.from(getContext()).inflate(R.layout.menu_search_select_courses, null);
         RecyclerView recyclerView = popupView.findViewById(R.id.recycler_search_course);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Tạo PopupWindow trước khi sử dụng trong adapter
         PopupWindow popupWindow = new PopupWindow(popupView,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -208,15 +189,12 @@ public class ManageClassInstancesFragment extends Fragment {
 
         popupWindow.setElevation(10);
 
-        // Tạo Adapter và set vào RecyclerView
         MenuCourseAdapter adapter = new MenuCourseAdapter(courseList, course -> {
-            // Cập nhật searchInput với tên và ID khóa học khi chọn một khóa học
             searchInput.setText(course.getCourseName() + " #" + course.getCourseId());
             popupWindow.dismiss(); // Đóng PopupWindow sau khi chọn khóa học
         });
         recyclerView.setAdapter(adapter);
 
-        // Hiển thị PopupWindow
         popupWindow.showAsDropDown(searchInput, 0, 10);
     }
 
@@ -224,13 +202,11 @@ public class ManageClassInstancesFragment extends Fragment {
         Calendar calendar = Calendar.getInstance();
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(), (view, year, month, dayOfMonth) -> {
-            // Định dạng ngày đã chọn với định dạng "January 30th, 2024"
             String monthName = new SimpleDateFormat("MMMM", Locale.getDefault()).format(new GregorianCalendar(year, month, dayOfMonth).getTime());
             String daySuffix = getDaySuffix(dayOfMonth);
             String formattedDate = String.format("%s, %d%s %d", monthName, dayOfMonth, daySuffix, year);
 
             Log.d("formattedDate: ", formattedDate);
-            // Hiển thị ngày vào searchInput và thực hiện tìm kiếm
             searchInput.setText(formattedDate);
             eventSearch(formattedDate);
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
@@ -241,7 +217,6 @@ public class ManageClassInstancesFragment extends Fragment {
     private void eventSearch(String query) {
         List<ClassInstance> filteredInstances = new ArrayList<>();
 
-        // Lặp qua danh sách các phiên học và tìm các phiên học phù hợp với query
         for (ClassInstance instance : instanceLists) {
             switch (selectedField) {
                 case "courseId":
@@ -259,7 +234,6 @@ public class ManageClassInstancesFragment extends Fragment {
                         filteredInstances.add(instance);
                     }
                     break;
-
                 case "teacher":
                     if (instance.getTeacher().toLowerCase().contains(query.toLowerCase())) {
                         filteredInstances.add(instance);
@@ -268,44 +242,32 @@ public class ManageClassInstancesFragment extends Fragment {
             }
         }
 
-        // Kiểm tra nếu không tìm thấy phiên học nào phù hợp
         if (filteredInstances.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
         } else {
             recyclerView.setVisibility(View.VISIBLE);
         }
 
-        // Cập nhật danh sách phiên học trong Adapter
         instanceAdapter.updateInstanceList(filteredInstances);
     }
 
-    // Mở popup để thêm hoặc cập nhật phiên học
     public void openAddInstancePopup(String instanceId) {
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(R.drawable.dialog_rounded_border);
 
-        // Thiết lập sự kiện cho nút đóng
         LinearLayout btnClosePopup = dialog.findViewById(R.id.btn_close);
         Button btnSave = dialog.findViewById(R.id.btn_save);
         Button btnClearAllPopup = dialog.findViewById(R.id.btn_clear);
         Button btnUploadImage = dialog.findViewById(R.id.btnUploadImage);
 
-        // Đặt sự kiện cho nút đóng và xóa
         setPopupEventListeners(btnClosePopup, btnClearAllPopup);
-
         btnUploadImage.setOnClickListener(this::chooseImage);
-
         clearAllInputs();
 
-        // Kiểm tra xem có phải cập nhật không, để điền vào ô input
         setPopupAddOrUpdate(instanceId);
-
-        // bắt sự kiện trùng id
         isInstanceIdExists();
 
-        // Sự kiện khi nhấn Save
         btnSave.setOnClickListener(v -> saveInstance(instanceId));
 
-        // Mở popup
         dialog.show();
     }
 
@@ -351,44 +313,32 @@ public class ManageClassInstancesFragment extends Fragment {
             edInstanceId.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    // Không cần xử lý sự kiện này
                 }
 
                 @Override
                 public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    // Kiểm tra khi người dùng thay đổi văn bản
-                    if (!charSequence.toString().isEmpty() && tvInstanceId.getVisibility() == View.GONE ) {
-                        checkAlreadyId(charSequence.toString());
+                    // Check when user changes the text
+                    if (!charSequence.toString().isEmpty() &&
+                            tvInstanceId.getVisibility() == View.GONE &&
+                            instanceService.getClassInstance(charSequence.toString()) != null) {
+                        edInstanceId.setError("This ID already exists in the database");
                     }
                 }
 
                 @Override
                 public void afterTextChanged(Editable editable) {
-                    // Không cần xử lý sự kiện này
                 }
             });
 
         }
     }
 
-    private boolean checkAlreadyId(String id) {
-        boolean idExists = instanceService.getClassInstance(id) != null;
-
-        // Thiết lập lỗi nếu ID tồn tại
-        edInstanceId.setError(idExists ? "This ID already exists in the database" : null);
-
-        return idExists;
-    }
-
-    // Thiết lập sự kiện cho nút đóng và xóa
     private void setPopupEventListeners(View btnClosePopup, View btnClearAllPopup) {
         btnClosePopup.setOnClickListener(v -> dialog.dismiss());
         btnClearAllPopup.setOnClickListener(v -> clearAllInputs());
     }
 
-    // Thêm hoặc cập nhật phiên học
     private void saveInstance(String instanceId) {
-        // Lấy thông tin từ các trường trong popup
         String courseIdStr = spCourseId.getSelectedItem().toString();
         dateStr = edDate.getText().toString().trim();
         String teacher = spTeacher.getSelectedItem().toString();
@@ -398,18 +348,18 @@ public class ManageClassInstancesFragment extends Fragment {
         int courseId = Integer.parseInt(getCourse);
 
         if (!isValidateInput()) {
-            return; // Nếu không hợp lệ, không thực hiện lưu
+            return;
         }
-        // Kiểm tra tính hợp lệ của dữ liệu đầu vào
+
         if (!Objects.equals(instanceId, "")) {
-            // Cập nhật phiên học hiện có
-            instanceService.updateClassInstance(instanceId, courseId, dateStr, teacher, imageBytes);
+            Course course = courseService.getCourse(courseId);
+            instanceService.updateClassInstance(new ClassInstance(instanceId, course, dateStr, teacher, imageBytes));
             DialogHelper.showSuccessDialog(getActivity(), "Course instance updated successfully!");
         } else {
             instanceId = edInstanceId.getText().toString().trim();
 
-            // Thêm phiên học mới vào cơ sở dữ liệu
-            instanceService.addClassInstance(instanceId, courseId, dateStr, teacher, imageBytes);
+            Course course = courseService.getCourse(courseId);
+            instanceService.addClassInstance(new ClassInstance(instanceId, course, dateStr, teacher, imageBytes));
             DialogHelper.showSuccessDialog(getActivity(), "Course instance saved successfully!");
         }
 
@@ -418,7 +368,6 @@ public class ManageClassInstancesFragment extends Fragment {
         dialog.dismiss();
     }
 
-    // Thiết lập giao diện
     private void setPopupAddOrUpdate(String instanceId) {
         edInstanceId.setEnabled(true);
 
@@ -432,7 +381,6 @@ public class ManageClassInstancesFragment extends Fragment {
                 tvInstanceId.setText(findInstance.getInstanceId());
                 tvInstanceId.setVisibility(View.VISIBLE);
 
-                // Đặt dữ liệu phiên học hiện tại vào các trường input
                 edInstanceId.setText(findInstance.getInstanceId());
                 spCourseId.setSelection(getArrayPosition("getCourseId", String.valueOf(findInstance.getCourse().getCourseId())));
                 edDate.setText(findInstance.getDate());
@@ -442,7 +390,7 @@ public class ManageClassInstancesFragment extends Fragment {
                 e.printStackTrace(); // In lỗi ra log để kiểm tra
                 DialogHelper.showErrorDialog(getActivity(), e.getMessage());
             }
-        } else{
+        } else {
             tvTitle.setText("Add Class Instance");
             tvSubtitle.setText("Create a new course for YinYoga.");
             tvInstanceId.setVisibility(View.GONE);
@@ -477,19 +425,16 @@ public class ManageClassInstancesFragment extends Fragment {
     private boolean isValidateInput() {
         boolean isValid = true;
 
-        // Kiểm tra nếu InstanceId rỗng
         if (edInstanceId.getText().toString().trim().isEmpty()) {
             edInstanceId.setError("Please enter Instance ID");
             isValid = false;
         }
 
-        // Kiểm tra nếu ngày (date) rỗng
         if (edDate.getText().toString().trim().isEmpty()) {
             edDate.setError("Please enter Date");
             isValid = false;
         }
 
-        // Kiểm tra nếu chưa chọn hình ảnh
         if (imageBytes == null) {
             Toast.makeText(getActivity(), "Please upload an image", Toast.LENGTH_SHORT).show();
             isValid = false;
@@ -501,58 +446,34 @@ public class ManageClassInstancesFragment extends Fragment {
 
     public void loadInstancesFromDatabase() {
         instanceLists.clear();
-        Cursor cursor = instanceService.getAllClassInstances();
+        instanceLists = instanceService.getAllClassInstances();
 
-        if (cursor != null && cursor.moveToFirst()) {
-            // Nếu có dữ liệu, nạp vào danh sách
-            do {
-                String instanceId = cursor.getString(0);
-                int courseId = cursor.getInt(1);
-                String date = cursor.getString(2);
-                String teacher = cursor.getString(3);
-                byte[] imageUrl = cursor.getBlob(4);
-                String courseName = cursor.getString(5);
-
-                // Tạo đối tượng Course và gán courseId, courseName
-                Course course = new Course();
-                course.setCourseId(courseId);
-                course.setCourseName(courseName);
-
-                // Thêm instance vào danh sách
-                instanceLists.add(new ClassInstance(instanceId, course, date, teacher, imageUrl));
-            } while (cursor.moveToNext());
-            syncClassInstanceManager.syncClassInstanceToFirestore();
-        } else {
+        if (instanceLists.isEmpty()) {
             byte[] img = ImageHelper.convertDrawableToByteArray(ManageClassInstancesFragment.this.requireContext(), R.drawable.bg_course);
-            instanceService.addClassInstance("YOGA101", 1,"January, 30th 2024", "John Doe", img);
-            instanceService.addClassInstance("YOGA102", 1, "February, 15th 2024", "Jane Smith", img);
-            instanceService.addClassInstance("YOGA103", 1,"March, 5st 2024", "Albus Dumbledore", img);
+            instanceService.addClassInstance(new ClassInstance("YOGA101", courseService.getCourse(1), "January, 30th 2024", "John Doe", img));
+            instanceService.addClassInstance(new ClassInstance("YOGA102", courseService.getCourse(1), "February, 15th 2024", "Jane Doe", img));
+            instanceService.addClassInstance(new ClassInstance("YOGA103", courseService.getCourse(2), "March, 1st 2024", "John Doe", img));
+            instanceLists = instanceService.getAllClassInstances();
             syncClassInstanceManager.syncClassInstanceFromFirestore();
         }
 
-        if (cursor != null) {
-            cursor.close(); // Đóng cursor sau khi sử dụng
-        }
-
+        syncClassInstanceManager.syncClassInstanceToFirestore();
         DialogHelper.dismissLoadingDialog();
-        // Cập nhật giao diện với dữ liệu mới
+
         instanceAdapter = new ClassInstanceAdapter(instanceLists, this);
         recyclerView.setAdapter(instanceAdapter);
     }
 
-    // Cấu hình RecyclerView với dữ liệu mẫu
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Dữ liệu mẫu cho các phiên học
         instanceLists = new ArrayList<>();
         instanceAdapter = new ClassInstanceAdapter(instanceLists, this);
         recyclerView.setAdapter(instanceAdapter);
     }
 
-    // Khởi tạo các View từ layout
     private void initViews(View view) {
-        recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView = view.findViewById(R.id.recyclerViewClassInstance);
         add_task = view.findViewById(R.id.add_task);
         tvClearSearch = view.findViewById(R.id.clear_search);
         searchInput = view.findViewById(R.id.searchInput);
@@ -562,11 +483,9 @@ public class ManageClassInstancesFragment extends Fragment {
         instanceService = new ClassInstanceService(getContext());
         courseService = new CourseService(getContext());
 
-        // Khởi tạo dialog khi cần thiết
         dialog = new Dialog(requireContext());
         dialog.setContentView(R.layout.popup_add_instance);
 
-        // Khởi tạo EditText trong popup
         tvTitle = dialog.findViewById(R.id.tvTitle);
         tvSubtitle = dialog.findViewById(R.id.tvSubtitle);
         tvInstanceId = dialog.findViewById(R.id.tvInstanceId);
@@ -578,24 +497,19 @@ public class ManageClassInstancesFragment extends Fragment {
 
         arrayCourseSpinner = new ArrayList<>();
 
-        // Lấy courseId - courseName vào array
         fillToSpinnerCourseIdPopup();
-        // Khi nhấp vào ô ngày
         edDate.setOnClickListener(v -> showDayPickerDialog(getDayFromCourse()));
     }
 
     private int getDayFromCourse() {
-        // Lấy giá trị courseId từ Spinner (spinnerCourseId là Spinner hiển thị Course ID)
-        String selectedCourse = spCourseId.getSelectedItem().toString(); // Lấy giá trị "1 - Flow Yoga" từ Spinner
-        String[] parts = selectedCourse.split(" - "); // Tách phần id và tên
+        String selectedCourse = spCourseId.getSelectedItem().toString();
+        String[] parts = selectedCourse.split(" - ");
 
-        int courseId = Integer.parseInt(parts[0]); // Lấy courseId
+        int courseId = Integer.parseInt(parts[0]);
 
-        // Lấy thông tin dayOfTheWeek từ courseService bằng cách sử dụng courseId
-        Course course = courseService.getCourse(courseId); // Giả sử bạn đã có hàm này trong service
+        Course course = courseService.getCourse(courseId);
         String dayOfTheWeek = course.getDayOfWeek();
 
-        // Sử dụng một Map để ánh xạ tên các ngày thành giá trị Calendar
         Map<String, Integer> dayMap = new HashMap<>();
         dayMap.put("monday", Calendar.MONDAY);
         dayMap.put("tuesday", Calendar.TUESDAY);
@@ -605,34 +519,27 @@ public class ManageClassInstancesFragment extends Fragment {
         dayMap.put("saturday", Calendar.SATURDAY);
         dayMap.put("sunday", Calendar.SUNDAY);
 
-        // Trả về giá trị tương ứng với dayOfTheWeek, hoặc -1 nếu không tìm thấy
         return dayMap.getOrDefault(dayOfTheWeek.toLowerCase(), -1);
     }
 
-    //Hiển thị lịch có thứ theo courseId
     private void showDayPickerDialog(int dayOfWeek) {
-        // Tạo danh sách các ngày tương ứng với dayOfWeek bắt đầu từ ngày hiện tại
         List<String> dayList = new ArrayList<>();
         Calendar calendar = Calendar.getInstance();
 
-        // Di chuyển đến ngày tương ứng tiếp theo nếu không phải là ngày cần tìm
         while (calendar.get(Calendar.DAY_OF_WEEK) != dayOfWeek) {
             calendar.add(Calendar.DAY_OF_MONTH, 1);
         }
 
-        // Thêm 10 ngày tương ứng tiếp theo vào danh sách
         for (int i = 0; i < 10; i++) {
             dayList.add(formatDateWithSuffix(calendar.getTime()));
             calendar.add(Calendar.DAY_OF_MONTH, 7);
         }
 
-        // Hiển thị dialog custom
         DialogHelper.showCustomDayPickerDialog(
                 getContext(),
                 "Choose a " + getDayOfWeekName(dayOfWeek),
                 dayList,
                 selectedDate -> {
-                    // Cập nhật ngày đã chọn vào EditText
                     edDate.setText(selectedDate);
                 }
         );
@@ -642,14 +549,11 @@ public class ManageClassInstancesFragment extends Fragment {
         SimpleDateFormat monthYearFormat = new SimpleDateFormat("MMMM, yyyy", Locale.getDefault());
         SimpleDateFormat dayFormat = new SimpleDateFormat("d", Locale.getDefault());
 
-        // Lấy ngày, tháng và năm
         String day = dayFormat.format(date);
         String monthYear = monthYearFormat.format(date);
 
-        // Thêm hậu tố thích hợp
         String dayWithSuffix = day + getDaySuffix(Integer.parseInt(day));
 
-        // Kết hợp để tạo định dạng mong muốn
         return monthYear.replace(",", ", " + dayWithSuffix);
     }
 
@@ -658,63 +562,52 @@ public class ManageClassInstancesFragment extends Fragment {
             return "th";
         }
         switch (day % 10) {
-            case 1: return "st";
-            case 2: return "nd";
-            case 3: return "rd";
-            default: return "th";
+            case 1:
+                return "st";
+            case 2:
+                return "nd";
+            case 3:
+                return "rd";
+            default:
+                return "th";
         }
     }
 
-    // lấy day name
     public String getDayOfWeekName(int dayOfWeek) {
-        // Mảng các tên ngày trong tuần, chỉ số bắt đầu từ 1 (Sunday)
         String[] days = {"", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 
         if (dayOfWeek >= Calendar.SUNDAY && dayOfWeek <= Calendar.SATURDAY) {
             return days[dayOfWeek];
         } else {
-            return "Invalid day"; // Nếu dayOfWeek không hợp lệ
+            return "Invalid day";
         }
     }
 
     private void fillToSpinnerCourseIdPopup() {
         arrayCourseSpinner.clear();
-        // Khởi tạo danh sách để lưu các giá trị courseId - courseName
+        // Initialize a list to store courseId - courseName
         arrayCourseSpinner = new ArrayList<>();
+        List<Course> courseList = courseService.getAllCourses();
 
-        // Lấy dữ liệu từ courseService
-        Cursor cursor = courseService.getAllCourses();
-
-        if (cursor != null && cursor.moveToFirst()) {
-            // Nếu có dữ liệu, nạp vào danh sách
-            do {
-                int id = cursor.getInt(0); // Lấy courseId
-                String courseName = cursor.getString(1); // Lấy courseName
-
-                // Thêm courseId - courseName vào danh sách
-                arrayCourseSpinner.add(id + " - " + courseName);
-
-            } while (cursor.moveToNext());
-
-            // Sau khi có danh sách, đưa vào Spinner
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, arrayCourseSpinner);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spCourseId.setAdapter(adapter); // spinnerCoursePKId là Spinner của bạn
-        } else {
-            // Nếu không có dữ liệu, hiển thị thông báo không có dữ liệu và vô hiệu hóa Spinner
+        if (courseList.isEmpty()) {
             arrayCourseSpinner.add("No data available");
             ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, arrayCourseSpinner);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spCourseId.setAdapter(adapter);
-            spCourseId.setEnabled(false); // Vô hiệu hóa Spinner nếu không có dữ liệu
-        }
+            spCourseId.setEnabled(false);
+        } else {
+            for (Course course : courseList) {
+                int id = course.getCourseId();
+                String courseName = course.getCourseName();
+                arrayCourseSpinner.add(id + " - " + courseName);
+            }
 
-        if (cursor != null) {
-            cursor.close(); // Đóng cursor sau khi sử dụng
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, arrayCourseSpinner);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spCourseId.setAdapter(adapter); // spinnerCoursePKId là Spinner của bạn
         }
     }
 
-    // Phương thức xóa tất cả thông tin nhập vào trong popup
     private void clearAllInputs() {
         spCourseId.setSelection(0);
         edInstanceId.setText("");

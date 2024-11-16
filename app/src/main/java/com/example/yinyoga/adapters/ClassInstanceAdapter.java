@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,10 +22,9 @@ import com.example.yinyoga.utils.ImageHelper;
 import java.util.List;
 
 public class ClassInstanceAdapter extends RecyclerView.Adapter<ClassInstanceAdapter.InstanceViewHolder> {
-
     private List<ClassInstance> instanceList;
-    private ManageClassInstancesFragment fragment;
-    private ClassInstanceService instanceService;
+    private final ManageClassInstancesFragment fragment;
+    private final ClassInstanceService instanceService;
 
     public ClassInstanceAdapter(List<ClassInstance> instanceList, ManageClassInstancesFragment fragment) {
         this.fragment = fragment;
@@ -43,18 +43,17 @@ public class ClassInstanceAdapter extends RecyclerView.Adapter<ClassInstanceAdap
     public void onBindViewHolder(@NonNull InstanceViewHolder holder, int position) {
         ClassInstance instance = instanceList.get(position);
 
-        // Định dạng CourseID theo kiểu "Course - YG1001"
+        // Format the CourseID like "Course - YG1001"
         holder.courseId.setText(String.format("%s #%s - %s ",
                 instance.getCourse().getCourseName(),
                 instance.getCourse().getCourseId(),
                 instance.getInstanceId()));
 
-        // Hiển thị Date: January, 20th, 2023 hoặc "Date: N/A" nếu không có giá trị
+        // Date: January, 20th, 2023 or "Date: N/A" if no value
         holder.date.setText(instance.getDate() != null && !instance.getDate().isEmpty()
                 ? "Date: " + instance.getDate()
                 : "Date: N/A");
 
-        // Hiển thị Teacher: Harry Potter
         holder.teacher.setText(String.format("Teacher: %s", instance.getTeacher()));
 
         holder.classInstanceImage.setImageBitmap(ImageHelper.convertByteArrayToBitmap(instance.getImageUrl()));
@@ -77,16 +76,14 @@ public class ClassInstanceAdapter extends RecyclerView.Adapter<ClassInstanceAdap
         TextView deleteSection = popupView.findViewById(R.id.delete_section);
 
         editSection.setOnClickListener(v -> {
-            // Thực hiện thao tác chỉnh sửa
             if (fragment != null) {
                 String instanceId = instanceList.get(position).getInstanceId();
-                fragment.openAddInstancePopup(instanceId); // Edit the course
+                fragment.openAddInstancePopup(instanceId);
             }
-            popupWindow.dismiss(); // Đóng menu sau khi nhấn
+            popupWindow.dismiss();
         });
 
         deleteSection.setOnClickListener(v -> {
-            // Xác nhận xóa
             DialogHelper.showDeleteConfirmationDialog(
                     fragment.getActivity(),
                     "Are you sure you want to delete class instance \"" + instanceList.get(position).getInstanceId() + "\"?",
@@ -103,9 +100,9 @@ public class ClassInstanceAdapter extends RecyclerView.Adapter<ClassInstanceAdap
                             instanceList.remove(position);
                             notifyItemRemoved(position);
                             notifyItemRangeChanged(position, instanceList.size());
- }
+                        }
                     });
-            popupWindow.dismiss(); // Đóng menu sau khi nhấn
+            popupWindow.dismiss();
         });
 
         // Show the PopupWindow
@@ -137,7 +134,6 @@ public class ClassInstanceAdapter extends RecyclerView.Adapter<ClassInstanceAdap
         }
     }
 
-    // Phương thức cập nhật danh sách các phiên học
     public void updateInstanceList(List<ClassInstance> updatedList) {
         this.instanceList = updatedList;
         notifyDataSetChanged();

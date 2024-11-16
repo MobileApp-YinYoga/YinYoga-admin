@@ -1,9 +1,9 @@
 package com.example.yinyoga.models;
 
 public class Role {
-    private int roleId;          // Mã vai trò
-    private String roleName;    // Mã vai trò
-    private String description;     // Tên vai trò
+    private int roleId;
+    private String roleName;
+    private String description;
 
     public Role(int roleId, String roleName, String description) {
         this.roleId = roleId;
