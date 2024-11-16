@@ -15,7 +15,7 @@
         android:layout_height="match_parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/background_welcome" />
+        app:srcCompat="@drawable/im_background_welcome" />
 
     <Button
         android:id="@+id/getStart"
