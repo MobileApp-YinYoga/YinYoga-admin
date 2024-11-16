@@ -13,8 +13,8 @@
         android:id="@+id/ic_back"
         android:layout_width="29dp"
         android:layout_height="25dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_back" />
@@ -22,9 +22,9 @@
     <!-- Logo -->
     <ImageView
         android:id="@+id/logo"
-        android:layout_width="259dp"
-        android:layout_height="142dp"
-        android:layout_marginTop="55dp"
+        android:layout_width="789px"
+        android:layout_height="558px"
+        android:layout_marginTop="35dp"
         android:contentDescription="App Logo"
         android:src="@drawable/logo"
         app:layout_constraintEnd_toEndOf="parent"
@@ -36,7 +36,7 @@
         android:id="@+id/register_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="0dp"
         android:text="Register"
         android:textColor="@color/main"
         android:textSize="24sp"
@@ -51,9 +51,9 @@
         android:layout_width="330dp"
         android:layout_height="50dp"
         android:layout_marginTop="20dp"
-        android:background="@drawable/custom_input"
         android:fontFamily="@font/poppins_semibold"
         android:hint="Username"
+        android:backgroundTint="@color/main_50"
         android:textSize="16dp"
         android:paddingLeft="10dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -89,7 +89,7 @@
         android:layout_width="330dp"
         android:layout_height="50dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/custom_input"
+        android:backgroundTint="@color/main_50"
         android:fontFamily="@font/poppins_semibold"
         android:hint="Full name"
         android:textSize="16dp"
@@ -109,7 +109,7 @@
         android:inputType="textPassword"
         android:textSize="16dp"
         android:paddingLeft="10dp"
-        android:background="@drawable/custom_input"
+        android:backgroundTint="@color/main_50"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.507"
         app:layout_constraintStart_toStartOf="parent"
@@ -126,7 +126,7 @@
         android:textSize="16dp"
         android:paddingLeft="10dp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:background="@drawable/custom_input"
+        android:backgroundTint="@color/main_50"
         app:layout_constraintHorizontal_bias="0.507"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/register_password" />
@@ -135,7 +135,7 @@
         android:id="@+id/register_button"
         android:layout_width="200dp"
         android:layout_height="55dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="50dp"
         android:backgroundTint="@color/main"
         android:fontFamily="@font/poppins_semibold"
         android:text="Register"
@@ -152,7 +152,7 @@
         android:layout_height="50dp"
         android:layout_marginTop="10dp"
         android:fontFamily="@font/poppins_semibold"
-        android:background="@drawable/custom_input"
+        android:backgroundTint="@color/main_50"
         android:hint="Email"
         android:inputType="textEmailAddress"
         android:textSize="16dp"
@@ -163,6 +163,31 @@
         app:layout_constraintTop_toBottomOf="@+id/register_fullname" />
 
 
+    <TextView
+        android:id="@+id/subNavigation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/poppins_medium"
+        android:text="Already have an Account?"
+        android:textColor="@color/main"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/register_button" />
+
+    <TextView
+        android:id="@+id/nav_register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/poppins_bold"
+        android:text="Login"
+        android:textColor="@color/main"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/subNavigation"
+        app:layout_constraintTop_toBottomOf="@+id/register_button" />
 
 
     <!-- Trường Password -->

@@ -330,7 +330,7 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
         if (courseLists.isEmpty()) {
             // Pass the formatted date as a String
             String formattedDate = DatetimeHelper.getCurrentDatetime();
-            byte[] img = ImageHelper.convertDrawableToByteArray(ManageCoursesFragment.this.requireContext(), R.drawable.bg_course);
+            byte[] img = ImageHelper.convertDrawableToByteArray(ManageCoursesFragment.this.requireContext(), R.drawable.im_bg_course);
             courseService.addCourse(new Course("Flow Yoga", "Beginner", formattedDate, "Monday", "A calming beginner yoga class", 20, 60, img, 15.0, "10:00"));
             courseService.addCourse(new Course("Yin Yoga", "Intermediate", formattedDate, "Tuesday", "A deep stretch yoga class focusing on flexibility", 15, 75, img, 20.0, "12:00"));
             courseLists = courseService.getAllCourses();

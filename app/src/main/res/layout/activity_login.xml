@@ -15,17 +15,17 @@
         android:id="@+id/ic_back"
         android:layout_width="29dp"
         android:layout_height="25dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_back" />
 
     <ImageView
         android:id="@+id/logo"
-        android:layout_width="259dp"
-        android:layout_height="142dp"
-        android:layout_marginTop="55dp"
+        android:layout_width="789px"
+        android:layout_height="558px"
+        android:layout_marginTop="35dp"
         android:contentDescription="App Logo"
         android:src="@drawable/logo"
         app:layout_constraintEnd_toEndOf="parent"
@@ -37,7 +37,7 @@
         android:id="@+id/login_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="0dp"
         android:text="Login"
         android:textColor="@color/main"
         android:textSize="24sp"
@@ -63,7 +63,7 @@
     <!-- Trường Username -->
     <EditText
         android:id="@+id/username"
-        android:layout_width="300dp"
+        android:layout_width="330dp"
         android:layout_height="50dp"
         android:layout_marginTop="20dp"
         android:hint="Username"
@@ -77,7 +77,7 @@
     <!-- Trường Password -->
     <EditText
         android:id="@+id/password"
-        android:layout_width="300dp"
+        android:layout_width="330dp"
         android:layout_height="50dp"
         android:layout_marginTop="20dp"
         android:hint="Password"
@@ -109,7 +109,7 @@
         android:id="@+id/remember_me"
         android:layout_width="176dp"
         android:layout_height="25dp"
-        android:layout_marginStart="50dp"
+        android:layout_marginStart="35dp"
         android:layout_marginTop="40dp"
         android:fontFamily="@font/poppins_light"
         android:paddingTop="5dp"
@@ -123,7 +123,7 @@
         android:id="@+id/forget_pass"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="44dp"
         android:layout_marginEnd="44dp"
         android:fontFamily="@font/poppins_medium"
         android:text="Forget password"

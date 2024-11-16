@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -40,9 +41,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         holder.time.setText(notification.getCreatedDate());
 
         if (notification.isRead()) {
-            holder.itemView.setBackgroundColor(context.getResources().getColor(android.R.color.white));
+            holder.status.setImageResource(R.drawable.ic_notification_read);
         } else {
-            holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.main_30));
+            holder.status.setImageResource(R.drawable.ic_notification_unread);
         }
     }
 
@@ -65,11 +66,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     static class NotificationViewHolder extends RecyclerView.ViewHolder {
         TextView title, description, time;
+        ImageView status;
 
         public NotificationViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.title);
             description = itemView.findViewById(R.id.description);
+            status = itemView.findViewById(R.id.ic_status);
             time = itemView.findViewById(R.id.time);
         }
     }

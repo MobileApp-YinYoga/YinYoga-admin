@@ -15,7 +15,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:background="@color/main_30"
         android:padding="10dp"
         android:layout_marginTop="5dp"
         app:layout_constraintStart_toStartOf="parent"

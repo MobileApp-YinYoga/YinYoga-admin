@@ -464,7 +464,7 @@ public class ManageClassInstancesFragment extends Fragment {
         instanceLists = instanceService.getAllClassInstances();
 
         if (instanceLists.isEmpty()) {
-            byte[] img = ImageHelper.convertDrawableToByteArray(ManageClassInstancesFragment.this.requireContext(), R.drawable.bg_course);
+            byte[] img = ImageHelper.convertDrawableToByteArray(ManageClassInstancesFragment.this.requireContext(), R.drawable.im_bg_course);
             instanceService.addClassInstance(new ClassInstance("YOGA101", courseService.getCourse(1), "January, 30th 2024", "John Doe", img));
             instanceService.addClassInstance(new ClassInstance("YOGA102", courseService.getCourse(1), "February, 15th 2024", "Jane Doe", img));
             instanceService.addClassInstance(new ClassInstance("YOGA103", courseService.getCourse(2), "March, 1st 2024", "John Doe", img));
