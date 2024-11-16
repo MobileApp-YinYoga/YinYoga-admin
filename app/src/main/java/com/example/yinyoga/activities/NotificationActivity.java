@@ -11,6 +11,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -48,6 +49,7 @@ public class NotificationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
+        EdgeToEdge.enable(this);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.activity_notification), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -175,6 +177,10 @@ public class NotificationActivity extends AppCompatActivity {
 
     private void loadNotifications() {
         List<Notification> allNotifications = notificationService.getAllNotifications();
+
+       if (allNotifications.size() <= 0){
+           addSampleNotifications();
+       }
         newNotifications.clear();
         beforeNotifications.clear();
 
@@ -207,13 +213,97 @@ public class NotificationActivity extends AppCompatActivity {
         calendar.add(Calendar.DAY_OF_YEAR, -3); // Ngày trước đó ba ngày
         String threeDaysAgoDate = dateFormat.format(calendar.getTime());
 
-        notificationService.insertNotification(new Notification("trannq2003@gmail.com", "Today's Notification 1", "Description 1", "09:00 AM", false, todayDate));
-        notificationService.insertNotification(new Notification("trannq2003@gmail.com", "Today's Notification 2", "Description 2", "10:00 AM", true, todayDate));
-        notificationService.insertNotification(new Notification("trannq2003@gmail.com", "Today's Notification 3", "Description 3", "11:00 AM", false, todayDate));
+        // Today's Notifications
+        notificationService.insertNotification(new Notification(
+                "trannqgcc210041@fpt.edu.vn",
+                "New Yoga Class Booking",
+                "User trannq2003@gmail.com has booked a class for 'Advanced Yoga' on Monday at 10:00 AM",
+                "10:00 AM",
+                false,
+                todayDate
+        ));
 
-        notificationService.insertNotification(new Notification("trannq2003@gmail.com", "Old Notification 1", "Description 1", "09:00 AM", true, yesterdayDate));
-        notificationService.insertNotification(new Notification("trannq2003@gmail.com", "Old Notification 2", "Description 2", "10:00 AM", true, yesterdayDate));
-        notificationService.insertNotification(new Notification("trannq2003@gmail.com", "Old Notification 3", "Description 3", "11:00 AM", false, threeDaysAgoDate));
-        notificationService.insertNotification(new Notification("trannq2003@gmail.com", "Old Notification 4", "Description 4", "12:00 PM", false, threeDaysAgoDate));
+        notificationService.insertNotification(new Notification(
+                "trannqgcc210041@fpt.edu.vn",
+                "Yoga Class Booking Pending Approval",
+                "User trannq2003@gmail.com's booking for 'Flow Yoga' on Wednesday is pending approval",
+                "11:00 AM",
+                true,
+                todayDate
+        ));
+
+        notificationService.insertNotification(new Notification(
+                "trannqgcc210041@fpt.edu.vn",
+                "New User Registration",
+                "New user registered: trannq2003@gmail.com",
+                "12:00 PM",
+                false,
+                todayDate
+        ));
+
+// Past Notifications
+        notificationService.insertNotification(new Notification(
+                "trannqgcc210041@fpt.edu.vn",
+                "Yoga Class Booking Confirmed",
+                "User john_doe@gmail.com has confirmed their booking for 'Power Yoga' on Tuesday at 9:00 AM",
+                "09:00 AM",
+                true,
+                yesterdayDate
+        ));
+
+        notificationService.insertNotification(new Notification(
+                "trannqgcc210041@fpt.edu.vn",
+                "Payment Pending for Booking",
+                "Payment for the booking by jane.smith@example.com for 'Yin Yoga' on Thursday is still pending",
+                "10:00 AM",
+                false,
+                yesterdayDate
+        ));
+
+        notificationService.insertNotification(new Notification(
+                "trannqgcc210041@fpt.edu.vn",
+                "Booking Canceled",
+                "Booking by emily.jones@example.com for 'Vinyasa Yoga' on Friday has been canceled",
+                "11:00 AM",
+                true,
+                yesterdayDate
+        ));
+
+// Older Notifications
+        notificationService.insertNotification(new Notification(
+                "trannqgcc210041@fpt.edu.vn",
+                "Class Rescheduled",
+                "Yoga class 'Morning Flow' on Sunday has been rescheduled to 11:00 AM from 9:00 AM",
+                "09:00 AM",
+                false,
+                threeDaysAgoDate
+        ));
+
+        notificationService.insertNotification(new Notification(
+                "trannqgcc210041@fpt.edu.vn",
+                "New Booking Request",
+                "New booking request from user alice.walker@example.com for 'Beginner Yoga' on Monday at 10:00 AM",
+                "10:00 AM",
+                false,
+                threeDaysAgoDate
+        ));
+
+        notificationService.insertNotification(new Notification(
+                "trannqgcc210041@fpt.edu.vn",
+                "Booking Payment Successful",
+                "Payment for booking by sarah.lee@example.com for 'Hatha Yoga' on Tuesday has been successfully completed",
+                "11:00 AM",
+                true,
+                threeDaysAgoDate
+        ));
+
+        notificationService.insertNotification(new Notification(
+                "trannqgcc210041@fpt.edu.vn",
+                "Booking Expired",
+                "Booking for 'Power Yoga' scheduled on Friday by mark.taylor@example.com has expired",
+                "12:00 PM",
+                false,
+                threeDaysAgoDate
+        ));
     }
 }

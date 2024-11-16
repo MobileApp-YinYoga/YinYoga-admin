@@ -6,9 +6,11 @@
     <color name="warningColor">#FFEB3B</color>
     <color name="infoColor">#64B5F6</color>
     <color name="white">#FFFFFF</color>
+    <color name="white_40">#40FFFFFF</color>
     <color name="white_70">#90FFFFFF</color>
     <color name="white_80">#80FFFFFF</color>
     <color name="main">#6D674B</color>
+    <color name="gray_50">#507B7B7B</color>
     <color name="main_50">#506D674B</color>
     <color name="main_95">#956D674B</color>
     <color name="main_60">#606D674B</color>

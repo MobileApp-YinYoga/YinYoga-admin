@@ -4,17 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="20dp"
     android:background="@color/white"
     android:id="@+id/login"
     tools:context=".activities.ForgotPasswordActivity">
 
     <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="441dp"
+        android:layout_height="730dp"
+        android:layout_marginStart="-10dp"
+        android:layout_marginTop="150dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/im_background" />
+
+    <ImageView
         android:id="@+id/ic_back"
         android:layout_width="29dp"
         android:layout_height="25dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_back" />
@@ -36,10 +45,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
-        android:fontFamily="@font/poppins_bold"
+        android:fontFamily="@font/poppins_semibold"
         android:text="Fogot Password"
         android:textColor="@color/main"
-        android:textSize="24sp"
+        android:textSize="64px"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/logo" />
@@ -91,7 +100,7 @@
         android:id="@+id/btnSubmit"
         android:layout_width="130dp"
         android:layout_height="55dp"
-        android:layout_marginBottom="240dp"
+        android:layout_marginBottom="300dp"
         android:backgroundTint="@color/main"
         android:fontFamily="@font/poppins_semibold"
         android:text="Continue"
