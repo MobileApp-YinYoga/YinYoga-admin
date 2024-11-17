@@ -1,17 +1,17 @@
 package com.example.yinyoga.utils;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
+import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -116,31 +116,40 @@ public class DialogHelper {
         }, 3000);
     }
 
-    public static void showDeleteConfirmationDialog(Activity activity, String message, final DeleteConfirmationListener listener) {
-        final Dialog dialog = new Dialog(activity);
-        dialog.setContentView(R.layout.dialog_confirm_delete);
+    public static void showConfirmationDialog(
+            Activity activity,
+            String title, String message,
+            byte[] imageBytes,
+            DeleteConfirmationListener listener
+    ) {
+        Dialog dialog = new Dialog(activity);
+        dialog.setContentView(R.layout.dialog_confirm);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
-        TextView messageText = dialog.findViewById(R.id.dialog_title);
-        messageText.setText(message);
+        TextView titleText = dialog.findViewById(R.id.dialog_confirm_title);
+        TextView messageText = dialog.findViewById(R.id.dialog_confirm_message);
+        ImageView imageView = dialog.findViewById(R.id.dialog_confirm_image);
+
+        titleText.setText(title == null ? "Confirm" : title);
+        messageText.setText(message == null ? "You won’t be able to revert this!" : message);
+
+        // Handle image display
+        if (imageBytes != null && imageBytes.length > 0) {
+            imageView.setImageBitmap(ImageHelper.convertByteArrayToBitmap(imageBytes));
+            imageView.setVisibility(View.VISIBLE);
+        } else {
+            imageView.setVisibility(View.GONE);
+        }
 
         Button yesButton = dialog.findViewById(R.id.btn_yes);
         Button noButton = dialog.findViewById(R.id.btn_no);
 
-        yesButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.onConfirm();
-                dialog.dismiss();
-            }
+        yesButton.setOnClickListener(v -> {
+            listener.onConfirm();
+            dialog.dismiss();
         });
 
-        noButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
+        noButton.setOnClickListener(v -> dialog.dismiss());
 
         dialog.show();
     }

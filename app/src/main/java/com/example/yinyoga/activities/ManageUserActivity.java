@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,11 +28,13 @@ import com.example.yinyoga.R;
 import com.example.yinyoga.models.User;
 import com.example.yinyoga.service.UserService;
 import com.example.yinyoga.sync.SyncClassInstanceManager;
+import com.example.yinyoga.sync.SyncCourseManager;
+import com.example.yinyoga.sync.SyncNotificationManager;
 import com.example.yinyoga.utils.DialogHelper;
 import com.example.yinyoga.utils.UserSessionManager;
 
 public class ManageUserActivity extends AppCompatActivity {
-
+    private ImageView backHome;
     private TextView tvUsername, tvEmail, tvFullname, tvTitle;
     private EditText edUsername, edEmail, edFullName;
     private LinearLayout editProfileLayout, changePasswordLayout, submitLayout, generalLayout;
@@ -62,6 +65,13 @@ public class ManageUserActivity extends AppCompatActivity {
         }
 
         initView();
+
+        backHome.setOnClickListener(v -> {
+            Intent intent = new Intent(ManageUserActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        });
+
         setupListeners();
         loadUserData();
     }
@@ -86,6 +96,7 @@ public class ManageUserActivity extends AppCompatActivity {
 
         btnSave = findViewById(R.id.btn_save);
         btnCancel = findViewById(R.id.cancel);
+        backHome = findViewById(R.id.profile_back_icon);
 
         username = sessionManager.getUsername();
     }
@@ -200,12 +211,16 @@ public class ManageUserActivity extends AppCompatActivity {
             dialogMessage.setText("Please enter your administrator password to confirm the database reset.");
         });
 
-        btnNo.setOnClickListener(v -> dialog.dismiss());
+        btnNo.setOnClickListener(v -> {
+            showSection("general");
+            dialog.dismiss();
+        });
 
         btnConfirm.setOnClickListener(v -> {
             String enteredPassword = etPassword.getText().toString().trim();
             if (validatePassword(enteredPassword)) {
                 resetDatabase();
+                showSection("general");
                 dialog.dismiss();
             } else {
                 etPassword.setError("Incorrect password. Please try again.");
@@ -254,7 +269,11 @@ public class ManageUserActivity extends AppCompatActivity {
 
     private void resetDatabase() {
         userService.resetDatabase();
-        new SyncClassInstanceManager(this).resetInFirestore();
+
+        new SyncClassInstanceManager(this).resetClassInstanceInFirestore();
+        new SyncCourseManager(this).resetCourseInFirestore();
+        new SyncNotificationManager(this).resetNotificationInFirestore();
+
         Toast.makeText(this, "Database reset successfully", Toast.LENGTH_SHORT).show();
     }
 }

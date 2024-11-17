@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.yinyoga.R;
 import com.example.yinyoga.adapters.ClassInstanceAdapter;
@@ -52,7 +53,6 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
     private Dialog seeMoreDialog;
     private RecyclerView recyclerView;
     private CourseAdapter coursesAdapter;
-    private ClassInstanceAdapter classInstanceAdapter;
     private List<Course> courseLists;
     private LinearLayout add_task;
     private Spinner spinnerDayOfTheWeek, courseTypeSpinner;
@@ -62,8 +62,8 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
     private CourseService courseService;
     private ImageView imgGallery;
     private byte[] imageBytes;
-    SyncCourseManager syncCourseManager;
-    ClassInstanceService classInstanceService;
+    private SyncCourseManager syncCourseManager;
+    private ClassInstanceService classInstanceService;
 
     @Nullable
     @Override
@@ -75,7 +75,6 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        syncCourseManager = new SyncCourseManager(requireContext());
         initViews(view);
         setupRecyclerView();
         loadCourseFromDatabase();
@@ -142,10 +141,14 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
 
     private void setPopupEventListeners(View btnClosePopup, View btnClearAllPopup) {
         btnClosePopup.setOnClickListener(v -> dialog.dismiss());
-        btnClearAllPopup.setOnClickListener(v -> clearAllInputs());
+        btnClearAllPopup.setOnClickListener(v -> clearAllInputs(true));
     }
 
     private void saveCourse(int courseId) {
+        if (!isValidateInput()) {
+            return;
+        }
+
         String courseName = edCourseName.getText().toString().trim();
         String dayOfWeek = spinnerDayOfTheWeek.getSelectedItem().toString();
         String timeStr = edTime.getText().toString().trim();
@@ -156,24 +159,43 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
         String description = edDescription.getText().toString().trim();
         String createdAt = DatetimeHelper.getCurrentDatetime();
 
-        if (isValidateInput(courseName, timeStr, durationStr, capacityStr, priceStr, description)) {
-            int duration = Integer.parseInt(durationStr);
-            int capacity = Integer.parseInt(capacityStr);
-            double price = Double.parseDouble(priceStr);
+        String message = "Your inputted data:";
+        message += "\nName: " + courseName;
+        message += "\nDay of the week: " + dayOfWeek;
+        message += "\nTime: " + timeStr;
+        message += "\nDuration: " + durationStr;
+        message += "\nCapacity: " + capacityStr;
+        message += "\nPrice: " + priceStr;
+        message += "\nType: " + courseType;
+        message += "\nDescription: " + description;
+        message += "\nDo you want to save this course?";
 
-            if (courseId < 0) {
-                courseService.addCourse(new Course(courseName, courseType, createdAt, dayOfWeek, description, capacity, duration, imageBytes, price, timeStr));
-            } else {
-                courseService.updateCourse(new Course(courseId, courseName, courseType, createdAt, dayOfWeek, description, capacity, duration, imageBytes, price, timeStr));
-            }
+        DialogHelper.showConfirmationDialog(
+                requireActivity(),
+                "Confirm your course!",
+                message,
+                imageBytes,
+                () -> {
+                    int duration = Integer.parseInt(durationStr);
+                    int capacity = Integer.parseInt(capacityStr);
+                    double price = Double.parseDouble(priceStr);
 
-            DialogHelper.showSuccessDialog(getActivity(), "Course saved successfully!");
+                    Course course = new Course(courseName, courseType, createdAt, dayOfWeek, description, capacity, duration, imageBytes, price, timeStr);
 
-            clearAllInputs();
-            loadCourseFromDatabase();
+                    if (courseId < 0) {
+                        courseService.addCourse(course);
+                    } else {
+                        course.setCourseId(courseId);
+                        courseService.updateCourse(course);
+                    }
 
-            dialog.dismiss();
-        }
+                    DialogHelper.showSuccessDialog(getActivity(), "Course saved successfully!");
+
+                    clearAllInputs(false);
+                    loadCourseFromDatabase();
+
+                    dialog.dismiss();
+                });
     }
 
     private void setPopupAddOrUpdate(int courseId) {
@@ -226,8 +248,15 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
         return position;
     }
 
-    private boolean isValidateInput(String courseName, String timeStr, String durationStr, String capacityStr, String priceStr, String description) {
+    private boolean isValidateInput() {
         boolean isValid = true;
+
+        String courseName = edCourseName.getText().toString().trim();
+        String timeStr = edTime.getText().toString().trim();
+        String durationStr = edDuration.getText().toString().trim();
+        String capacityStr = edCapacity.getText().toString().trim();
+        String priceStr = edPrice.getText().toString().trim();
+        String description = edDescription.getText().toString().trim();
 
         if (courseName.isEmpty()) {
             edCourseName.setError("Please enter course name");
@@ -284,6 +313,11 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
             isValid = false;
         }
 
+        if (imageBytes == null) {
+            Toast.makeText(getActivity(), "Please upload an image", Toast.LENGTH_SHORT).show();
+            isValid = false;
+        }
+
         return isValid;
     }
 
@@ -298,11 +332,10 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
             courseService.addCourse(new Course("Flow Yoga", "Beginner", formattedDate, "Monday", "A calming beginner yoga class", 20, 60, img, 15.0, "10:00"));
             courseService.addCourse(new Course("Yin Yoga", "Intermediate", formattedDate, "Tuesday", "A deep stretch yoga class focusing on flexibility", 15, 75, img, 20.0, "12:00"));
             courseLists = courseService.getAllCourses();
-            syncCourseManager.syncCourseFromFirestore();
         }
 
         syncCourseManager.syncCoursesToFirestore();
-        DialogHelper.dismissLoadingDialog();
+        syncCourseManager.syncCourseFromFirestore();
 
         coursesAdapter = new CourseAdapter(courseLists, this);
         coursesAdapter.setCustomListeners(this);
@@ -390,9 +423,11 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
         spinnerDayOfTheWeek = dialog.findViewById(R.id.spinnerDayofTheWeek);
         courseTypeSpinner = dialog.findViewById(R.id.courseTypeSpinner);
         imgGallery = dialog.findViewById(R.id.ivUploadImage);
+
+        syncCourseManager = new SyncCourseManager(requireContext());
     }
 
-    private void clearAllInputs() {
+    private void clearAllInputs(boolean showNotification) {
         edCourseName.setText("");
         spinnerDayOfTheWeek.setSelection(0);
         edTime.setText("");
@@ -402,7 +437,9 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
         edDescription.setText("");
         courseTypeSpinner.setSelection(0);
 
-        DialogHelper.showSuccessDialog(getActivity(), "All fields cleared!");
+        if (showNotification) {
+            DialogHelper.showSuccessDialog(getActivity(), "All inputs cleared successfully!");
+        }
     }
 
     @Override
@@ -425,7 +462,7 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
             classInstance.setCourse(course);
         }
         ManageClassInstancesFragment ManageClassInstancesFragment = new ManageClassInstancesFragment();
-        classInstanceAdapter = new ClassInstanceAdapter(classInstanceList, ManageClassInstancesFragment);
+        ClassInstanceAdapter classInstanceAdapter = new ClassInstanceAdapter(classInstanceList, ManageClassInstancesFragment);
         recyclerViewSeeMore.setAdapter(classInstanceAdapter);
 
         seeMoreDialog.show();

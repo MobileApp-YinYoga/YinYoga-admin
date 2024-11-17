@@ -84,23 +84,20 @@ public class ClassInstanceAdapter extends RecyclerView.Adapter<ClassInstanceAdap
         });
 
         deleteSection.setOnClickListener(v -> {
-            DialogHelper.showDeleteConfirmationDialog(
+            DialogHelper.showConfirmationDialog(
                     fragment.getActivity(),
                     "Are you sure you want to delete class instance \"" + instanceList.get(position).getInstanceId() + "\"?",
-                    new DialogHelper.DeleteConfirmationListener() {
-                        @Override
-                        public void onConfirm() {
-                            fragment.loadInstancesFromDatabase();
-                            SyncClassInstanceManager syncClassInstanceManager = new SyncClassInstanceManager(v.getContext());
-                            syncClassInstanceManager.deleteClassInstance(instanceList.get(position).getInstanceId());
-                            DialogHelper.showSuccessDialog(fragment.getActivity(), "Course removed successfully!");
+                    null,
+                    null,
+                    () -> {
+                        fragment.loadInstancesFromDatabase();
+                        DialogHelper.showSuccessDialog(fragment.getActivity(), "Course removed successfully!");
 
-                            // Xóa khóa học và làm mới danh sách
-                            instanceService.deleteClassInstance(instanceList.get(position).getInstanceId());
-                            instanceList.remove(position);
-                            notifyItemRemoved(position);
-                            notifyItemRangeChanged(position, instanceList.size());
-                        }
+                        // Xóa khóa học và làm mới danh sách
+                        instanceService.deleteClassInstance(instanceList.get(position).getInstanceId());
+                        instanceList.remove(position);
+                        notifyItemRemoved(position);
+                        notifyItemRangeChanged(position, instanceList.size());
                     });
             popupWindow.dismiss();
         });
