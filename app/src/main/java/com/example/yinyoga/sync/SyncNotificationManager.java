@@ -31,6 +31,26 @@ public class SyncNotificationManager {
         this.notificationRepository = new NotificationRepository(context);
     }
 
+    public void resetNotificationInFirestore() {
+        // Reset courses collection
+        db.collection("notifications")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String docId = document.getId();
+                            db.collection("notifications").document(docId)
+                                    .delete()
+                                    .addOnSuccessListener(aVoid -> Log.d("SyncManager", "Document " + docId + " deleted from notifications"))
+                                    .addOnFailureListener(e -> Log.w("SyncManager", "Error deleting document from notifications", e));
+                        }
+                        Log.d("SyncManager", "All documents in 'notifications' collection deleted");
+                    } else {
+                        Log.w("SyncManager", "Error fetching documents from notifications for deletion.", task.getException());
+                    }
+                });
+    }
+
     public void syncNotificationsToFirestore() {
         // Query your SQLite database to get the data
         List<Notification> notificationList = notificationRepository.getAllNotifications();

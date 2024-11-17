@@ -53,7 +53,6 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
     private Dialog seeMoreDialog;
     private RecyclerView recyclerView;
     private CourseAdapter coursesAdapter;
-    private ClassInstanceAdapter classInstanceAdapter;
     private List<Course> courseLists;
     private LinearLayout add_task;
     private Spinner spinnerDayOfTheWeek, courseTypeSpinner;
@@ -76,7 +75,6 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        syncCourseManager = new SyncCourseManager(requireContext());
         initViews(view);
         setupRecyclerView();
         loadCourseFromDatabase();
@@ -334,11 +332,10 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
             courseService.addCourse(new Course("Flow Yoga", "Beginner", formattedDate, "Monday", "A calming beginner yoga class", 20, 60, img, 15.0, "10:00"));
             courseService.addCourse(new Course("Yin Yoga", "Intermediate", formattedDate, "Tuesday", "A deep stretch yoga class focusing on flexibility", 15, 75, img, 20.0, "12:00"));
             courseLists = courseService.getAllCourses();
-            syncCourseManager.syncCourseFromFirestore();
         }
 
         syncCourseManager.syncCoursesToFirestore();
-        DialogHelper.dismissLoadingDialog();
+        syncCourseManager.syncCourseFromFirestore();
 
         coursesAdapter = new CourseAdapter(courseLists, this);
         coursesAdapter.setCustomListeners(this);
@@ -426,6 +423,8 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
         spinnerDayOfTheWeek = dialog.findViewById(R.id.spinnerDayofTheWeek);
         courseTypeSpinner = dialog.findViewById(R.id.courseTypeSpinner);
         imgGallery = dialog.findViewById(R.id.ivUploadImage);
+
+        syncCourseManager = new SyncCourseManager(requireContext());
     }
 
     private void clearAllInputs(boolean showNotification) {
@@ -463,7 +462,7 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
             classInstance.setCourse(course);
         }
         ManageClassInstancesFragment ManageClassInstancesFragment = new ManageClassInstancesFragment();
-        classInstanceAdapter = new ClassInstanceAdapter(classInstanceList, ManageClassInstancesFragment);
+        ClassInstanceAdapter classInstanceAdapter = new ClassInstanceAdapter(classInstanceList, ManageClassInstancesFragment);
         recyclerViewSeeMore.setAdapter(classInstanceAdapter);
 
         seeMoreDialog.show();

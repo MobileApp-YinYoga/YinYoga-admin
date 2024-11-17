@@ -1,16 +1,13 @@
 package com.example.yinyoga.activities;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -23,20 +20,29 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.yinyoga.R;
-import com.example.yinyoga.database.Database;
 import com.example.yinyoga.fragments.ManageClassInstancesFragment;
 import com.example.yinyoga.fragments.ManageCoursesFragment;
+import com.example.yinyoga.models.Course;
+import com.example.yinyoga.service.CourseService;
+import com.example.yinyoga.sync.SyncClassInstanceManager;
+import com.example.yinyoga.sync.SyncCourseManager;
+import com.example.yinyoga.sync.SyncNotificationManager;
 import com.example.yinyoga.utils.DialogHelper;
+import com.example.yinyoga.utils.NetworkUtil;
 import com.example.yinyoga.utils.UserSessionManager;
 import com.google.android.material.navigation.NavigationView;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity implements NetworkUtil.NetworkListener {
     private DrawerLayout drawerLayout;
-    private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
     private ImageView menuIcon, notificationIcon;
-    private Database database;
     private TextView username, roleName;
+    private boolean isNetworkConnected = false;
+    private SyncCourseManager syncCourseManager;
+    private SyncClassInstanceManager syncClassInstanceManager;
+    private SyncNotificationManager syncNotificationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,9 +55,10 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.white));
-        }
+        isNetworkConnected = true;
+        NetworkUtil.monitorNetwork(this);
+
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.white));
 
         initView();
         authentication(savedInstanceState);
@@ -59,10 +66,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        // Initialize the database
-        database = new Database(this);
-        SQLiteDatabase db = database.getWritableDatabase();
-
         // Initialize views from the layout
         drawerLayout = findViewById(R.id.drawer_layout);
         menuIcon = findViewById(R.id.menu_icon);
@@ -70,7 +73,8 @@ public class MainActivity extends AppCompatActivity {
         navigationView = findViewById(R.id.navigation_view);
 
         // Set up the Drawer Toggle to open and close the navigation bar
-        toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
+        drawerLayout.addDrawerListener(toggle);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -83,6 +87,10 @@ public class MainActivity extends AppCompatActivity {
         // Access TextViews in nav_header
         username = headerView.findViewById(R.id.user_name);
         roleName = headerView.findViewById(R.id.user_role);
+
+        syncCourseManager = new SyncCourseManager(this);
+        syncClassInstanceManager = new SyncClassInstanceManager(this);
+        syncNotificationManager = new SyncNotificationManager(this);
     }
 
     private void authentication(Bundle savedInstanceState) {
@@ -101,78 +109,68 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setEventMenu(Bundle savedInstanceState) {
-        menuIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                    drawerLayout.closeDrawer(GravityCompat.START); // Close the navigation bar
-                } else {
-                    drawerLayout.openDrawer(GravityCompat.START); // Open the navigation bar
-                }
+        menuIcon.setOnClickListener(v -> {
+            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                drawerLayout.closeDrawer(GravityCompat.START); // Close the navigation bar
+            } else {
+                drawerLayout.openDrawer(GravityCompat.START); // Open the navigation bar
             }
         });
 
         // Set event when selecting an item from the navigation bar
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Fragment selectedFragment = null;
-                int id = item.getItemId();
+        navigationView.setNavigationItemSelectedListener(item -> {
+            Fragment selectedFragment = null;
+            int id = item.getItemId();
 
-                if (id == R.id.nav_manage_classes) {
-                    selectedFragment = new ManageCoursesFragment();
-                } else if (id == R.id.nav_manage_class_instances) {
-                    selectedFragment = new ManageClassInstancesFragment();
-                } else if (id == R.id.nav_profile) {
-                    // Start the Activity for the user profile page
-                    Intent intent = new Intent(MainActivity.this, ManageUserActivity.class);
-                    startActivity(intent);
-                } else if (id == R.id.nav_notifications) {
-                    // Start the Activity for the notification page
-                    Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
-                    startActivity(intent);
-                } else if (id == R.id.nav_logout) {
-                    DialogHelper.showConfirmationDialog(
-                            MainActivity.this,
-                            "Are you sure you want to log out?",
-                            null,
-                            null,
-                            () -> {
-                                UserSessionManager sessionManager = new UserSessionManager(MainActivity.this);
-                                sessionManager.logout();
+            if (id == R.id.nav_manage_classes) {
+                selectedFragment = new ManageCoursesFragment();
+            } else if (id == R.id.nav_manage_class_instances) {
+                selectedFragment = new ManageClassInstancesFragment();
+            } else if (id == R.id.nav_profile) {
+                // Start the Activity for the user profile page
+                Intent intent = new Intent(MainActivity.this, ManageUserActivity.class);
+                startActivity(intent);
+            } else if (id == R.id.nav_notifications) {
+                // Start the Activity for the notification page
+                Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
+                startActivity(intent);
+            } else if (id == R.id.nav_logout) {
+                DialogHelper.showConfirmationDialog(
+                        MainActivity.this,
+                        "Are you sure you want to log out?",
+                        null,
+                        null,
+                        () -> {
+                            UserSessionManager sessionManager = new UserSessionManager(MainActivity.this);
+                            sessionManager.logout();
 
-                                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
-                                finish();
-                            }
-                    );
-                }
-
-                // Replace the Fragment in the FrameLayout if a Fragment is selected
-                if (selectedFragment != null) {
-                    replaceFragment(selectedFragment);
-                }
-
-                drawerLayout.closeDrawer(GravityCompat.START); // Close the navigation bar
-                return true;
+                            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                            finish();
+                        }
+                );
             }
+
+            // Replace the Fragment in the FrameLayout if a Fragment is selected
+            if (selectedFragment != null) {
+                replaceFragment(selectedFragment);
+            }
+
+            drawerLayout.closeDrawer(GravityCompat.START); // Close the navigation bar
+            return true;
         });
 
         // By default, open the ManageCoursesFragment when the app is opened
         if (savedInstanceState == null) {
-            replaceFragment(new ManageCoursesFragment()); // Hiển thị ManageCoursesFragment mặc định
+            replaceFragment(new ManageCoursesFragment());
         }
     }
 
-
     private void setEventNotification() {
-        notificationIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
-                startActivity(intent);
-            }
+        notificationIcon.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
+            startActivity(intent);
         });
     }
 
@@ -181,5 +179,40 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, fragment)
                 .commit();
+    }
+
+    @Override
+    public void onAvailable() {
+        // Network connected
+        if (!isNetworkConnected) {
+            Toast.makeText(this, "Wi-Fi Connected", Toast.LENGTH_SHORT).show();
+            isNetworkConnected = true;
+
+            DialogHelper.showLoadingDialog(this, "Wait sync data...");
+
+            // Sync courses
+            syncCourseManager.syncCoursesToFirestore();
+            syncCourseManager.syncCourseFromFirestore();
+
+            // Sync class instances
+            syncClassInstanceManager.syncClassInstanceToFirestore();
+            syncClassInstanceManager.syncClassInstanceFromFirestore();
+
+            // Sync notifications
+            syncNotificationManager.syncNotificationsToFirestore();
+            syncNotificationManager.syncNotificationsFromFirestore();
+
+            DialogHelper.dismissLoadingDialog();
+
+            // Notify all syncs
+            DialogHelper.showSuccessDialog(this, "Sync data successfully!");
+        }
+    }
+
+    @Override
+    public void onLost() {
+        isNetworkConnected = false;
+        // Network disconnected
+        Toast.makeText(this, "Wi-Fi Disconnected", Toast.LENGTH_SHORT).show();
     }
 }

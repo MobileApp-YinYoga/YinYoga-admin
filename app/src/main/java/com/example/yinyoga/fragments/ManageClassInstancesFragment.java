@@ -85,9 +85,6 @@ public class ManageClassInstancesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        DialogHelper.showLoadingDialog(this.getContext(), "Loading all class instances...");
-
-        syncClassInstanceManager = new SyncClassInstanceManager(requireContext());
         initViews(view);
         setupRecyclerView();
         loadInstancesFromDatabase();
@@ -469,11 +466,10 @@ public class ManageClassInstancesFragment extends Fragment {
             instanceService.addClassInstance(new ClassInstance("YOGA102", courseService.getCourse(1), "February, 15th 2024", "Jane Doe", img));
             instanceService.addClassInstance(new ClassInstance("YOGA103", courseService.getCourse(2), "March, 1st 2024", "John Doe", img));
             instanceLists = instanceService.getAllClassInstances();
-            syncClassInstanceManager.syncClassInstanceFromFirestore();
         }
 
         syncClassInstanceManager.syncClassInstanceToFirestore();
-        DialogHelper.dismissLoadingDialog();
+        syncClassInstanceManager.syncClassInstanceFromFirestore();
 
         instanceAdapter = new ClassInstanceAdapter(instanceLists, this);
         recyclerView.setAdapter(instanceAdapter);
@@ -510,6 +506,8 @@ public class ManageClassInstancesFragment extends Fragment {
         edDate = dialog.findViewById(R.id.edDateInstance);
         spTeacher = dialog.findViewById(R.id.spinnerTeacher);
         imgGallery = dialog.findViewById(R.id.ivUploadImageClassInstance);
+
+        syncClassInstanceManager = new SyncClassInstanceManager(requireContext());
 
         fillToSpinnerCourseIdPopup();
         edDate.setOnClickListener(v -> showDayPickerDialog(getDayFromCourse()));

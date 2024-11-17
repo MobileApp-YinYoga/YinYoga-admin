@@ -75,22 +75,20 @@ public class NotificationActivity extends AppCompatActivity {
         });
 
         setupRecyclerView();
-
-        syncNotificationManager = new SyncNotificationManager(this);
-        DialogHelper.showLoadingDialog(this, "Loading notifications...");
         loadNotifications();
-        DialogHelper.dismissLoadingDialog();
     }
 
     private void initView() {
         notificationService = new NotificationService(this);
-        notificationService.deleteOldNotifications(); // Xóa thông báo cũ hơn 1 năm
+        notificationService.deleteOldNotifications(); // Delete notifications older than 1 year
 
         recyclerNewNotifications = findViewById(R.id.recycler_new_notifications);
         recyclerBeforeNotifications = findViewById(R.id.recycler_before_notifications);
 
         backHome = findViewById(R.id.ic_back);
         menuOptions = findViewById(R.id.menu_options_search);
+
+        syncNotificationManager = new SyncNotificationManager(this);
     }
 
 
@@ -112,10 +110,7 @@ public class NotificationActivity extends AppCompatActivity {
         // Inflate layout for PopupWindow
         View popupView = LayoutInflater.from(this).inflate(R.layout.menu_notification, null);
 
-        PopupWindow popupWindow = new PopupWindow(popupView,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                true);
+        PopupWindow popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
 
         // Set background to close the Popup when clicking outside
         popupWindow.setOutsideTouchable(true);
@@ -129,16 +124,11 @@ public class NotificationActivity extends AppCompatActivity {
         });
 
         tvClearAll.setOnClickListener(v -> {
-            DialogHelper.showConfirmationDialog(
-                    this,
-                    "Are you sure you want to delete all notifications?",
-                    null,
-                    null,
-                    () -> {
-                        clearAllNotifications();
-                        loadNotifications();
-                        DialogHelper.showSuccessDialog(NotificationActivity.this, "All notifications removed successfully!");
-                    });
+            DialogHelper.showConfirmationDialog(this, "Are you sure you want to delete all notifications?", null, null, () -> {
+                clearAllNotifications();
+                loadNotifications();
+                DialogHelper.showSuccessDialog(NotificationActivity.this, "All notifications removed successfully!");
+            });
             popupWindow.dismiss();
         });
 
@@ -177,17 +167,13 @@ public class NotificationActivity extends AppCompatActivity {
     private void loadNotifications() {
         List<Notification> allNotifications = notificationService.getAllNotifications();
 
-       if (allNotifications.size() <= 0){
-           addSampleNotifications();
-       }
+        if (allNotifications.isEmpty()) {
+            addSampleNotifications();
+            allNotifications = notificationService.getAllNotifications();
+        }
+
         newNotifications.clear();
         beforeNotifications.clear();
-
-        if (allNotifications.isEmpty()) {
-            syncNotificationManager.syncNotificationsFromFirestore();
-        } else {
-            syncNotificationManager.syncNotificationsToFirestore();
-        }
 
         for (Notification notification : allNotifications) {
             if (notificationService.isToday(notification.getCreatedDate())) {
@@ -199,6 +185,9 @@ public class NotificationActivity extends AppCompatActivity {
 
         newAdapter.notifyDataSetChanged();
         beforeAdapter.notifyDataSetChanged();
+
+        syncNotificationManager.syncNotificationsToFirestore();
+        syncNotificationManager.syncNotificationsFromFirestore();
     }
 
     private void addSampleNotifications() {
@@ -206,103 +195,33 @@ public class NotificationActivity extends AppCompatActivity {
         String todayDate = dateFormat.format(new Date());
 
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_YEAR, -1); // Ngày hôm qua
+        calendar.add(Calendar.DAY_OF_YEAR, -1); // Yesterday's date
         String yesterdayDate = dateFormat.format(calendar.getTime());
 
-        calendar.add(Calendar.DAY_OF_YEAR, -3); // Ngày trước đó ba ngày
+        calendar.add(Calendar.DAY_OF_YEAR, -3); // 3 days ago
         String threeDaysAgoDate = dateFormat.format(calendar.getTime());
 
         // Today's Notifications
-        notificationService.insertNotification(new Notification(
-                "trannqgcc210041@fpt.edu.vn",
-                "New Yoga Class Booking",
-                "User trannq2003@gmail.com has booked a class for 'Advanced Yoga' on Monday at 10:00 AM",
-                "10:00 AM",
-                false,
-                todayDate
-        ));
+        notificationService.insertNotification(new Notification("trannqgcc210041@fpt.edu.vn", "New Yoga Class Booking", "User trannq2003@gmail.com has booked a class for 'Advanced Yoga' on Monday at 10:00 AM", "10:00 AM", false, todayDate));
 
-        notificationService.insertNotification(new Notification(
-                "trannqgcc210041@fpt.edu.vn",
-                "Yoga Class Booking Pending Approval",
-                "User trannq2003@gmail.com's booking for 'Flow Yoga' on Wednesday is pending approval",
-                "11:00 AM",
-                true,
-                todayDate
-        ));
+        notificationService.insertNotification(new Notification("trannqgcc210041@fpt.edu.vn", "Yoga Class Booking Pending Approval", "User trannq2003@gmail.com's booking for 'Flow Yoga' on Wednesday is pending approval", "11:00 AM", true, todayDate));
 
-        notificationService.insertNotification(new Notification(
-                "trannqgcc210041@fpt.edu.vn",
-                "New User Registration",
-                "New user registered: trannq2003@gmail.com",
-                "12:00 PM",
-                false,
-                todayDate
-        ));
+        notificationService.insertNotification(new Notification("trannqgcc210041@fpt.edu.vn", "New User Registration", "New user registered: trannq2003@gmail.com", "12:00 PM", false, todayDate));
 
-// Past Notifications
-        notificationService.insertNotification(new Notification(
-                "trannqgcc210041@fpt.edu.vn",
-                "Yoga Class Booking Confirmed",
-                "User john_doe@gmail.com has confirmed their booking for 'Power Yoga' on Tuesday at 9:00 AM",
-                "09:00 AM",
-                true,
-                yesterdayDate
-        ));
+        // Past Notifications
+        notificationService.insertNotification(new Notification("trannqgcc210041@fpt.edu.vn", "Yoga Class Booking Confirmed", "User john_doe@gmail.com has confirmed their booking for 'Power Yoga' on Tuesday at 9:00 AM", "09:00 AM", true, yesterdayDate));
 
-        notificationService.insertNotification(new Notification(
-                "trannqgcc210041@fpt.edu.vn",
-                "Payment Pending for Booking",
-                "Payment for the booking by jane.smith@example.com for 'Yin Yoga' on Thursday is still pending",
-                "10:00 AM",
-                false,
-                yesterdayDate
-        ));
+        notificationService.insertNotification(new Notification("trannqgcc210041@fpt.edu.vn", "Payment Pending for Booking", "Payment for the booking by jane.smith@example.com for 'Yin Yoga' on Thursday is still pending", "10:00 AM", false, yesterdayDate));
 
-        notificationService.insertNotification(new Notification(
-                "trannqgcc210041@fpt.edu.vn",
-                "Booking Canceled",
-                "Booking by emily.jones@example.com for 'Vinyasa Yoga' on Friday has been canceled",
-                "11:00 AM",
-                true,
-                yesterdayDate
-        ));
+        notificationService.insertNotification(new Notification("trannqgcc210041@fpt.edu.vn", "Booking Canceled", "Booking by emily.jones@example.com for 'Vinyasa Yoga' on Friday has been canceled", "11:00 AM", true, yesterdayDate));
 
-// Older Notifications
-        notificationService.insertNotification(new Notification(
-                "trannqgcc210041@fpt.edu.vn",
-                "Class Rescheduled",
-                "Yoga class 'Morning Flow' on Sunday has been rescheduled to 11:00 AM from 9:00 AM",
-                "09:00 AM",
-                false,
-                threeDaysAgoDate
-        ));
+        // Older Notifications
+        notificationService.insertNotification(new Notification("trannqgcc210041@fpt.edu.vn", "Class Rescheduled", "Yoga class 'Morning Flow' on Sunday has been rescheduled to 11:00 AM from 9:00 AM", "09:00 AM", false, threeDaysAgoDate));
 
-        notificationService.insertNotification(new Notification(
-                "trannqgcc210041@fpt.edu.vn",
-                "New Booking Request",
-                "New booking request from user alice.walker@example.com for 'Beginner Yoga' on Monday at 10:00 AM",
-                "10:00 AM",
-                false,
-                threeDaysAgoDate
-        ));
+        notificationService.insertNotification(new Notification("trannqgcc210041@fpt.edu.vn", "New Booking Request", "New booking request from user alice.walker@example.com for 'Beginner Yoga' on Monday at 10:00 AM", "10:00 AM", false, threeDaysAgoDate));
 
-        notificationService.insertNotification(new Notification(
-                "trannqgcc210041@fpt.edu.vn",
-                "Booking Payment Successful",
-                "Payment for booking by sarah.lee@example.com for 'Hatha Yoga' on Tuesday has been successfully completed",
-                "11:00 AM",
-                true,
-                threeDaysAgoDate
-        ));
+        notificationService.insertNotification(new Notification("trannqgcc210041@fpt.edu.vn", "Booking Payment Successful", "Payment for booking by sarah.lee@example.com for 'Hatha Yoga' on Tuesday has been successfully completed", "11:00 AM", true, threeDaysAgoDate));
 
-        notificationService.insertNotification(new Notification(
-                "trannqgcc210041@fpt.edu.vn",
-                "Booking Expired",
-                "Booking for 'Power Yoga' scheduled on Friday by mark.taylor@example.com has expired",
-                "12:00 PM",
-                false,
-                threeDaysAgoDate
-        ));
+        notificationService.insertNotification(new Notification("trannqgcc210041@fpt.edu.vn", "Booking Expired", "Booking for 'Power Yoga' scheduled on Friday by mark.taylor@example.com has expired", "12:00 PM", false, threeDaysAgoDate));
     }
 }

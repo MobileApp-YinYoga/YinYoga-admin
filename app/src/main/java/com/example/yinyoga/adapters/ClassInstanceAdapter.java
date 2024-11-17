@@ -91,8 +91,6 @@ public class ClassInstanceAdapter extends RecyclerView.Adapter<ClassInstanceAdap
                     null,
                     () -> {
                         fragment.loadInstancesFromDatabase();
-                        SyncClassInstanceManager syncClassInstanceManager = new SyncClassInstanceManager(v.getContext());
-                        syncClassInstanceManager.deleteClassInstance(instanceList.get(position).getInstanceId());
                         DialogHelper.showSuccessDialog(fragment.getActivity(), "Course removed successfully!");
 
                         // Xóa khóa học và làm mới danh sách

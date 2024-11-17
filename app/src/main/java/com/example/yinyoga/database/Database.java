@@ -202,11 +202,11 @@ public class Database extends SQLiteOpenHelper {
 
         try {
             // Bỏ qua bảng Users
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_COURSES);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_CLASS_INSTANCES);
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_COURSES);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_NOTIFICATIONS);
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_BOOKINGS);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_BOOKING_DETAILS);
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_BOOKINGS);
 
             // Tạo lại các bảng
             onCreate(db);
