@@ -15,21 +15,29 @@ import com.example.yinyoga.R;
 import com.example.yinyoga.fragments.ManageClassInstancesFragment;
 import com.example.yinyoga.models.ClassInstance;
 import com.example.yinyoga.service.ClassInstanceService;
-import com.example.yinyoga.sync.SyncClassInstanceManager;
 import com.example.yinyoga.utils.DialogHelper;
 import com.example.yinyoga.utils.ImageHelper;
 
 import java.util.List;
 
 public class ClassInstanceAdapter extends RecyclerView.Adapter<ClassInstanceAdapter.InstanceViewHolder> {
+    public interface CustomListeners {
+        void handleDeleteAction(int position);
+    }
+
     private List<ClassInstance> instanceList;
     private final ManageClassInstancesFragment fragment;
     private final ClassInstanceService instanceService;
+    private CustomListeners customListeners;
 
     public ClassInstanceAdapter(List<ClassInstance> instanceList, ManageClassInstancesFragment fragment) {
         this.fragment = fragment;
         this.instanceList = instanceList;
         this.instanceService = new ClassInstanceService(fragment.getContext());
+    }
+
+    public void setCustomListeners(CustomListeners customListeners) {
+        this.customListeners = customListeners;
     }
 
     @NonNull
@@ -84,21 +92,7 @@ public class ClassInstanceAdapter extends RecyclerView.Adapter<ClassInstanceAdap
         });
 
         deleteSection.setOnClickListener(v -> {
-            DialogHelper.showConfirmationDialog(
-                    fragment.getActivity(),
-                    "Are you sure you want to delete class instance \"" + instanceList.get(position).getInstanceId() + "\"?",
-                    null,
-                    null,
-                    () -> {
-                        fragment.loadInstancesFromDatabase();
-                        DialogHelper.showSuccessDialog(fragment.getActivity(), "Course removed successfully!");
-
-                        // Xóa khóa học và làm mới danh sách
-                        instanceService.deleteClassInstance(instanceList.get(position).getInstanceId());
-                        instanceList.remove(position);
-                        notifyItemRemoved(position);
-                        notifyItemRangeChanged(position, instanceList.size());
-                    });
+            customListeners.handleDeleteAction(position);
             popupWindow.dismiss();
         });
 

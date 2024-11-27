@@ -123,19 +123,11 @@ public class SyncCourseManager {
                 });
     }
 
-    public void deleteCourse(int courseId) {
-        // Delete the record from SQLite first
-        SQLiteDatabase sqliteDb = dbHelper.getWritableDatabase(); // Renamed for clarity
-        int rowsAffected = sqliteDb.delete("courses", "id = ?", new String[]{String.valueOf(courseId)});
-
-        if (rowsAffected > 0) {
-            // If deletion is successful in SQLite, proceed to delete from Firestore
-            db.collection("courses").document(String.valueOf(courseId))
-                    .delete()
-                    .addOnSuccessListener(aVoid -> Log.d("SyncClassInstanceManager", "Course deleted from Firestore: " + courseId))
-                    .addOnFailureListener(e -> Log.w("SyncClassInstanceManager", "Error deleting course from Firestore", e));
-        } else {
-            Log.w("SyncClassInstanceManager", "No matching course found to delete in SQLite for courseId: " + courseId);
-        }
+    public void deleteCourseOnFirebase(int courseId) {
+        // If deletion is successful in SQLite, proceed to delete from Firestore
+        db.collection("courses").document(String.valueOf(courseId))
+                .delete()
+                .addOnSuccessListener(aVoid -> Log.d("SyncCourseManager", "Course deleted on Firestore: " + courseId))
+                .addOnFailureListener(e -> Log.w("SyncCourseManager", "Error deleting course on Firestore", e));
     }
 }

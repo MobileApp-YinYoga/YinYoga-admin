@@ -221,6 +221,7 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
                 courseTypeSpinner.setSelection(getArrayPosition("getGenre", findCourse.getCourseType()));
 
                 imgGallery.setImageBitmap(ImageHelper.convertByteArrayToBitmap(findCourse.getImageUrl()));
+                imageBytes = ImageHelper.getImageBytes(imgGallery);
             } catch (Exception e) {
                 e.printStackTrace(); // In lỗi ra log để kiểm tra
                 DialogHelper.showErrorDialog(getActivity(), e.getMessage());
@@ -482,5 +483,24 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
         recyclerViewSeeMore.setAdapter(classInstanceAdapter);
 
         seeMoreDialog.show();
+    }
+
+    @Override
+    public void handleDeleteAction(int position) {
+        Course course = courseLists.get(position);
+        DialogHelper.showConfirmationDialog(
+                requireActivity(),
+                "Are you sure you want to delete course \"" + course.getCourseName() + "\"?",
+                null,
+                null,
+                () -> {
+                    // Delete course and refresh list
+                    courseService.deleteCourse(course.getCourseId());
+                    courseLists.remove(position);
+                    syncCourseManager.deleteCourseOnFirebase(course.getCourseId());
+
+                    loadCourseFromDatabase();
+                    DialogHelper.showSuccessDialog(requireActivity(), "Course removed successfully!");
+                });
     }
 }

@@ -36,6 +36,7 @@ import java.util.List;
 public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.YogaClassViewHolder> {
     public interface CustomListeners {
         void onSeeMoreClick(int courseId);
+        void handleDeleteAction(int position);
     }
 
     private List<Course> courseList;
@@ -126,7 +127,10 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.YogaClassV
         editSection.setOnClickListener(v -> handleEditAction(position, popupWindow));
 
         // Set event for Delete button
-        deleteSection.setOnClickListener(v -> handleDeleteAction(position, popupWindow));
+        deleteSection.setOnClickListener(v -> {
+            customListeners.handleDeleteAction(position);
+            popupWindow.dismiss(); // Close popup menu
+        });
 
         // Show the PopupWindow
         popupWindow.setElevation(10); // Set shadow nếu cần

@@ -184,7 +184,7 @@
             android:fontFamily="@font/poppins_semibold"
             android:hint="New Password"
             android:inputType="textPassword"
-            android:textSize="16dp" />
+            android:textSize="35px" />
 
         <EditText
             android:id="@+id/confirm_password"
@@ -195,7 +195,7 @@
             android:fontFamily="@font/poppins_semibold"
             android:hint="Confirm New Password"
             android:inputType="textPassword"
-            android:textSize="16dp" />
+            android:textSize="35px" />
 
         <Button
             android:id="@+id/change_password_button"

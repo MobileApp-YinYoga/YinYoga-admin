@@ -73,7 +73,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="5dp"
             android:fontFamily="@font/poppins_medium"
-            android:text="Create a new course for YinYoga."
+            android:text="Create a new course for Universal Yoga."
             android:textColor="@color/main"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"

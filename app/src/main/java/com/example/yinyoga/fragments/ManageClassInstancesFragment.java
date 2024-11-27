@@ -58,7 +58,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
-public class ManageClassInstancesFragment extends Fragment {
+public class ManageClassInstancesFragment extends Fragment implements ClassInstanceAdapter.CustomListeners {
     private Dialog dialog;
     private RecyclerView recyclerView;
     private ClassInstanceAdapter instanceAdapter;
@@ -253,7 +253,7 @@ public class ManageClassInstancesFragment extends Fragment {
         LinearLayout btnClosePopup = dialog.findViewById(R.id.btn_close);
         Button btnSave = dialog.findViewById(R.id.btn_save);
         Button btnClearAllPopup = dialog.findViewById(R.id.btn_clear);
-        Button btnUploadImage = dialog.findViewById(R.id.btnUploadImage);
+        TextView btnUploadImage = dialog.findViewById(R.id.btnUploadImage);
 
         setPopupEventListeners(btnClosePopup, btnClearAllPopup);
         btnUploadImage.setOnClickListener(this::chooseImage);
@@ -423,6 +423,8 @@ public class ManageClassInstancesFragment extends Fragment {
                 edDate.setText(findInstance.getDate());
                 spTeacher.setSelection(getArrayPosition("getTeacher", findInstance.getTeacher()));
 
+                imgGallery.setImageBitmap(ImageHelper.convertByteArrayToBitmap(findInstance.getImageUrl()));
+                imageBytes = ImageHelper.getImageBytes(imgGallery);
             } catch (Exception e) {
                 e.printStackTrace();
                 DialogHelper.showErrorDialog(getActivity(), e.getMessage());
@@ -498,6 +500,7 @@ public class ManageClassInstancesFragment extends Fragment {
         syncClassInstanceManager.syncClassInstanceFromFirestore();
 
         instanceAdapter = new ClassInstanceAdapter(instanceLists, this);
+        instanceAdapter.setCustomListeners(this);
         recyclerView.setAdapter(instanceAdapter);
     }
 
@@ -591,8 +594,30 @@ public class ManageClassInstancesFragment extends Fragment {
         spTeacher.setSelection(0);
         edInstanceId.setError(null);
 
+        // Clear the image view
+        imgGallery.setImageBitmap(null);
+
         if (showNotification) {
             DialogHelper.showSuccessDialog(getActivity(), "All inputs cleared successfully!");
         }
+    }
+
+    @Override
+    public void handleDeleteAction(int position) {
+        ClassInstance classInstance = instanceLists.get(position);
+        DialogHelper.showConfirmationDialog(
+                requireActivity(),
+                "Are you sure you want to delete class instance \"" + classInstance.getInstanceId() + "\"?",
+                null,
+                null,
+                () -> {
+                    // Delete class instance and refresh list
+                    instanceService.deleteClassInstance(classInstance.getInstanceId());
+                    instanceLists.remove(position);
+                    syncClassInstanceManager.deleteClassInstanceOnFirebase(classInstance.getInstanceId());
+
+                    loadInstancesFromDatabase();
+                    DialogHelper.showSuccessDialog(requireActivity(), "Course removed successfully!");
+                });
     }
 }
