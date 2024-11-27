@@ -19,14 +19,34 @@ import java.util.Map;
 
 public class SyncCourseManager {
 
-    private FirebaseFirestore db;
-    private Database dbHelper;
-    private CourseRepository courseRepository;
+    private final FirebaseFirestore db;
+    private final Database dbHelper;
+    private final CourseRepository courseRepository;
 
     public SyncCourseManager(Context context) {
         db = FirebaseFirestore.getInstance();
         dbHelper = new Database(context);
         this.courseRepository = new CourseRepository(context);
+    }
+
+    public void resetCourseInFirestore() {
+        // Reset courses collection
+        db.collection("courses")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String docId = document.getId();
+                            db.collection("courses").document(docId)
+                                    .delete()
+                                    .addOnSuccessListener(aVoid -> Log.d("SyncManager", "Document " + docId + " deleted from courses"))
+                                    .addOnFailureListener(e -> Log.w("SyncManager", "Error deleting document from courses", e));
+                        }
+                        Log.d("SyncManager", "All documents in 'courses' collection deleted");
+                    } else {
+                        Log.w("SyncManager", "Error fetching documents from courses for deletion.", task.getException());
+                    }
+                });
     }
 
     public void syncCoursesToFirestore() {
@@ -101,5 +121,21 @@ public class SyncCourseManager {
                         Log.w("SyncCourseManager", "Error getting Firestore course.", task.getException());
                     }
                 });
+    }
+
+    public void deleteCourse(int courseId) {
+        // Delete the record from SQLite first
+        SQLiteDatabase sqliteDb = dbHelper.getWritableDatabase(); // Renamed for clarity
+        int rowsAffected = sqliteDb.delete("courses", "id = ?", new String[]{String.valueOf(courseId)});
+
+        if (rowsAffected > 0) {
+            // If deletion is successful in SQLite, proceed to delete from Firestore
+            db.collection("courses").document(String.valueOf(courseId))
+                    .delete()
+                    .addOnSuccessListener(aVoid -> Log.d("SyncClassInstanceManager", "Course deleted from Firestore: " + courseId))
+                    .addOnFailureListener(e -> Log.w("SyncClassInstanceManager", "Error deleting course from Firestore", e));
+        } else {
+            Log.w("SyncClassInstanceManager", "No matching course found to delete in SQLite for courseId: " + courseId);
+        }
     }
 }

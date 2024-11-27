@@ -65,17 +65,15 @@ public class ManageClassInstancesFragment extends Fragment {
     private List<ClassInstance> instanceLists;
     private LinearLayout add_task, dropdown;
     private Spinner spTeacher, spCourseId;
-    private EditText edDate, edInstanceId;
-    private EditText searchInput;
+    private EditText edDate, edInstanceId, searchInput;
     private TextView tvInstanceId, tvTitle, tvSubtitle, tvClearSearch;
     private String selectedField;
-    private String dateStr;
     private ClassInstanceService instanceService;
     private CourseService courseService;
     private List<String> arrayCourseSpinner;
     private ImageView imgGallery;
     private byte[] imageBytes;
-    SyncClassInstanceManager syncClassInstanceManager;
+    private SyncClassInstanceManager syncClassInstanceManager;
 
     @Nullable
     @Override
@@ -88,9 +86,6 @@ public class ManageClassInstancesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        DialogHelper.showLoadingDialog(this.getContext(), "Loading all class instances...");
-
-        syncClassInstanceManager = new SyncClassInstanceManager(requireContext());
         initViews(view);
         setupRecyclerView();
         loadInstancesFromDatabase();
@@ -192,7 +187,7 @@ public class ManageClassInstancesFragment extends Fragment {
 
         MenuCourseAdapter adapter = new MenuCourseAdapter(courseList, course -> {
             searchInput.setText(course.getCourseName() + " #" + course.getCourseId());
-            popupWindow.dismiss(); // Đóng PopupWindow sau khi chọn khóa học
+            popupWindow.dismiss();
         });
         recyclerView.setAdapter(adapter);
 
@@ -262,7 +257,7 @@ public class ManageClassInstancesFragment extends Fragment {
 
         setPopupEventListeners(btnClosePopup, btnClearAllPopup);
         btnUploadImage.setOnClickListener(this::chooseImage);
-        clearAllInputs();
+        clearAllInputs(false);
 
         setPopupAddOrUpdate(instanceId);
         isInstanceIdExists();
@@ -361,37 +356,53 @@ public class ManageClassInstancesFragment extends Fragment {
 
     private void setPopupEventListeners(View btnClosePopup, View btnClearAllPopup) {
         btnClosePopup.setOnClickListener(v -> dialog.dismiss());
-        btnClearAllPopup.setOnClickListener(v -> clearAllInputs());
+        btnClearAllPopup.setOnClickListener(v -> clearAllInputs(true));
     }
 
     private void saveInstance(String instanceId) {
+        if (!isValidateInput()) {
+            return;
+        }
+
         String courseIdStr = spCourseId.getSelectedItem().toString();
-        dateStr = edDate.getText().toString().trim();
+        String dateStr = edDate.getText().toString().trim();
         String teacher = spTeacher.getSelectedItem().toString();
 
         String[] splitCourseId = courseIdStr.split(" - ");
         String getCourse = splitCourseId[0];
         int courseId = Integer.parseInt(getCourse);
 
-        if (!isValidateInput()) {
-            return;
-        }
+        String confirmInstance = Objects.equals(instanceId, "") ? edInstanceId.getText().toString().trim() : instanceId;
+        String message = "Your inputted data:";
+        message += "\nInstance ID: " + confirmInstance;
+        message += "\nCourse: " + courseIdStr;
+        message += "\nDate: " + dateStr;
+        message += "\nTeacher: " + teacher;
+        message += "\nDo you want to save this class instance?";
 
-        if (!Objects.equals(instanceId, "")) {
-            Course course = courseService.getCourse(courseId);
-            instanceService.updateClassInstance(new ClassInstance(instanceId, course, dateStr, teacher, imageBytes));
-            DialogHelper.showSuccessDialog(getActivity(), "Course instance updated successfully!");
-        } else {
-            instanceId = edInstanceId.getText().toString().trim();
+        DialogHelper.showConfirmationDialog(
+                requireActivity(),
+                "Confirm your class instance!",
+                message,
+                imageBytes,
+                () -> {
+                    Course course = courseService.getCourse(courseId);
+                    ClassInstance classInstance = new ClassInstance(instanceId, course, dateStr, teacher, imageBytes);
 
-            Course course = courseService.getCourse(courseId);
-            instanceService.addClassInstance(new ClassInstance(instanceId, course, dateStr, teacher, imageBytes));
-            DialogHelper.showSuccessDialog(getActivity(), "Course instance saved successfully!");
-        }
+                    if (!Objects.equals(instanceId, "")) {
+                        instanceService.updateClassInstance(classInstance);
+                    } else {
+                        classInstance.setInstanceId(edInstanceId.getText().toString().trim());
+                        instanceService.addClassInstance(classInstance);
+                    }
 
-        loadInstancesFromDatabase();
-        clearAllInputs();
-        dialog.dismiss();
+                    DialogHelper.showSuccessDialog(getActivity(), "Class instance saved successfully!");
+
+                    clearAllInputs(false);
+                    loadInstancesFromDatabase();
+
+                    dialog.dismiss();
+                });
     }
 
     private void setPopupAddOrUpdate(String instanceId) {
@@ -413,15 +424,13 @@ public class ManageClassInstancesFragment extends Fragment {
                 spTeacher.setSelection(getArrayPosition("getTeacher", findInstance.getTeacher()));
 
             } catch (Exception e) {
-                e.printStackTrace(); // In lỗi ra log để kiểm tra
+                e.printStackTrace();
                 DialogHelper.showErrorDialog(getActivity(), e.getMessage());
             }
         } else {
             tvTitle.setText("Add Class Instance");
             tvSubtitle.setText("Create a new course for YinYoga.");
             tvInstanceId.setVisibility(View.GONE);
-
-            clearAllInputs();
         }
     }
 
@@ -441,7 +450,7 @@ public class ManageClassInstancesFragment extends Fragment {
                 }
             }
 
-            throw new Exception("Không tìm thấy phần tử phù hợp trong mảng");
+            throw new Exception("Value not found in array");
         } catch (Exception e) {
             DialogHelper.showErrorDialog(getActivity(), "Error while getting array for spinner: " + e.getMessage());
         }
@@ -451,12 +460,15 @@ public class ManageClassInstancesFragment extends Fragment {
     private boolean isValidateInput() {
         boolean isValid = true;
 
-        if (edInstanceId.getText().toString().trim().isEmpty()) {
+        String instanceId = edInstanceId.getText().toString().trim();
+        String dateStr = edDate.getText().toString().trim();
+
+        if (instanceId.isEmpty()) {
             edInstanceId.setError("Please enter Instance ID");
             isValid = false;
         }
 
-        if (edDate.getText().toString().trim().isEmpty()) {
+        if (dateStr.isEmpty()) {
             edDate.setError("Please enter Date");
             isValid = false;
         }
@@ -480,11 +492,10 @@ public class ManageClassInstancesFragment extends Fragment {
             instanceService.addClassInstance(new ClassInstance("YOGA102", courseService.getCourse(1), "February, 15th 2024", "Jane Doe", img));
             instanceService.addClassInstance(new ClassInstance("YOGA103", courseService.getCourse(2), "March, 1st 2024", "John Doe", img));
             instanceLists = instanceService.getAllClassInstances();
-            syncClassInstanceManager.syncClassInstanceFromFirestore();
         }
 
         syncClassInstanceManager.syncClassInstanceToFirestore();
-        DialogHelper.dismissLoadingDialog();
+        syncClassInstanceManager.syncClassInstanceFromFirestore();
 
         instanceAdapter = new ClassInstanceAdapter(instanceLists, this);
         recyclerView.setAdapter(instanceAdapter);
@@ -506,6 +517,7 @@ public class ManageClassInstancesFragment extends Fragment {
         dropdown = view.findViewById(R.id.dropdown_menu);
 
         instanceLists = new ArrayList<>();
+        arrayCourseSpinner = new ArrayList<>();
         instanceService = new ClassInstanceService(getContext());
         courseService = new CourseService(getContext());
 
@@ -521,7 +533,7 @@ public class ManageClassInstancesFragment extends Fragment {
         spTeacher = dialog.findViewById(R.id.spinnerTeacher);
         imgGallery = dialog.findViewById(R.id.ivUploadImageClassInstance);
 
-        arrayCourseSpinner = new ArrayList<>();
+        syncClassInstanceManager = new SyncClassInstanceManager(requireContext());
 
         fillToSpinnerCourseIdPopup();
         edDate.setOnClickListener(v -> showDayPickerDialog(getDayFromCourse()));
@@ -550,8 +562,6 @@ public class ManageClassInstancesFragment extends Fragment {
 
     private void fillToSpinnerCourseIdPopup() {
         arrayCourseSpinner.clear();
-        // Initialize a list to store courseId - courseName
-        arrayCourseSpinner = new ArrayList<>();
         List<Course> courseList = courseService.getAllCourses();
 
         if (courseList.isEmpty()) {
@@ -560,24 +570,29 @@ public class ManageClassInstancesFragment extends Fragment {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spCourseId.setAdapter(adapter);
             spCourseId.setEnabled(false);
-        } else {
-            for (Course course : courseList) {
-                int id = course.getCourseId();
-                String courseName = course.getCourseName();
-                arrayCourseSpinner.add(id + " - " + courseName);
-            }
-
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, arrayCourseSpinner);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spCourseId.setAdapter(adapter); // spinnerCoursePKId là Spinner của bạn
+            return;
         }
+
+        for (Course course : courseList) {
+            int id = course.getCourseId();
+            String courseName = course.getCourseName();
+            arrayCourseSpinner.add(id + " - " + courseName);
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, arrayCourseSpinner);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spCourseId.setAdapter(adapter);
     }
 
-    private void clearAllInputs() {
+    private void clearAllInputs(boolean showNotification) {
         spCourseId.setSelection(0);
         edInstanceId.setText("");
         edDate.setText("");
         spTeacher.setSelection(0);
         edInstanceId.setError(null);
+
+        if (showNotification) {
+            DialogHelper.showSuccessDialog(getActivity(), "All inputs cleared successfully!");
+        }
     }
 }
