@@ -27,6 +27,7 @@ import com.example.yinyoga.adapters.NotificationAdapter;
 import com.example.yinyoga.models.Notification;
 import com.example.yinyoga.service.NotificationService;
 import com.example.yinyoga.sync.SyncNotificationManager;
+import com.example.yinyoga.utils.DatetimeHelper;
 import com.example.yinyoga.utils.DialogHelper;
 
 import java.text.SimpleDateFormat;
@@ -41,8 +42,9 @@ public class NotificationActivity extends AppCompatActivity {
     private RecyclerView recyclerNewNotifications, recyclerBeforeNotifications;
     private NotificationAdapter newAdapter, beforeAdapter;
     private List<Notification> newNotifications, beforeNotifications;
-    private ImageView menuOptions, backHome;
+    private ImageView menuOptions, backHome, im_empty;
     private NotificationService notificationService;
+    private TextView tv_before_title, tv_new_title;
     SyncNotificationManager syncNotificationManager;
 
     @Override
@@ -91,6 +93,9 @@ public class NotificationActivity extends AppCompatActivity {
 
         backHome = findViewById(R.id.ic_back);
         menuOptions = findViewById(R.id.menu_options_search);
+        im_empty = findViewById(R.id.im_empty);
+        tv_new_title = findViewById(R.id.tv_new_title);
+        tv_before_title = findViewById(R.id.tv_before_title);
     }
 
 
@@ -165,6 +170,7 @@ public class NotificationActivity extends AppCompatActivity {
 
     private void clearAllNotifications() {
         notificationService.clearAllNotifications();
+        syncNotificationManager.syncNotificationsToFirestore();
 
         newNotifications.clear();
         beforeNotifications.clear();
@@ -179,19 +185,18 @@ public class NotificationActivity extends AppCompatActivity {
         List<Notification> allNotifications = notificationService.getAllNotifications();
 
        if (allNotifications.size() <= 0){
-           addSampleNotifications();
+           im_empty.setVisibility(View.VISIBLE);
+           tv_before_title.setVisibility(View.GONE);
+           tv_new_title.setVisibility(View.GONE);
+           return;
        }
+
+        im_empty.setVisibility(View.GONE);
         newNotifications.clear();
         beforeNotifications.clear();
 
-        if (allNotifications.isEmpty()) {
-            syncNotificationManager.syncNotificationsFromFirestore();
-        } else {
-            syncNotificationManager.syncNotificationsToFirestore();
-        }
-
         for (Notification notification : allNotifications) {
-            if (notificationService.isToday(notification.getCreatedDate())) {
+            if (DatetimeHelper.isToday(notification.getCreatedDate())) {
                 newNotifications.add(notification);
             } else {
                 beforeNotifications.add(notification);
@@ -204,7 +209,6 @@ public class NotificationActivity extends AppCompatActivity {
 
     private void addSampleNotifications() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        String todayDate = dateFormat.format(new Date());
 
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_YEAR, -1); // Ngày hôm qua
@@ -220,7 +224,7 @@ public class NotificationActivity extends AppCompatActivity {
                 "User trannq2003@gmail.com has booked a class for 'Advanced Yoga' on Monday at 10:00 AM",
                 "10:00 AM",
                 false,
-                todayDate
+                DatetimeHelper.getCurrentDatetime()
         ));
 
         notificationService.insertNotification(new Notification(
@@ -229,7 +233,7 @@ public class NotificationActivity extends AppCompatActivity {
                 "User trannq2003@gmail.com's booking for 'Flow Yoga' on Wednesday is pending approval",
                 "11:00 AM",
                 true,
-                todayDate
+                DatetimeHelper.getCurrentDatetime()
         ));
 
         notificationService.insertNotification(new Notification(
@@ -238,7 +242,7 @@ public class NotificationActivity extends AppCompatActivity {
                 "New user registered: trannq2003@gmail.com",
                 "12:00 PM",
                 false,
-                todayDate
+                DatetimeHelper.getCurrentDatetime()
         ));
 
 // Past Notifications

@@ -40,6 +40,7 @@ import com.example.yinyoga.models.Course;
 import com.example.yinyoga.service.ClassInstanceService;
 import com.example.yinyoga.service.CourseService;
 import com.example.yinyoga.sync.SyncClassInstanceManager;
+import com.example.yinyoga.utils.DatetimeHelper;
 import com.example.yinyoga.utils.DialogHelper;
 import com.example.yinyoga.utils.ImageHelper;
 
@@ -203,7 +204,7 @@ public class ManageClassInstancesFragment extends Fragment {
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(), (view, year, month, dayOfMonth) -> {
             String monthName = new SimpleDateFormat("MMMM", Locale.getDefault()).format(new GregorianCalendar(year, month, dayOfMonth).getTime());
-            String daySuffix = getDaySuffix(dayOfMonth);
+            String daySuffix = DatetimeHelper.getDaySuffix(dayOfMonth);
             String formattedDate = String.format("%s, %d%s %d", monthName, dayOfMonth, daySuffix, year);
 
             Log.d("formattedDate: ", formattedDate);
@@ -269,6 +270,31 @@ public class ManageClassInstancesFragment extends Fragment {
         btnSave.setOnClickListener(v -> saveInstance(instanceId));
 
         dialog.show();
+    }
+
+
+
+    private void showDayPickerDialog(int dayOfWeek) {
+        List<String> dayList = new ArrayList<>();
+        Calendar calendar = Calendar.getInstance();
+
+        while (calendar.get(Calendar.DAY_OF_WEEK) != dayOfWeek) {
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+        }
+
+        for (int i = 0; i < 10; i++) {
+            dayList.add(DatetimeHelper.formatDateWithSuffix(calendar.getTime()));
+            calendar.add(Calendar.DAY_OF_MONTH, 7);
+        }
+
+        DialogHelper.showCustomDayPickerDialog(
+                getContext(),
+                "Choose a " + DatetimeHelper.getDayOfWeekName(dayOfWeek),
+                dayList,
+                selectedDate -> {
+                    edDate.setText(selectedDate);
+                }
+        );
     }
 
     private final ActivityResultLauncher<Intent> chooseImageLauncher = registerForActivityResult(
@@ -520,67 +546,6 @@ public class ManageClassInstancesFragment extends Fragment {
         dayMap.put("sunday", Calendar.SUNDAY);
 
         return dayMap.getOrDefault(dayOfTheWeek.toLowerCase(), -1);
-    }
-
-    private void showDayPickerDialog(int dayOfWeek) {
-        List<String> dayList = new ArrayList<>();
-        Calendar calendar = Calendar.getInstance();
-
-        while (calendar.get(Calendar.DAY_OF_WEEK) != dayOfWeek) {
-            calendar.add(Calendar.DAY_OF_MONTH, 1);
-        }
-
-        for (int i = 0; i < 10; i++) {
-            dayList.add(formatDateWithSuffix(calendar.getTime()));
-            calendar.add(Calendar.DAY_OF_MONTH, 7);
-        }
-
-        DialogHelper.showCustomDayPickerDialog(
-                getContext(),
-                "Choose a " + getDayOfWeekName(dayOfWeek),
-                dayList,
-                selectedDate -> {
-                    edDate.setText(selectedDate);
-                }
-        );
-    }
-
-    private String formatDateWithSuffix(Date date) {
-        SimpleDateFormat monthYearFormat = new SimpleDateFormat("MMMM, yyyy", Locale.getDefault());
-        SimpleDateFormat dayFormat = new SimpleDateFormat("d", Locale.getDefault());
-
-        String day = dayFormat.format(date);
-        String monthYear = monthYearFormat.format(date);
-
-        String dayWithSuffix = day + getDaySuffix(Integer.parseInt(day));
-
-        return monthYear.replace(",", ", " + dayWithSuffix);
-    }
-
-    private String getDaySuffix(int day) {
-        if (day >= 11 && day <= 13) {
-            return "th";
-        }
-        switch (day % 10) {
-            case 1:
-                return "st";
-            case 2:
-                return "nd";
-            case 3:
-                return "rd";
-            default:
-                return "th";
-        }
-    }
-
-    public String getDayOfWeekName(int dayOfWeek) {
-        String[] days = {"", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
-
-        if (dayOfWeek >= Calendar.SUNDAY && dayOfWeek <= Calendar.SATURDAY) {
-            return days[dayOfWeek];
-        } else {
-            return "Invalid day";
-        }
     }
 
     private void fillToSpinnerCourseIdPopup() {

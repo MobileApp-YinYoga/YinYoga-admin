@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:background="@drawable/popup_background"
         android:layout_width="380dp"
         android:padding="10dp"
@@ -17,7 +17,7 @@
             android:id="@+id/btnClose"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
             android:background="@drawable/circular_button_background"
             android:gravity="center_vertical"
@@ -90,7 +90,7 @@
             android:fontFamily="@font/poppins_semibold"
             android:text="Course Name*"
             android:textColor="@color/main"
-            android:textSize="16sp"
+            android:textSize="35px"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvSubtitle" />
 
@@ -103,10 +103,9 @@
             android:fontFamily="@font/poppins_semibold"
             android:text="Duration*"
             android:textColor="@color/main"
-            android:textSize="16sp"
+            android:textSize="35px"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/edTime" />
-
 
         <!-- Nhãn Thời gian -->
         <EditText
@@ -121,7 +120,7 @@
             android:hint="e.g. Sivananda Yoga"
             android:inputType="none"
             android:minHeight="48dp"
-            android:textSize="16sp"
+            android:textSize="35px"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -137,8 +136,7 @@
             android:fontFamily="@font/inter_medium"
             android:hint="e.g. 10:30"
             android:inputType="time"
-            android:minHeight="48dp"
-            android:textSize="16sp"
+            android:textSize="35px"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -154,7 +152,7 @@
             android:fontFamily="@font/inter_medium"
             android:hint="e.g. 20"
             android:inputType="number"
-            android:textSize="16sp"
+            android:textSize="35px"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/teacherLabel" />
 
@@ -168,7 +166,7 @@
             android:fontFamily="@font/inter_medium"
             android:hint="e.g. 15.0"
             android:inputType="numberDecimal"
-            android:textSize="16sp"
+            android:textSize="35px"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/priceLabel" />
 
@@ -181,14 +179,14 @@
             android:fontFamily="@font/poppins_semibold"
             android:text="Day of the week*"
             android:textColor="@color/main"
-            android:textSize="16sp"
+            android:textSize="35px"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/edCourseName" />
 
         <Spinner
             android:id="@+id/spinnerDayofTheWeek"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:layout_marginStart="20dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="20dp"
@@ -214,7 +212,7 @@
             android:fontFamily="@font/poppins_semibold"
             android:text="Time*"
             android:textColor="@color/main"
-            android:textSize="16sp"
+            android:textSize="35px"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/spinnerDayofTheWeek" />
 
@@ -231,7 +229,7 @@
             android:fontFamily="@font/poppins_semibold"
             android:text="Capacity*"
             android:textColor="@color/main"
-            android:textSize="16sp"
+            android:textSize="35px"
             app:layout_constraintStart_toEndOf="@+id/timeLabel"
             app:layout_constraintTop_toBottomOf="@id/spinnerDayofTheWeek" />
 
@@ -244,7 +242,7 @@
             android:fontFamily="@font/poppins_semibold"
             android:text="Price*"
             android:textColor="@color/main"
-            android:textSize="16sp"
+            android:textSize="35px"
             app:layout_constraintStart_toEndOf="@+id/durationLabel"
             app:layout_constraintTop_toBottomOf="@id/edCapacity" />
 
@@ -261,7 +259,7 @@
             android:fontFamily="@font/inter_medium"
             android:hint="e.g. 180 (minutes)"
             android:inputType="number"
-            android:textSize="16sp"
+            android:textSize="35px"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/durationLabel" />
 
@@ -274,14 +272,14 @@
             android:fontFamily="@font/poppins_semibold"
             android:text="Course Type*"
             android:textColor="@color/main"
-            android:textSize="16sp"
+            android:textSize="35px"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/edPrice" />
 
         <Spinner
             android:id="@+id/courseTypeSpinner"
             android:layout_width="match_parent"
-            android:layout_height="49dp"
+            android:layout_height="45dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="20dp"
@@ -310,13 +308,14 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
             android:backgroundTint="@color/main"
             android:fontFamily="@font/inter_medium"
             android:hint="e.g. A brief description of the course..."
             android:minHeight="45dp"
             android:padding="12dp"
             android:inputType="textMultiLine"
-            android:textSize="16sp"
+            android:textSize="35px"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/descriptionLabel" />
@@ -339,6 +338,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
             android:layout_marginTop="5dp"
             android:orientation="vertical"
             app:layout_constraintStart_toStartOf="parent"
@@ -346,22 +346,23 @@
 
             <ImageView
                 android:id="@+id/ivUploadImage"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
                 tools:layout_editor_absoluteX="56dp"
                 tools:layout_editor_absoluteY="453dp"
                 tools:srcCompat="@tools:sample/avatars" />
 
-            <!-- Button for uploading an image -->
-            <Button
+            <TextView
                 android:id="@+id/btnUploadImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:backgroundTint="@color/main_95"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@drawable/edit_text_background"
                 android:fontFamily="@font/poppins_semibold"
                 android:text="Upload File"
-                android:textColor="@color/white" />
+                android:paddingTop="10dp"
+                android:textAlignment="center"
+                android:textColor="@color/main" />
         </LinearLayout>
 
 
@@ -371,7 +372,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/uploadImageContainer">
@@ -379,9 +380,9 @@
             <!-- Nút xóa tất cả -->
             <Button
                 android:id="@+id/btnSaveCourse"
-                android:layout_width="120dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="70dp"
+                android:layout_marginEnd="10dp"
                 android:backgroundTint="@color/main"
                 android:fontFamily="@font/poppins_semibold"
                 android:padding="10dp"
@@ -393,8 +394,9 @@
 
             <Button
                 android:id="@+id/btnClearAll"
-                android:layout_width="120dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
                 android:backgroundTint="#506D674B"
                 android:fontFamily="@font/poppins_semibold"
                 android:padding="10dp"

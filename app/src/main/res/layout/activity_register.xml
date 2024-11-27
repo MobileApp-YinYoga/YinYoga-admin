@@ -19,19 +19,17 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_back" />
 
-    <!-- Logo -->
     <ImageView
         android:id="@+id/logo"
         android:layout_width="789px"
         android:layout_height="558px"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="10dp"
         android:contentDescription="App Logo"
         android:src="@drawable/logo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Tiêu đề -->
     <TextView
         android:id="@+id/register_title"
         android:layout_width="wrap_content"
@@ -39,12 +37,11 @@
         android:layout_marginTop="0dp"
         android:text="Register"
         android:textColor="@color/main"
-        android:textSize="24sp"
+        android:textSize="65px"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/logo" />
-
 
     <EditText
         android:id="@+id/register_username"
@@ -54,7 +51,7 @@
         android:fontFamily="@font/poppins_semibold"
         android:hint="Username"
         android:backgroundTint="@color/main_50"
-        android:textSize="16dp"
+        android:textSize="35px"
         android:paddingLeft="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.507"
@@ -92,7 +89,7 @@
         android:backgroundTint="@color/main_50"
         android:fontFamily="@font/poppins_semibold"
         android:hint="Full name"
-        android:textSize="16dp"
+        android:textSize="35px"
         android:paddingLeft="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.507"
@@ -107,7 +104,7 @@
         android:fontFamily="@font/poppins_semibold"
         android:hint="Password"
         android:inputType="textPassword"
-        android:textSize="16dp"
+        android:textSize="35px"
         android:paddingLeft="10dp"
         android:backgroundTint="@color/main_50"
         app:layout_constraintEnd_toEndOf="parent"
@@ -123,7 +120,7 @@
         android:fontFamily="@font/poppins_semibold"
         android:hint="Confirm Password"
         android:inputType="textPassword"
-        android:textSize="16dp"
+        android:textSize="35px"
         android:paddingLeft="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         android:backgroundTint="@color/main_50"
@@ -133,9 +130,9 @@
 
     <Button
         android:id="@+id/register_button"
-        android:layout_width="200dp"
-        android:layout_height="55dp"
-        android:layout_marginTop="50dp"
+        android:layout_width="430px"
+        android:layout_height="120px"
+        android:layout_marginTop="40dp"
         android:backgroundTint="@color/main"
         android:fontFamily="@font/poppins_semibold"
         android:text="Register"
@@ -155,7 +152,7 @@
         android:backgroundTint="@color/main_50"
         android:hint="Email"
         android:inputType="textEmailAddress"
-        android:textSize="16dp"
+        android:textSize="35px"
         android:paddingLeft="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.507"
@@ -177,7 +174,7 @@
         app:layout_constraintTop_toBottomOf="@+id/register_button" />
 
     <TextView
-        android:id="@+id/nav_register"
+        android:id="@+id/nav_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
@@ -188,11 +185,4 @@
         android:textSize="12sp"
         app:layout_constraintStart_toEndOf="@+id/subNavigation"
         app:layout_constraintTop_toBottomOf="@+id/register_button" />
-
-
-    <!-- Trường Password -->
-
-    <!-- Trường Confirm Password -->
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

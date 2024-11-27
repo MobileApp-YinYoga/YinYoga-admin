@@ -30,7 +30,7 @@ import java.util.concurrent.Executors;
 public class ForgotPasswordActivity extends AppCompatActivity {
     private ImageView ic_back;
     private EditText edEmail, edVerifyCode, edNewPassword, edConfirmPassword;
-    private TextView errorText, title;
+    private TextView errorText, title, subtitle_verify, label_resent, resent;
     private Button btnSubmit, btnChangePassword;
     private LinearLayout resetPasswordLayout;
     private String verificationCode;
@@ -102,11 +102,14 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         JavaMailAPI javaMailAPI = new JavaMailAPI(recipientEmail, subject, message);
         javaMailAPI.setOnEmailSentListener(success -> runOnUiThread(() -> {
             if (success) {
-                DialogHelper.showSuccessDialog(this, "Email sent successfully!");
+                DialogHelper.showSuccessDialog(this, "Verify code has been sent successfully!");
                 DialogHelper.dismissLoadingDialog();
 
                 edEmail.setVisibility(View.GONE);
                 edVerifyCode.setVisibility(View.VISIBLE);
+                resent.setVisibility(View.VISIBLE);
+                label_resent.setVisibility(View.VISIBLE);
+                subtitle_verify.setVisibility(View.VISIBLE);
                 title.setText("Verify Your Email");
                 btnSubmit.setText("Verify");
             } else {
@@ -149,6 +152,9 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             errorText.setVisibility(View.GONE);
             edVerifyCode.setVisibility(View.GONE);
             btnSubmit.setVisibility(View.GONE);
+            resent.setVisibility(View.GONE);
+            label_resent.setVisibility(View.GONE);
+            subtitle_verify.setVisibility(View.GONE);
             resetPasswordLayout.setVisibility(View.VISIBLE);
         } else {
             errorText.setText("Invalid verification code. Please check your email.");
@@ -207,6 +213,9 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         userService = new UserService(this);
         ic_back = findViewById(R.id.ic_back);
         title = findViewById(R.id.title);
+        subtitle_verify = findViewById(R.id.subtitle_verify);
+        label_resent = findViewById(R.id.label_resent);
+        resent = findViewById(R.id.resent);
         edEmail = findViewById(R.id.email);
         edVerifyCode = findViewById(R.id.verify_code);
         edNewPassword = findViewById(R.id.new_password);

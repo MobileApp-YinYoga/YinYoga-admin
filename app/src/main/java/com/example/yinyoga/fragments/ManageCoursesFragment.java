@@ -91,7 +91,7 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
 
         Button btnSave = dialog.findViewById(R.id.btnSaveCourse);
         Button btnClearAllPopup = dialog.findViewById(R.id.btnClearAll);
-        Button btnUploadImage = dialog.findViewById(R.id.btnUploadImage);
+        TextView btnUploadImage = dialog.findViewById(R.id.btnUploadImage);
 
         btnUploadImage.setOnClickListener(this::chooseImage);
 
@@ -167,9 +167,8 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
                 courseService.updateCourse(new Course(courseId, courseName, courseType, createdAt, dayOfWeek, description, capacity, duration, imageBytes, price, timeStr));
             }
 
-            DialogHelper.showSuccessDialog(getActivity(), "Course saved successfully!");
-
             clearAllInputs();
+            DialogHelper.showSuccessDialog(getActivity(), "Course \"" + courseName + "\" saved successfully!");
             loadCourseFromDatabase();
 
             dialog.dismiss();
@@ -197,12 +196,15 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
                 // Set Spinner positions
                 spinnerDayOfTheWeek.setSelection(getArrayPosition("getDate", findCourse.getDayOfWeek()));
                 courseTypeSpinner.setSelection(getArrayPosition("getGenre", findCourse.getCourseType()));
+
+                imgGallery.setImageBitmap(ImageHelper.convertByteArrayToBitmap(findCourse.getImageUrl()));
             } catch (Exception e) {
                 e.printStackTrace(); // In lỗi ra log để kiểm tra
                 DialogHelper.showErrorDialog(getActivity(), e.getMessage());
             }
         } else {
             tvCourseId.setVisibility(View.GONE);
+            clearAllInputs();
         }
     }
 
@@ -393,16 +395,28 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
     }
 
     private void clearAllInputs() {
+        // Clear all text fields
         edCourseName.setText("");
-        spinnerDayOfTheWeek.setSelection(0);
         edTime.setText("");
         edDuration.setText("");
         edCapacity.setText("");
         edPrice.setText("");
         edDescription.setText("");
+
+        // Reset spinners to their default selections
+        spinnerDayOfTheWeek.setSelection(0);
         courseTypeSpinner.setSelection(0);
 
-        DialogHelper.showSuccessDialog(getActivity(), "All fields cleared!");
+        // Clear the image view
+        imgGallery.setImageBitmap(null);
+
+        // Clear error states (if any)
+        edCourseName.setError(null);
+        edTime.setError(null);
+        edDuration.setError(null);
+        edCapacity.setError(null);
+        edPrice.setError(null);
+        edDescription.setError(null);
     }
 
     @Override

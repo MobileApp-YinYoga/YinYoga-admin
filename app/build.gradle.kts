@@ -40,11 +40,14 @@ android {
 }
 
 dependencies {
+    implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(libs.firebase.inappmessaging)
+    implementation(libs.play.services.auth)
+    implementation(libs.firebase.core)
     implementation(libs.recyclerview)
     implementation(libs.firebase.firestore)
     testImplementation(libs.junit)

@@ -12,7 +12,7 @@
         android:id="@+id/imageView"
         android:layout_width="441dp"
         android:layout_height="730dp"
-        android:layout_marginStart="-10dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="150dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -30,8 +30,8 @@
 
     <ImageView
         android:id="@+id/logo"
-        android:layout_width="259dp"
-        android:layout_height="142dp"
+        android:layout_width="789px"
+        android:layout_height="558px"
         android:layout_marginTop="55dp"
         android:contentDescription="App Logo"
         android:src="@drawable/logo"
@@ -39,29 +39,43 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Tiêu đề -->
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="10dp"
         android:fontFamily="@font/poppins_semibold"
         android:text="Fogot Password"
         android:textColor="@color/main"
-        android:textSize="64px"
+        android:textSize="60px"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/logo" />
 
-    <!-- TextView hiển thị thông báo lỗi -->
     <TextView
+        android:visibility="gone"
         android:id="@+id/error_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="Error message here"
         android:textColor="@color/errorColor"
-        android:textSize="14sp"
+        android:textSize="35px"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/subtitle_verify"
+        android:layout_width="310dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="We’ve sent code to trannq2003@gmail.com"
+        android:textColor="@color/main_95"
+        android:fontFamily="@font/poppins_semibold"
+        android:textSize="35px"
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@+id/title"
         app:layout_constraintStart_toStartOf="parent"
@@ -71,35 +85,72 @@
         android:id="@+id/email"
         android:layout_width="300dp"
         android:layout_height="50dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="40dp"
         android:backgroundTint="@color/main_50"
         android:fontFamily="@font/poppins_semibold"
         android:hint="Enter Your Email"
-        android:textSize="16dp"
+        android:textSize="35px"
+        android:textColor="@color/main"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/error_text" />
+        app:layout_constraintTop_toBottomOf="@+id/title" />
 
     <EditText
+        android:visibility="gone"
         android:id="@+id/verify_code"
         android:layout_width="300dp"
         android:layout_height="50dp"
-        android:layout_marginTop="20dp"
-        android:backgroundTint="@color/main_50"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/rounded_before_notification"
         android:fontFamily="@font/poppins_semibold"
-        android:hint="Enter the code sent to your email"
-        android:textSize="16dp"
-        android:visibility="gone"
+        android:textAlignment="center"
+        android:textSize="35px"
+        android:hint="_   _   _   _   _   _"
+        android:textColor="@color/main"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/error_text" />
+        app:layout_constraintTop_toBottomOf="@+id/title" />
+
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/label_resent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/poppins"
+        android:text="Don’t receive code?"
+        android:textAlignment="textEnd"
+        android:textColor="@color/main_95"
+        android:textSize="35px"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/verify_code" />
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/resent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/poppins_bold"
+        android:text="Re-send"
+        android:textAlignment="textStart"
+        android:textColor="@color/main_95"
+        android:textSize="35px"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.066"
+        app:layout_constraintStart_toEndOf="@+id/label_resent"
+        app:layout_constraintTop_toBottomOf="@+id/verify_code" />
 
     <Button
         android:id="@+id/btnSubmit"
-        android:layout_width="130dp"
-        android:layout_height="55dp"
+        android:layout_width="169dp"
+        android:layout_height="45dp"
         android:layout_marginBottom="300dp"
         android:backgroundTint="@color/main"
         android:fontFamily="@font/poppins_semibold"

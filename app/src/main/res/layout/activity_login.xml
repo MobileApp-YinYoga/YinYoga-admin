@@ -9,8 +9,6 @@
     android:id="@+id/activity_login"
     tools:context=".activities.LoginActivity">
 
-    <!-- Logo -->
-
     <ImageView
         android:id="@+id/ic_back"
         android:layout_width="29dp"
@@ -25,14 +23,13 @@
         android:id="@+id/logo"
         android:layout_width="789px"
         android:layout_height="558px"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="10dp"
         android:contentDescription="App Logo"
         android:src="@drawable/logo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Tiêu đề -->
     <TextView
         android:id="@+id/login_title"
         android:layout_width="wrap_content"
@@ -40,27 +37,25 @@
         android:layout_marginTop="0dp"
         android:text="Login"
         android:textColor="@color/main"
-        android:textSize="24sp"
+        android:textSize="65px"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/logo" />
 
-    <!-- TextView hiển thị thông báo lỗi -->
     <TextView
         android:id="@+id/error_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="12dp"
         android:text="Error message here"
         android:textColor="@color/errorColor"
-        android:textSize="14sp"
+        android:textSize="35px"
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@+id/login_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Trường Username -->
     <EditText
         android:id="@+id/username"
         android:layout_width="330dp"
@@ -68,13 +63,12 @@
         android:layout_marginTop="20dp"
         android:hint="Username"
         android:backgroundTint="@color/main_50"
-        android:textSize="16dp"
+        android:textSize="35px"
         android:fontFamily="@font/poppins_semibold"
         app:layout_constraintTop_toBottomOf="@+id/error_text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Trường Password -->
     <EditText
         android:id="@+id/password"
         android:layout_width="330dp"
@@ -83,17 +77,16 @@
         android:hint="Password"
         android:inputType="textPassword"
         android:backgroundTint="@color/main_50"
-        android:textSize="16dp"
+        android:textSize="35px"
         android:fontFamily="@font/poppins_semibold"
         app:layout_constraintTop_toBottomOf="@+id/username"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-
     <Button
         android:id="@+id/btnSubmit"
-        android:layout_width="130dp"
-        android:layout_height="55dp"
+        android:layout_width="430px"
+        android:layout_height="120px"
         android:layout_marginTop="60dp"
         android:backgroundTint="@color/main"
         android:fontFamily="@font/poppins_semibold"
@@ -111,7 +104,8 @@
         android:layout_height="25dp"
         android:layout_marginStart="35dp"
         android:layout_marginTop="40dp"
-        android:fontFamily="@font/poppins_light"
+        android:fontFamily="@font/poppins"
+        android:textColor="@color/main"
         android:paddingTop="5dp"
         android:checked="true"
         android:text="Remember me"
@@ -126,9 +120,9 @@
         android:layout_marginTop="44dp"
         android:layout_marginEnd="44dp"
         android:fontFamily="@font/poppins_medium"
-        android:text="Forget password"
         android:textColor="@color/main"
-        android:textSize="12sp"
+        android:text="Forget password"
+        android:textSize="32px"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password" />
 
