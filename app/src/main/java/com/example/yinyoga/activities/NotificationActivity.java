@@ -159,7 +159,7 @@ public class NotificationActivity extends AppCompatActivity {
 
     private void clearAllNotifications() {
         notificationService.clearAllNotifications();
-        syncNotificationManager.syncNotificationsToFirestore();
+        loadNotifications();
 
         newNotifications.clear();
         beforeNotifications.clear();
@@ -171,6 +171,9 @@ public class NotificationActivity extends AppCompatActivity {
     }
 
     private void loadNotifications() {
+        syncNotificationManager.syncNotificationsToFirestore();
+        syncNotificationManager.syncNotificationsFromFirestore();
+        
         List<Notification> allNotifications = notificationService.getAllNotifications();
 
         if (allNotifications.isEmpty()) {
@@ -194,8 +197,5 @@ public class NotificationActivity extends AppCompatActivity {
 
         newAdapter.notifyDataSetChanged();
         beforeAdapter.notifyDataSetChanged();
-
-        syncNotificationManager.syncNotificationsToFirestore();
-        syncNotificationManager.syncNotificationsFromFirestore();
     }
 }

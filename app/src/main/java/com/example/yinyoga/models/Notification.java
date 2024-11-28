@@ -1,7 +1,7 @@
 package com.example.yinyoga.models;
 
 public class Notification {
-    private int id;
+    private String id;
     private String email;
     private String title;
     private String description;
@@ -9,7 +9,7 @@ public class Notification {
     private boolean isRead;
     private String createdDate;
 
-    public Notification(int id, String email, String title, String description, String time, boolean isRead, String createdDate) {
+    public Notification(String id, String email, String title, String description, String time, boolean isRead, String createdDate) {
         this.id = id;
         this.email = email;
         this.title = title;
@@ -28,28 +28,59 @@ public class Notification {
         this.createdDate = createdDate;
     }
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public String getId() {
+        return id;
+    }
 
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public String getEmail() {
         return email;
     }
+
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public String getDescription() {
+        return description;
+    }
 
-    public String getTime() { return time; }
-    public void setTime(String time) { this.time = time; }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-    public boolean isRead() { return isRead; }
-    public void setRead(boolean read) { isRead = read; }
+    public String getTime() {
+        return time;
+    }
 
-    public String getCreatedDate() { return createdDate; }
-    public void setCreatedDate(String createdDate) { this.createdDate = createdDate; }
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public boolean isRead() {
+        return isRead;
+    }
+
+    public void setRead(boolean read) {
+        isRead = read;
+    }
+
+    public String getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(String createdDate) {
+        this.createdDate = createdDate;
+    }
 }
