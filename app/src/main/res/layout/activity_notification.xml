@@ -20,7 +20,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!-- Icon Back -->
         <ImageView
             android:id="@+id/ic_back"
             android:layout_width="24dp"
@@ -29,7 +28,6 @@
             android:layout_marginEnd="16dp"
             android:src="@drawable/ic_back"/>
 
-        <!-- Title Notifications -->
         <TextView
             android:id="@+id/tv_notifications_title"
             android:layout_width="0dp"
@@ -42,7 +40,6 @@
             android:textStyle="bold"
             android:gravity="center" />
 
-        <!-- Menu Options Icon -->
         <ImageView
             android:id="@+id/menu_options_search"
             android:layout_width="25dp"
@@ -113,4 +110,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/bg_empty_notification" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

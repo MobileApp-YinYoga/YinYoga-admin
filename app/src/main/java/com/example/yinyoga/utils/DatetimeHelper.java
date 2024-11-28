@@ -18,7 +18,6 @@ public class DatetimeHelper {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
             Date date = dateFormat.parse(createdDate);
 
-            // Lấy ngày hiện tại
             Calendar today = Calendar.getInstance();
             today.set(Calendar.HOUR_OF_DAY, 0);
             today.set(Calendar.MINUTE, 0);
@@ -38,7 +37,6 @@ public class DatetimeHelper {
 
         String day = dayFormat.format(date);
         String monthYear = monthYearFormat.format(date);
-
         String dayWithSuffix = day + getDaySuffix(Integer.parseInt(day));
 
         return monthYear.replace(",", ", " + dayWithSuffix);

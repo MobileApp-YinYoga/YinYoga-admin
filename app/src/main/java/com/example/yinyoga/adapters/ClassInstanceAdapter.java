@@ -118,10 +118,10 @@ public class ClassInstanceAdapter extends RecyclerView.Adapter<ClassInstanceAdap
             instanceMenu = itemView.findViewById(R.id.instanceMenu);
             classInstanceImage = itemView.findViewById(R.id.class_instance_image);
 
-            Log.d("InstanceViewHolder", "Date TextView: " + date);  // Check xem view này có bị null không
-            Log.d("InstanceViewHolder", "CourseID TextView: " + courseId);  // Check xem view này có bị null không
-            Log.d("InstanceViewHolder", "Teacher Spinner: " + teacher);  // Check xem view này có bị null không
-            Log.d("InstanceViewHolder", "instanceMenu Spinner: " + instanceMenu);  // Check xem view này có bị null không
+            Log.d("InstanceViewHolder", "Date TextView: " + date);
+            Log.d("InstanceViewHolder", "CourseID TextView: " + courseId);
+            Log.d("InstanceViewHolder", "Teacher Spinner: " + teacher);
+            Log.d("InstanceViewHolder", "instanceMenu Spinner: " + instanceMenu);
         }
     }
 

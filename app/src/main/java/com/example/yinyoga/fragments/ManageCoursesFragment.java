@@ -76,7 +76,9 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
         super.onViewCreated(view, savedInstanceState);
 
         initViews(view);
+
         setupRecyclerView();
+
         loadCourseFromDatabase();
 
         setEventTextChangeForSearch();
@@ -223,7 +225,7 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
                 imgGallery.setImageBitmap(ImageHelper.convertByteArrayToBitmap(findCourse.getImageUrl()));
                 imageBytes = ImageHelper.getImageBytes(imgGallery);
             } catch (Exception e) {
-                e.printStackTrace(); // In lỗi ra log để kiểm tra
+                e.printStackTrace();
                 DialogHelper.showErrorDialog(getActivity(), e.getMessage());
             }
         } else {
@@ -329,21 +331,14 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
         courseLists.clear();
         courseLists = courseService.getAllCourses();
 
-        if (courseLists.isEmpty()) {
-            // Pass the formatted date as a String
-            String formattedDate = DatetimeHelper.getCurrentDatetime();
-            byte[] img = ImageHelper.convertDrawableToByteArray(ManageCoursesFragment.this.requireContext(), R.drawable.im_bg_course);
-            courseService.addCourse(new Course("Flow Yoga", "Beginner", formattedDate, "Monday", "A calming beginner yoga class", 20, 60, img, 15.0, "10:00"));
-            courseService.addCourse(new Course("Yin Yoga", "Intermediate", formattedDate, "Tuesday", "A deep stretch yoga class focusing on flexibility", 15, 75, img, 20.0, "12:00"));
-            courseLists = courseService.getAllCourses();
+        if (!courseLists.isEmpty()) {
+            syncCourseManager.syncCoursesToFirestore();
+            syncCourseManager.syncCourseFromFirestore();
+
+            coursesAdapter = new CourseAdapter(courseLists, this);
+            coursesAdapter.setCustomListeners(this);
+            recyclerView.setAdapter(coursesAdapter);
         }
-
-        syncCourseManager.syncCoursesToFirestore();
-        syncCourseManager.syncCourseFromFirestore();
-
-        coursesAdapter = new CourseAdapter(courseLists, this);
-        coursesAdapter.setCustomListeners(this);
-        recyclerView.setAdapter(coursesAdapter);
     }
 
     private void setupRecyclerView() {

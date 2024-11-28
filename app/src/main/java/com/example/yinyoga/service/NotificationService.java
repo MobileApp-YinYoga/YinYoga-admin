@@ -18,7 +18,6 @@ public class NotificationService {
         this.notificationRepository = new NotificationRepository(context);
     }
 
-    // Thêm thông báo mới
     public void insertNotification(Notification notification) {
         notificationRepository.inseartNotification(notification);
     }

@@ -72,7 +72,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             }
         });
 
-        // Change password button action
         btnChangePassword.setOnClickListener(v -> setNewPassword());
     }
 
@@ -167,10 +166,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         String confirmPassword = edConfirmPassword.getText().toString().trim();
 
         if (isValidPassword(newPassword, confirmPassword)){
-            // Băm mật khẩu mới
             String hashedPassword = userService.hashPassword(newPassword);
-
-            // Đặt mật khẩu mới cho người dùng
             userService.updatePassword(currentUser.getEmail(), hashedPassword);
 
             DialogHelper.showSuccessDialog(this, "Password set successfully!");
@@ -181,7 +177,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     private boolean isValidPassword(String newPassword, String confirmPassword) {
         boolean isValid = true;
 
-        // Kiểm tra độ dài mật khẩu mới
         if (newPassword.isEmpty() || newPassword.length() < 6) {
             errorText.setText("New password must be at least 6 characters.");
             errorText.setVisibility(View.VISIBLE);
@@ -196,7 +191,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             isValid = false;
         }
 
-        // Kiểm tra khớp mật khẩu
         if (!newPassword.equals(confirmPassword)) {
             errorText.setText("Passwords do not match.");
             errorText.setVisibility(View.VISIBLE);
@@ -207,7 +201,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         errorText.setVisibility(View.GONE);
         return isValid;
     }
-
 
     private void initView() {
         userService = new UserService(this);
@@ -226,6 +219,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         resetPasswordLayout = findViewById(R.id.reset_password);
 
         errorText.setVisibility(View.GONE);
-        resetPasswordLayout.setVisibility(View.GONE); // Ẩn layout đổi mật khẩu ban đầu
+        resetPasswordLayout.setVisibility(View.GONE);
     }
 }

@@ -51,7 +51,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Tên người dùng -->
     <TextView
         android:id="@+id/tv_username"
         android:layout_width="wrap_content"
@@ -65,7 +64,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/user_image" />
 
-    <!-- Tên đầy đủ -->
     <TextView
         android:id="@+id/tv_full_name"
         android:layout_width="wrap_content"
@@ -108,7 +106,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Tiêu đề 'General' -->
         <TextView
             android:id="@+id/general_title"
             android:layout_width="wrap_content"
@@ -121,7 +118,6 @@
             android:textStyle="bold"
             android:gravity="center"/>
 
-        <!-- Nút 'Edit Profile' -->
         <TextView
             android:id="@+id/btn_edit_profile"
             android:layout_width="match_parent"
@@ -136,7 +132,6 @@
             android:textColor="@color/main"
             android:textSize="16sp"/>
 
-        <!-- Nút 'Change Password' -->
         <TextView
             android:id="@+id/btn_change_password"
             android:layout_width="match_parent"
@@ -151,7 +146,6 @@
             android:textColor="@color/main"
             android:textSize="16sp"/>
 
-        <!-- Nút 'Notification' -->
         <TextView
             android:id="@+id/btn_reset_database"
             android:layout_width="match_parent"
@@ -180,7 +174,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Tiêu đề 'Edit Profile' -->
         <TextView
             android:id="@+id/edit_profile_title"
             android:layout_width="wrap_content"
@@ -194,7 +187,6 @@
             android:textStyle="bold"
             android:gravity="center"/>
 
-        <!-- Nhãn 'Username' -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -203,7 +195,6 @@
             android:textColor="@color/main"
             android:textSize="14sp"/>
 
-        <!-- EditText cho Username -->
         <EditText
             android:id="@+id/edit_profile_username"
             android:layout_width="match_parent"
@@ -219,7 +210,6 @@
             android:layout_height="1dp"
             android:background="@color/main_light"/>
 
-        <!-- Nhãn 'Email' -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -229,7 +219,6 @@
             android:textColor="@color/main"
             android:textSize="14sp"/>
 
-        <!-- EditText cho Email -->
         <EditText
             android:id="@+id/edit_profile_email"
             android:layout_width="match_parent"
@@ -246,7 +235,6 @@
             android:layout_height="1dp"
             android:background="@color/main_light"/>
 
-        <!-- Nhãn 'Full name' -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -256,7 +244,6 @@
             android:textColor="@color/main"
             android:textSize="14sp"/>
 
-        <!-- EditText cho Full name -->
         <EditText
             android:id="@+id/edit_profile_fullname"
             android:layout_width="match_parent"
@@ -274,7 +261,6 @@
 
     </LinearLayout>
 
-
     <LinearLayout
         android:id="@+id/change_password"
         android:layout_width="match_parent"
@@ -287,7 +273,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" >
 
-        <!-- Tiêu đề 'Change Password' -->
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
@@ -298,7 +283,6 @@
             android:textColor="@color/main"
             android:textSize="18sp"/>
 
-        <!-- Ô nhập mật khẩu hiện tại -->
         <EditText
             android:id="@+id/et_old_password"
             android:layout_width="300dp"
@@ -333,7 +317,6 @@
             android:paddingEnd="16dp"
             android:textSize="14sp"/>
 
-        <!-- Ô nhập lại mật khẩu mới -->
         <EditText
             android:id="@+id/et_confirm_new_password"
             android:layout_width="300dp"
@@ -366,7 +349,6 @@
         app:layout_constraintStart_toStartOf="parent"
         android:gravity="center">
 
-        <!-- Nút xóa tất cả -->
         <Button
             android:id="@+id/btn_save"
             android:layout_width="120dp"

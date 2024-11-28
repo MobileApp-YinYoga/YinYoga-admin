@@ -75,7 +75,7 @@
                     android:fontFamily="@font/poppins_medium"
                     android:text="Date: "
                     android:textColor="@color/white"
-                    android:textSize="10sp" /> <!-- Thêm text phù hợp -->
+                    android:textSize="10sp" />
 
                 <TextView
                     android:id="@+id/day_of_the_week"
@@ -84,7 +84,7 @@
                     android:fontFamily="@font/poppins_medium"
                     android:text="Monday"
                     android:textColor="@color/white"
-                    android:textSize="10sp" /> <!-- Điều chỉnh text theo yêu cầu -->
+                    android:textSize="10sp" />
 
                 <TextView
                     android:id="@+id/hyphen"
@@ -93,7 +93,7 @@
                     android:fontFamily="@font/poppins_medium"
                     android:text=" - "
                     android:textColor="@color/white"
-                    android:textSize="10sp" /> <!-- Dấu gạch nối giữa ngày và giờ -->
+                    android:textSize="10sp" />
 
                 <TextView
                     android:id="@+id/timeStart"
@@ -102,7 +102,7 @@
                     android:fontFamily="@font/poppins_medium"
                     android:text="10:30 AM"
                     android:textColor="@color/white"
-                    android:textSize="10sp" /> <!-- Thời gian bắt đầu lớp học -->
+                    android:textSize="10sp" />
 
                 <TextView
                     android:id="@+id/duration"
@@ -227,7 +227,6 @@
                     android:textColor="@color/white"
                     android:textSize="10sp" />
             </LinearLayout>
-
 
             <ImageView
                 android:id="@+id/courseMenu"

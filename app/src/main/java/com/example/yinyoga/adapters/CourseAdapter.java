@@ -133,7 +133,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.YogaClassV
         });
 
         // Show the PopupWindow
-        popupWindow.setElevation(10); // Set shadow nếu cần
+        popupWindow.setElevation(10);
         popupWindow.showAsDropDown(anchorView, 0, 30);
     }
 

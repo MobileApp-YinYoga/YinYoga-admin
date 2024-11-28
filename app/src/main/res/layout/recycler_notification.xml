@@ -8,7 +8,6 @@
     android:layout_marginBottom="8dp"
     android:padding="12dp">
 
-    <!-- Icon trạng thái -->
     <ImageView
         android:id="@+id/ic_status"
         android:layout_width="24dp"
@@ -18,7 +17,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
 
-    <!-- Tiêu đề thông báo -->
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
@@ -32,7 +30,6 @@
         app:layout_constraintStart_toEndOf="@id/ic_status"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Mô tả thông báo -->
     <TextView
         android:id="@+id/description"
         android:layout_width="wrap_content"
@@ -45,7 +42,6 @@
         app:layout_constraintStart_toEndOf="@id/ic_status"
         app:layout_constraintTop_toBottomOf="@id/title" />
 
-    <!-- Thời gian thông báo -->
     <TextView
         android:id="@+id/time"
         android:layout_width="wrap_content"
@@ -56,6 +52,5 @@
         android:textSize="24px"
         app:layout_constraintStart_toStartOf="@id/title"
         app:layout_constraintTop_toBottomOf="@id/description" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

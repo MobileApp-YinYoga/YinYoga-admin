@@ -152,7 +152,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        userService = new UserService(this);  // Khởi tạo userService để thao tác với DB
+        userService = new UserService(this);
 
         username = findViewById(R.id.register_username);
         fullName = findViewById(R.id.register_fullname);

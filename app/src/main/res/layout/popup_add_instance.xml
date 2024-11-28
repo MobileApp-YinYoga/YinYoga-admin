@@ -38,8 +38,6 @@
                 tools:ignore="MissingConstraints" />
         </LinearLayout>
 
-        <!-- Tiêu đề màn hình -->
-
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
@@ -93,8 +91,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvSubtitle" />
 
-
-        <!-- Nhãn Tên lớp học -->
         <EditText
             android:id="@+id/edInstanceId"
             android:layout_width="0dp"
@@ -124,8 +120,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edInstanceId" />
 
-
-        <!-- Nhãn Thời gian -->
         <Spinner
             android:id="@+id/spCourseIdFK"
             android:layout_width="0dp"
@@ -204,7 +198,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/edDateInstance" />
 
-        <!-- Thêm trường tải ảnh -->
         <TextView
             android:id="@+id/uploadImageLabel"
             android:layout_width="match_parent"
@@ -237,7 +230,6 @@
                 tools:layout_editor_absoluteY="453dp"
                 tools:srcCompat="@tools:sample/avatars" />
 
-            <!-- Button for uploading an image -->
             <TextView
                 android:id="@+id/btnUploadImage"
                 android:layout_width="match_parent"
@@ -261,7 +253,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/uploadImageContainer">
 
-            <!-- Nút xóa tất cả -->
             <Button
                 android:id="@+id/btn_save"
                 android:layout_width="120dp"
@@ -290,6 +281,5 @@
                 app:layout_constraintTop_toBottomOf="@id/btnSaveCourse" />
 
         </LinearLayout>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

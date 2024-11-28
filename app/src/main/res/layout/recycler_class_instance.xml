@@ -16,7 +16,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!-- Contents of the CardView -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -46,7 +45,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <!-- Tên lớp học -->
             <TextView
                 android:id="@+id/courseId"
                 android:layout_width="wrap_content"
@@ -62,7 +60,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Course - YG1001" />
 
-            <!-- LinearLayout để xếp loại lớp học và từ "type" thành một hàng -->
             <LinearLayout
                 android:id="@+id/linear_class_type"
                 android:layout_width="wrap_content"
@@ -71,7 +68,6 @@
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/courseId">
-
 
                 <TextView
                     android:id="@+id/tvDate"
@@ -91,8 +87,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/linear_class_type">
 
-
-                <!-- Giá lớp học -->
                 <TextView
                     android:id="@+id/tvTeacher"
                     android:layout_width="wrap_content"

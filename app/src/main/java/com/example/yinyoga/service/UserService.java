@@ -46,7 +46,7 @@ public class UserService {
 
     public boolean checkEmailExists(String email) {
         User user = userRepository.getUserByEmail(email);
-        return user != null; // Trả về true nếu email đã tồn tại
+        return user != null;
     }
 
     public User getUser(String username) {

@@ -78,7 +78,6 @@ public class ManageClassInstancesFragment extends Fragment implements ClassInsta
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Sử dụng layout của màn hình "Manage Class Instances"
         return inflater.inflate(R.layout.fragment_manage_class_instances, container, false);
     }
 
@@ -103,7 +102,6 @@ public class ManageClassInstancesFragment extends Fragment implements ClassInsta
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // Hiển thị icon clear_search khi có nội dung
                 tvClearSearch.setVisibility(s.length() > 0 ? View.VISIBLE : View.GONE);
                 eventSearch(s.toString());
             }
@@ -488,20 +486,14 @@ public class ManageClassInstancesFragment extends Fragment implements ClassInsta
         instanceLists.clear();
         instanceLists = instanceService.getAllClassInstances();
 
-        if (instanceLists.isEmpty()) {
-            byte[] img = ImageHelper.convertDrawableToByteArray(ManageClassInstancesFragment.this.requireContext(), R.drawable.im_bg_course);
-            instanceService.addClassInstance(new ClassInstance("YOGA101", courseService.getCourse(1), "January, 30th 2024", "John Doe", img));
-            instanceService.addClassInstance(new ClassInstance("YOGA102", courseService.getCourse(1), "February, 15th 2024", "Jane Doe", img));
-            instanceService.addClassInstance(new ClassInstance("YOGA103", courseService.getCourse(2), "March, 1st 2024", "John Doe", img));
-            instanceLists = instanceService.getAllClassInstances();
+        if (!instanceLists.isEmpty()) {
+            syncClassInstanceManager.syncClassInstanceToFirestore();
+            syncClassInstanceManager.syncClassInstanceFromFirestore();
+
+            instanceAdapter = new ClassInstanceAdapter(instanceLists, this);
+            instanceAdapter.setCustomListeners(this);
+            recyclerView.setAdapter(instanceAdapter);
         }
-
-        syncClassInstanceManager.syncClassInstanceToFirestore();
-        syncClassInstanceManager.syncClassInstanceFromFirestore();
-
-        instanceAdapter = new ClassInstanceAdapter(instanceLists, this);
-        instanceAdapter.setCustomListeners(this);
-        recyclerView.setAdapter(instanceAdapter);
     }
 
     private void setupRecyclerView() {

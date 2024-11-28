@@ -8,14 +8,14 @@
     android:id="@+id/activity_welcome"
     tools:context=".activities.WelcomeActivity">
 
-
     <ImageView
         android:id="@+id/background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/im_background_welcome" />
+        app:srcCompat="@drawable/im_background_welcome"
+        tools:ignore="ContentDescription" />
 
     <Button
         android:id="@+id/getStart"
@@ -31,5 +31,4 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

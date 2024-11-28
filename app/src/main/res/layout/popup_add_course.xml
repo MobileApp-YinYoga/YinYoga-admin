@@ -37,7 +37,6 @@
                 tools:ignore="MissingConstraints" />
         </LinearLayout>
 
-        <!-- Tiêu đề màn hình -->
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
@@ -79,8 +78,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
-
-        <!-- Nhãn Tên lớp học -->
         <TextView
             android:id="@+id/courseIdLabel"
             android:layout_width="match_parent"
@@ -199,10 +196,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/dayLabel" />
 
-
-        <!-- Ô nhập Thời gian -->
-
-        <!-- Nhãn Sức chứa -->
         <TextView
             android:id="@+id/timeLabel"
             android:layout_width="0dp"
@@ -215,10 +208,6 @@
             android:textSize="35px"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/spinnerDayofTheWeek" />
-
-        <!-- Ô nhập Sức chứa -->
-
-        <!-- Nhãn Giá -->
 
         <TextView
             android:id="@+id/teacherLabel"
@@ -246,9 +235,6 @@
             app:layout_constraintStart_toEndOf="@+id/durationLabel"
             app:layout_constraintTop_toBottomOf="@id/edCapacity" />
 
-        <!-- Ô nhập Giá -->
-
-        <!-- Dropdown Loại lớp học -->
         <EditText
             android:id="@+id/edDuration"
             android:layout_width="400px"
@@ -320,7 +306,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/descriptionLabel" />
 
-        <!-- Thêm trường tải ảnh -->
         <TextView
             android:id="@+id/uploadImageLabel"
             android:layout_width="match_parent"
@@ -365,7 +350,6 @@
                 android:textColor="@color/main" />
         </LinearLayout>
 
-
         <LinearLayout
             android:id="@+id/linear_class_capacity"
             android:layout_width="match_parent"
@@ -377,7 +361,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/uploadImageContainer">
 
-            <!-- Nút xóa tất cả -->
             <Button
                 android:id="@+id/btnSaveCourse"
                 android:layout_width="match_parent"
@@ -407,8 +390,5 @@
                 app:layout_constraintTop_toBottomOf="@id/btnSaveCourse" />
 
         </LinearLayout>
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </ScrollView>

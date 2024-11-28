@@ -21,7 +21,6 @@ public class Course {
         this.courseName = courseName;
     }
 
-    // Constructor
     public Course(int courseId, String courseName, String courseType, String createdAt,
                   String dayOfWeek, String description, int capacity, int duration,
                   byte[] imageUrl, double price, String time) {
