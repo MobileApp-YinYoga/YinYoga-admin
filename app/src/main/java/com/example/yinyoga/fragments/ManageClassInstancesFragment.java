@@ -609,7 +609,7 @@ public class ManageClassInstancesFragment extends Fragment implements ClassInsta
                     syncClassInstanceManager.deleteClassInstanceOnFirebase(classInstance.getInstanceId());
 
                     loadInstancesFromDatabase();
-                    DialogHelper.showSuccessDialog(requireActivity(), "Course removed successfully!");
+                    DialogHelper.showSuccessDialog(requireActivity(), "Class instance removed successfully!");
                 });
     }
 }
