@@ -30,7 +30,7 @@ import java.util.concurrent.Executors;
 public class ForgotPasswordActivity extends AppCompatActivity {
     private ImageView ic_back;
     private EditText edEmail, edVerifyCode, edNewPassword, edConfirmPassword;
-    private TextView errorText, title;
+    private TextView errorText, title, subtitle_verify, label_resent, resent;
     private Button btnSubmit, btnChangePassword;
     private LinearLayout resetPasswordLayout;
     private String verificationCode;
@@ -72,7 +72,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             }
         });
 
-        // Change password button action
         btnChangePassword.setOnClickListener(v -> setNewPassword());
     }
 
@@ -102,11 +101,14 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         JavaMailAPI javaMailAPI = new JavaMailAPI(recipientEmail, subject, message);
         javaMailAPI.setOnEmailSentListener(success -> runOnUiThread(() -> {
             if (success) {
-                DialogHelper.showSuccessDialog(this, "Email sent successfully!");
+                DialogHelper.showSuccessDialog(this, "Verify code has been sent successfully!");
                 DialogHelper.dismissLoadingDialog();
 
                 edEmail.setVisibility(View.GONE);
                 edVerifyCode.setVisibility(View.VISIBLE);
+                resent.setVisibility(View.VISIBLE);
+                label_resent.setVisibility(View.VISIBLE);
+                subtitle_verify.setVisibility(View.VISIBLE);
                 title.setText("Verify Your Email");
                 btnSubmit.setText("Verify");
             } else {
@@ -149,6 +151,9 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             errorText.setVisibility(View.GONE);
             edVerifyCode.setVisibility(View.GONE);
             btnSubmit.setVisibility(View.GONE);
+            resent.setVisibility(View.GONE);
+            label_resent.setVisibility(View.GONE);
+            subtitle_verify.setVisibility(View.GONE);
             resetPasswordLayout.setVisibility(View.VISIBLE);
         } else {
             errorText.setText("Invalid verification code. Please check your email.");
@@ -161,10 +166,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         String confirmPassword = edConfirmPassword.getText().toString().trim();
 
         if (isValidPassword(newPassword, confirmPassword)){
-            // Băm mật khẩu mới
             String hashedPassword = userService.hashPassword(newPassword);
-
-            // Đặt mật khẩu mới cho người dùng
             userService.updatePassword(currentUser.getEmail(), hashedPassword);
 
             DialogHelper.showSuccessDialog(this, "Password set successfully!");
@@ -175,7 +177,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     private boolean isValidPassword(String newPassword, String confirmPassword) {
         boolean isValid = true;
 
-        // Kiểm tra độ dài mật khẩu mới
         if (newPassword.isEmpty() || newPassword.length() < 6) {
             errorText.setText("New password must be at least 6 characters.");
             errorText.setVisibility(View.VISIBLE);
@@ -190,7 +191,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             isValid = false;
         }
 
-        // Kiểm tra khớp mật khẩu
         if (!newPassword.equals(confirmPassword)) {
             errorText.setText("Passwords do not match.");
             errorText.setVisibility(View.VISIBLE);
@@ -202,11 +202,13 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         return isValid;
     }
 
-
     private void initView() {
         userService = new UserService(this);
         ic_back = findViewById(R.id.ic_back);
         title = findViewById(R.id.title);
+        subtitle_verify = findViewById(R.id.subtitle_verify);
+        label_resent = findViewById(R.id.label_resent);
+        resent = findViewById(R.id.resent);
         edEmail = findViewById(R.id.email);
         edVerifyCode = findViewById(R.id.verify_code);
         edNewPassword = findViewById(R.id.new_password);
@@ -217,6 +219,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         resetPasswordLayout = findViewById(R.id.reset_password);
 
         errorText.setVisibility(View.GONE);
-        resetPasswordLayout.setVisibility(View.GONE); // Ẩn layout đổi mật khẩu ban đầu
+        resetPasswordLayout.setVisibility(View.GONE);
     }
 }

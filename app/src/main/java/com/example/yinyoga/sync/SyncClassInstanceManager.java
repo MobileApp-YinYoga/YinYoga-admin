@@ -98,11 +98,19 @@ public class SyncClassInstanceManager {
                                 db.insert("classInstances", null, values);
                             }
 
-                            Log.d("SyncClassInstanceManager", "Class instance synced from Firestore: " + courseId);
+                            Log.d("SyncClassInstanceManager", "Class instance synced from Firestore: " + instanceId);
                         }
                     } else {
                         Log.w("SyncClassInstanceManager", "Error getting Firestore class instance.", task.getException());
                     }
                 });
+    }
+
+    public void deleteClassInstanceOnFirebase(String classInstanceId) {
+        // If deletion is successful in SQLite, proceed to delete from Firestore
+        db.collection("classInstances").document(classInstanceId)
+                .delete()
+                .addOnSuccessListener(aVoid -> Log.d("SyncClassInstanceManager", "Class instance deleted on Firestore: " + classInstanceId))
+                .addOnFailureListener(e -> Log.w("SyncClassInstanceManager", "Error deleting Class instance on Firestore", e));
     }
 }

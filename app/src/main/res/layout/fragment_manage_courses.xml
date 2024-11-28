@@ -40,7 +40,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/classesHeader" />
 
-
     <TextView
         android:id="@+id/clear_search"
         android:layout_width="wrap_content"
@@ -110,10 +109,8 @@
         android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchInput"
-        app:layout_constraintVertical_bias="1.0"
         tools:listitem="@layout/recycler_course_layout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

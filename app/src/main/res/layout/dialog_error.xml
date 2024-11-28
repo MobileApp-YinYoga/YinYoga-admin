@@ -7,7 +7,6 @@
     android:gravity="center"
     android:background="@drawable/rounded_popup_background">
 
-    <!-- Icon -->
     <ImageView
         android:id="@+id/dialog_icon"
         android:layout_width="100dp"
@@ -15,7 +14,6 @@
         android:layout_marginTop="20dp"
         android:src="@drawable/ic_error" />
 
-    <!-- Message -->
     <TextView
         android:id="@+id/dialog_title"
         android:layout_width="wrap_content"

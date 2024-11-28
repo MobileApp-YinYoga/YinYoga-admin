@@ -18,32 +18,12 @@ public class NotificationService {
         this.notificationRepository = new NotificationRepository(context);
     }
 
-    // Thêm thông báo mới
     public void insertNotification(Notification notification) {
         notificationRepository.inseartNotification(notification);
     }
 
     public void clearAllNotifications() {
         notificationRepository.clearAllNotifications();
-    }
-
-    public boolean isToday(String createdDate) {
-        try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-            Date date = dateFormat.parse(createdDate);
-
-            // Lấy ngày hiện tại
-            Calendar today = Calendar.getInstance();
-            today.set(Calendar.HOUR_OF_DAY, 0);
-            today.set(Calendar.MINUTE, 0);
-            today.set(Calendar.SECOND, 0);
-            today.set(Calendar.MILLISECOND, 0);
-
-            return date != null && dateFormat.format(date).equals(dateFormat.format(today.getTime()));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
     }
 
     public List<Notification> getAllNotifications() {

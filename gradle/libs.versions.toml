@@ -13,6 +13,8 @@ androidMail = "1.6.7"
 androidActivation = "1.6.7"
 googleGmsGoogleServices = "4.4.2"
 firebaseFirestore = "25.1.1"
+playServicesAuth = "20.3.0"  # Cập nhật phiên bản mới nhất của play-services-auth
+firebaseCore = "21.1.0"  # Cập nhật phiên bản mới nhất của firebase-core
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -27,8 +29,10 @@ recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version
 mail = { group = "com.sun.mail", name = "android-mail", version.ref = "androidMail" }
 activation = { group = "com.sun.mail", name = "android-activation", version.ref = "androidActivation" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
+play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "playServicesAuth" }
+firebase-core = { group = "com.google.firebase", name = "firebase-core", version.ref = "firebaseCore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
+google-gms-google-services = { id = "com.google.gms.google-services", version = "4.4.2" }
 

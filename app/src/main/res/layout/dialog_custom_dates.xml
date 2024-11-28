@@ -29,7 +29,7 @@
             android:src="@drawable/ic_close_search" />
 
     </LinearLayout>
-    <!-- Tiêu đề của Dialog -->
+
     <TextView
         android:id="@+id/dialog_title"
         android:layout_width="wrap_content"
@@ -43,7 +43,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- RecyclerView cho danh sách ngày -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_dates"
         android:layout_width="wrap_content"

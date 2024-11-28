@@ -22,7 +22,7 @@ public class ClassInstanceService {
         try {
             classInstanceRepository.insertClassInstance(classInstance);
         } catch (Exception e) {
-            Log.e("addClassInstance", "Error adding class instance: " + e.getMessage()); // Ghi log lỗi
+            Log.e("addClassInstance", "Error adding class instance: " + e.getMessage());
         }
     }
 
@@ -31,7 +31,7 @@ public class ClassInstanceService {
             return classInstanceRepository.getClassInstanceById(instanceId);
         } catch (Exception e) {
             Log.e("getClassInstance", "Error retrieving class instance by ID: " + e.getMessage());
-            return null; // Trả về null nếu có lỗi
+            return null;
         }
     }
 
@@ -40,7 +40,7 @@ public class ClassInstanceService {
             return classInstanceRepository.getClassInstancesByCourseId(courseId);
         } catch (Exception e) {
             Log.e("getClassInstancesByCourseId", "Error retrieving class instances by course ID: " + e.getMessage());
-            return new ArrayList<>(); // Trả về một danh sách rỗng nếu có lỗi
+            return new ArrayList<>();
         }
     }
 
@@ -49,7 +49,7 @@ public class ClassInstanceService {
             return classInstanceRepository.getAllClassInstances();
         } catch (Exception e) {
             Log.e("getAllClassInstances", "Error retrieving all class instances: " + e.getMessage());
-            return null; // Trả về null nếu có lỗi
+            return null;
         }
     }
 
@@ -57,7 +57,7 @@ public class ClassInstanceService {
         try {
             classInstanceRepository.updateClassInstance(classInstance);
         } catch (Exception e) {
-            Log.e("updateClassInstance", "Error updating class instance: " + e.getMessage()); // Ghi log lỗi
+            Log.e("updateClassInstance", "Error updating class instance: " + e.getMessage());
         }
     }
 
@@ -65,7 +65,7 @@ public class ClassInstanceService {
         try {
             classInstanceRepository.deleteClassInstance(instanceId);
         } catch (Exception e) {
-            Log.e("deleteClassInstance", "Error deleting class instance: " + e.getMessage()); // Ghi log lỗi
+            Log.e("deleteClassInstance", "Error deleting class instance: " + e.getMessage());
         }
     }
 }

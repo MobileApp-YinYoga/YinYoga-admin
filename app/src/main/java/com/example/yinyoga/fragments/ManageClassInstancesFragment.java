@@ -40,6 +40,7 @@ import com.example.yinyoga.models.Course;
 import com.example.yinyoga.service.ClassInstanceService;
 import com.example.yinyoga.service.CourseService;
 import com.example.yinyoga.sync.SyncClassInstanceManager;
+import com.example.yinyoga.utils.DatetimeHelper;
 import com.example.yinyoga.utils.DialogHelper;
 import com.example.yinyoga.utils.ImageHelper;
 
@@ -57,7 +58,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
-public class ManageClassInstancesFragment extends Fragment {
+public class ManageClassInstancesFragment extends Fragment implements ClassInstanceAdapter.CustomListeners {
     private Dialog dialog;
     private RecyclerView recyclerView;
     private ClassInstanceAdapter instanceAdapter;
@@ -77,7 +78,6 @@ public class ManageClassInstancesFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Sử dụng layout của màn hình "Manage Class Instances"
         return inflater.inflate(R.layout.fragment_manage_class_instances, container, false);
     }
 
@@ -102,7 +102,6 @@ public class ManageClassInstancesFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // Hiển thị icon clear_search khi có nội dung
                 tvClearSearch.setVisibility(s.length() > 0 ? View.VISIBLE : View.GONE);
                 eventSearch(s.toString());
             }
@@ -198,7 +197,7 @@ public class ManageClassInstancesFragment extends Fragment {
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(), (view, year, month, dayOfMonth) -> {
             String monthName = new SimpleDateFormat("MMMM", Locale.getDefault()).format(new GregorianCalendar(year, month, dayOfMonth).getTime());
-            String daySuffix = getDaySuffix(dayOfMonth);
+            String daySuffix = DatetimeHelper.getDaySuffix(dayOfMonth);
             String formattedDate = String.format("%s, %d%s %d", monthName, dayOfMonth, daySuffix, year);
 
             Log.d("formattedDate: ", formattedDate);
@@ -252,7 +251,7 @@ public class ManageClassInstancesFragment extends Fragment {
         LinearLayout btnClosePopup = dialog.findViewById(R.id.btn_close);
         Button btnSave = dialog.findViewById(R.id.btn_save);
         Button btnClearAllPopup = dialog.findViewById(R.id.btn_clear);
-        Button btnUploadImage = dialog.findViewById(R.id.btnUploadImage);
+        TextView btnUploadImage = dialog.findViewById(R.id.btnUploadImage);
 
         setPopupEventListeners(btnClosePopup, btnClearAllPopup);
         btnUploadImage.setOnClickListener(this::chooseImage);
@@ -264,6 +263,31 @@ public class ManageClassInstancesFragment extends Fragment {
         btnSave.setOnClickListener(v -> saveInstance(instanceId));
 
         dialog.show();
+    }
+
+
+
+    private void showDayPickerDialog(int dayOfWeek) {
+        List<String> dayList = new ArrayList<>();
+        Calendar calendar = Calendar.getInstance();
+
+        while (calendar.get(Calendar.DAY_OF_WEEK) != dayOfWeek) {
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+        }
+
+        for (int i = 0; i < 10; i++) {
+            dayList.add(DatetimeHelper.formatDateWithSuffix(calendar.getTime()));
+            calendar.add(Calendar.DAY_OF_MONTH, 7);
+        }
+
+        DialogHelper.showCustomDayPickerDialog(
+                getContext(),
+                "Choose a " + DatetimeHelper.getDayOfWeekName(dayOfWeek),
+                dayList,
+                selectedDate -> {
+                    edDate.setText(selectedDate);
+                }
+        );
     }
 
     private final ActivityResultLauncher<Intent> chooseImageLauncher = registerForActivityResult(
@@ -397,6 +421,8 @@ public class ManageClassInstancesFragment extends Fragment {
                 edDate.setText(findInstance.getDate());
                 spTeacher.setSelection(getArrayPosition("getTeacher", findInstance.getTeacher()));
 
+                imgGallery.setImageBitmap(ImageHelper.convertByteArrayToBitmap(findInstance.getImageUrl()));
+                imageBytes = ImageHelper.getImageBytes(imgGallery);
             } catch (Exception e) {
                 e.printStackTrace();
                 DialogHelper.showErrorDialog(getActivity(), e.getMessage());
@@ -460,19 +486,14 @@ public class ManageClassInstancesFragment extends Fragment {
         instanceLists.clear();
         instanceLists = instanceService.getAllClassInstances();
 
-        if (instanceLists.isEmpty()) {
-            byte[] img = ImageHelper.convertDrawableToByteArray(ManageClassInstancesFragment.this.requireContext(), R.drawable.im_bg_course);
-            instanceService.addClassInstance(new ClassInstance("YOGA101", courseService.getCourse(1), "January, 30th 2024", "John Doe", img));
-            instanceService.addClassInstance(new ClassInstance("YOGA102", courseService.getCourse(1), "February, 15th 2024", "Jane Doe", img));
-            instanceService.addClassInstance(new ClassInstance("YOGA103", courseService.getCourse(2), "March, 1st 2024", "John Doe", img));
-            instanceLists = instanceService.getAllClassInstances();
+        if (!instanceLists.isEmpty()) {
+            syncClassInstanceManager.syncClassInstanceToFirestore();
+            syncClassInstanceManager.syncClassInstanceFromFirestore();
+
+            instanceAdapter = new ClassInstanceAdapter(instanceLists, this);
+            instanceAdapter.setCustomListeners(this);
+            recyclerView.setAdapter(instanceAdapter);
         }
-
-        syncClassInstanceManager.syncClassInstanceToFirestore();
-        syncClassInstanceManager.syncClassInstanceFromFirestore();
-
-        instanceAdapter = new ClassInstanceAdapter(instanceLists, this);
-        recyclerView.setAdapter(instanceAdapter);
     }
 
     private void setupRecyclerView() {
@@ -534,67 +555,6 @@ public class ManageClassInstancesFragment extends Fragment {
         return dayMap.getOrDefault(dayOfTheWeek.toLowerCase(), -1);
     }
 
-    private void showDayPickerDialog(int dayOfWeek) {
-        List<String> dayList = new ArrayList<>();
-        Calendar calendar = Calendar.getInstance();
-
-        while (calendar.get(Calendar.DAY_OF_WEEK) != dayOfWeek) {
-            calendar.add(Calendar.DAY_OF_MONTH, 1);
-        }
-
-        for (int i = 0; i < 10; i++) {
-            dayList.add(formatDateWithSuffix(calendar.getTime()));
-            calendar.add(Calendar.DAY_OF_MONTH, 7);
-        }
-
-        DialogHelper.showCustomDayPickerDialog(
-                getContext(),
-                "Choose a " + getDayOfWeekName(dayOfWeek),
-                dayList,
-                selectedDate -> {
-                    edDate.setText(selectedDate);
-                }
-        );
-    }
-
-    private String formatDateWithSuffix(Date date) {
-        SimpleDateFormat monthYearFormat = new SimpleDateFormat("MMMM, yyyy", Locale.getDefault());
-        SimpleDateFormat dayFormat = new SimpleDateFormat("d", Locale.getDefault());
-
-        String day = dayFormat.format(date);
-        String monthYear = monthYearFormat.format(date);
-
-        String dayWithSuffix = day + getDaySuffix(Integer.parseInt(day));
-
-        return monthYear.replace(",", ", " + dayWithSuffix);
-    }
-
-    private String getDaySuffix(int day) {
-        if (day >= 11 && day <= 13) {
-            return "th";
-        }
-        switch (day % 10) {
-            case 1:
-                return "st";
-            case 2:
-                return "nd";
-            case 3:
-                return "rd";
-            default:
-                return "th";
-        }
-    }
-
-    public String getDayOfWeekName(int dayOfWeek) {
-        String[] days = {"", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
-
-        if (dayOfWeek >= Calendar.SUNDAY && dayOfWeek <= Calendar.SATURDAY) {
-            return days[dayOfWeek];
-        }
-
-        return "Invalid day";
-    }
-
     private void fillToSpinnerCourseIdPopup() {
         arrayCourseSpinner.clear();
         List<Course> courseList = courseService.getAllCourses();
@@ -626,8 +586,30 @@ public class ManageClassInstancesFragment extends Fragment {
         spTeacher.setSelection(0);
         edInstanceId.setError(null);
 
+        // Clear the image view
+        imgGallery.setImageBitmap(null);
+
         if (showNotification) {
             DialogHelper.showSuccessDialog(getActivity(), "All inputs cleared successfully!");
         }
+    }
+
+    @Override
+    public void handleDeleteAction(int position) {
+        ClassInstance classInstance = instanceLists.get(position);
+        DialogHelper.showConfirmationDialog(
+                requireActivity(),
+                "Are you sure you want to delete class instance \"" + classInstance.getInstanceId() + "\"?",
+                null,
+                null,
+                () -> {
+                    // Delete class instance and refresh list
+                    instanceService.deleteClassInstance(classInstance.getInstanceId());
+                    instanceLists.remove(position);
+                    syncClassInstanceManager.deleteClassInstanceOnFirebase(classInstance.getInstanceId());
+
+                    loadInstancesFromDatabase();
+                    DialogHelper.showSuccessDialog(requireActivity(), "Class instance removed successfully!");
+                });
     }
 }

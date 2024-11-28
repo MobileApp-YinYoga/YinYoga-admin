@@ -58,7 +58,8 @@
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dialog_title" />
+        app:layout_constraintTop_toBottomOf="@+id/dialog_title"
+        tools:ignore="RtlCompat" />
 
     <LinearLayout
         android:id="@+id/confirm_notification"
@@ -81,7 +82,6 @@
             android:text="Yes"
             android:textColor="@android:color/white" />
 
-        <!-- No button -->
         <Button
             android:id="@+id/btn_no"
             android:layout_width="100dp"

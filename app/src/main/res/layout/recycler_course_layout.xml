@@ -16,7 +16,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!-- Contents of the CardView -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -45,7 +44,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <!-- Tên lớp học -->
             <TextView
                 android:id="@+id/class_name"
                 android:layout_width="95dp"
@@ -70,7 +68,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/class_name">
 
-                <!-- Ngày trong tuần -->
                 <TextView
                     android:id="@+id/label_date"
                     android:layout_width="wrap_content"
@@ -78,9 +75,8 @@
                     android:fontFamily="@font/poppins_medium"
                     android:text="Date: "
                     android:textColor="@color/white"
-                    android:textSize="10sp" /> <!-- Thêm text phù hợp -->
+                    android:textSize="10sp" />
 
-                <!-- Ngày trong tuần -->
                 <TextView
                     android:id="@+id/day_of_the_week"
                     android:layout_width="wrap_content"
@@ -88,9 +84,8 @@
                     android:fontFamily="@font/poppins_medium"
                     android:text="Monday"
                     android:textColor="@color/white"
-                    android:textSize="10sp" /> <!-- Điều chỉnh text theo yêu cầu -->
+                    android:textSize="10sp" />
 
-                <!-- Dấu gạch nối -->
                 <TextView
                     android:id="@+id/hyphen"
                     android:layout_width="wrap_content"
@@ -98,9 +93,8 @@
                     android:fontFamily="@font/poppins_medium"
                     android:text=" - "
                     android:textColor="@color/white"
-                    android:textSize="10sp" /> <!-- Dấu gạch nối giữa ngày và giờ -->
+                    android:textSize="10sp" />
 
-                <!-- Thời gian bắt đầu lớp học -->
                 <TextView
                     android:id="@+id/timeStart"
                     android:layout_width="wrap_content"
@@ -108,7 +102,7 @@
                     android:fontFamily="@font/poppins_medium"
                     android:text="10:30 AM"
                     android:textColor="@color/white"
-                    android:textSize="10sp" /> <!-- Thời gian bắt đầu lớp học -->
+                    android:textSize="10sp" />
 
                 <TextView
                     android:id="@+id/duration"
@@ -120,8 +114,6 @@
                     tools:text="180 minutes" />
             </LinearLayout>
 
-
-            <!-- LinearLayout để xếp loại lớp học và từ "type" thành một hàng -->
             <LinearLayout
                 android:id="@+id/linear_class_type"
                 android:layout_width="wrap_content"
@@ -131,7 +123,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/linear_class_capacity">
 
-                <!-- Từ "type" -->
                 <TextView
                     android:id="@+id/tvDate"
                     android:layout_width="wrap_content"
@@ -141,7 +132,6 @@
                     android:textColor="@color/white"
                     android:textSize="10sp" />
 
-                <!-- Loại lớp học -->
                 <TextView
                     android:id="@+id/genre"
                     android:layout_width="wrap_content"
@@ -152,7 +142,6 @@
                     tools:text="Advanced" />
             </LinearLayout>
 
-
             <LinearLayout
                 android:id="@+id/linear_description"
                 android:layout_width="wrap_content"
@@ -162,7 +151,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/linear_date">
 
-                <!-- Từ "Price" -->
                 <TextView
                     android:id="@+id/description_label"
                     android:layout_width="wrap_content"
@@ -172,7 +160,6 @@
                     android:textColor="@color/white"
                     android:textSize="10sp" />
 
-                <!-- Giá lớp học -->
                 <TextView
                     android:id="@+id/description"
                     android:layout_width="wrap_content"
@@ -194,7 +181,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linear_description">
 
-                <!-- Số lượng học viên -->
                 <TextView
                     android:id="@+id/class_capacity"
                     android:layout_width="wrap_content"
@@ -204,7 +190,6 @@
                     android:textSize="10sp"
                     tools:text="Capacity: " />
 
-                <!-- Từ "members" -->
                 <TextView
                     android:id="@+id/capacity"
                     android:layout_width="wrap_content"
@@ -215,7 +200,6 @@
                     tools:text="20 members" />
             </LinearLayout>
 
-            <!-- LinearLayout để xếp giá lớp học và từ "Price" thành một hàng -->
             <LinearLayout
                 android:id="@+id/linear_price"
                 android:layout_width="wrap_content"
@@ -225,7 +209,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/linear_class_type">
 
-                <!-- Từ "Price" -->
                 <TextView
                     android:id="@+id/class_price_label"
                     android:layout_width="wrap_content"
@@ -235,7 +218,6 @@
                     android:textColor="@color/white"
                     android:textSize="10sp" />
 
-                <!-- Giá lớp học -->
                 <TextView
                     android:id="@+id/price"
                     android:layout_width="wrap_content"
@@ -246,18 +228,16 @@
                     android:textSize="10sp" />
             </LinearLayout>
 
-
             <ImageView
                 android:id="@+id/courseMenu"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:layout_marginEnd="20dp"
                 android:src="@drawable/ic_menu_manage"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <!-- LinearLayout để xếp số lượng học viên và từ "members" thành một hàng -->
             <LinearLayout
                 android:id="@+id/linear_seemore"
                 android:layout_width="wrap_content"
@@ -265,7 +245,7 @@
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/done_background"
                 android:orientation="horizontal"
-                android:padding="5dp"
+                android:padding="3dp"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
                 android:textStyle="bold"
@@ -281,7 +261,7 @@
                     android:fontFamily="@font/poppins_semibold"
                     android:text="See more"
                     android:textColor="@color/white"
-                    android:textSize="12sp" />
+                    android:textSize="24px" />
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

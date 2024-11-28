@@ -114,9 +114,8 @@ public class LoginActivity extends AppCompatActivity {
         String pass = password.getText().toString().trim();
 
         try {
-            userService.authenticateUser(user, pass); // Thực hiện xác thực
+            userService.authenticateUser(user, pass);
 
-            // Nếu xác thực thành công, lưu trạng thái đăng nhập
             User storedUser = userService.getUser(user);
             sessionManager.saveLoginState(
                     storedUser.getUsername(),
@@ -127,12 +126,10 @@ public class LoginActivity extends AppCompatActivity {
                     rememberMeCheckBox.isChecked()
             );
 
-            // Chuyển đến MainActivity
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
 
         } catch (Exception e) {
-            // Xử lý ngoại lệ và hiển thị lỗi lên giao diện
             error_text.setVisibility(TextView.VISIBLE);
             error_text.setText(e.getMessage());
         }

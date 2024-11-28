@@ -8,7 +8,6 @@
     android:background="#FFFFFF"
     android:id="@+id/main">
 
-
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="426dp"

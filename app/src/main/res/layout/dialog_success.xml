@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="348dp"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="24dp"
@@ -19,7 +19,7 @@
     <!-- Message -->
     <TextView
         android:id="@+id/dialog_message"
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="30dp"
@@ -27,6 +27,6 @@
         android:text="Course removed successfully!"
         android:textColor="@color/main"
         android:fontFamily="@font/poppins_bold"
-        android:textSize="20sp" />
+        android:textSize="45px" />
 
 </LinearLayout>

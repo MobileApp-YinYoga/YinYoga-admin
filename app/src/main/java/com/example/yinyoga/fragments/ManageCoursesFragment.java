@@ -76,7 +76,9 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
         super.onViewCreated(view, savedInstanceState);
 
         initViews(view);
+
         setupRecyclerView();
+
         loadCourseFromDatabase();
 
         setEventTextChangeForSearch();
@@ -90,7 +92,7 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
 
         Button btnSave = dialog.findViewById(R.id.btnSaveCourse);
         Button btnClearAllPopup = dialog.findViewById(R.id.btnClearAll);
-        Button btnUploadImage = dialog.findViewById(R.id.btnUploadImage);
+        TextView btnUploadImage = dialog.findViewById(R.id.btnUploadImage);
 
         btnUploadImage.setOnClickListener(this::chooseImage);
 
@@ -219,12 +221,16 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
                 // Set Spinner positions
                 spinnerDayOfTheWeek.setSelection(getArrayPosition("getDate", findCourse.getDayOfWeek()));
                 courseTypeSpinner.setSelection(getArrayPosition("getGenre", findCourse.getCourseType()));
+
+                imgGallery.setImageBitmap(ImageHelper.convertByteArrayToBitmap(findCourse.getImageUrl()));
+                imageBytes = ImageHelper.getImageBytes(imgGallery);
             } catch (Exception e) {
-                e.printStackTrace(); // In lỗi ra log để kiểm tra
+                e.printStackTrace();
                 DialogHelper.showErrorDialog(getActivity(), e.getMessage());
             }
         } else {
             tvCourseId.setVisibility(View.GONE);
+            clearAllInputs(false);
         }
     }
 
@@ -325,21 +331,14 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
         courseLists.clear();
         courseLists = courseService.getAllCourses();
 
-        if (courseLists.isEmpty()) {
-            // Pass the formatted date as a String
-            String formattedDate = DatetimeHelper.getCurrentDatetime();
-            byte[] img = ImageHelper.convertDrawableToByteArray(ManageCoursesFragment.this.requireContext(), R.drawable.im_bg_course);
-            courseService.addCourse(new Course("Flow Yoga", "Beginner", formattedDate, "Monday", "A calming beginner yoga class", 20, 60, img, 15.0, "10:00"));
-            courseService.addCourse(new Course("Yin Yoga", "Intermediate", formattedDate, "Tuesday", "A deep stretch yoga class focusing on flexibility", 15, 75, img, 20.0, "12:00"));
-            courseLists = courseService.getAllCourses();
+        if (!courseLists.isEmpty()) {
+            syncCourseManager.syncCoursesToFirestore();
+            syncCourseManager.syncCourseFromFirestore();
+
+            coursesAdapter = new CourseAdapter(courseLists, this);
+            coursesAdapter.setCustomListeners(this);
+            recyclerView.setAdapter(coursesAdapter);
         }
-
-        syncCourseManager.syncCoursesToFirestore();
-        syncCourseManager.syncCourseFromFirestore();
-
-        coursesAdapter = new CourseAdapter(courseLists, this);
-        coursesAdapter.setCustomListeners(this);
-        recyclerView.setAdapter(coursesAdapter);
     }
 
     private void setupRecyclerView() {
@@ -429,14 +428,27 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
 
     private void clearAllInputs(boolean showNotification) {
         edCourseName.setText("");
-        spinnerDayOfTheWeek.setSelection(0);
         edTime.setText("");
         edDuration.setText("");
         edCapacity.setText("");
         edPrice.setText("");
         edDescription.setText("");
+
+        // Reset spinners to their default selections
+        spinnerDayOfTheWeek.setSelection(0);
         courseTypeSpinner.setSelection(0);
 
+        // Clear the image view
+        imgGallery.setImageBitmap(null);
+
+        // Clear error states (if any)
+        edCourseName.setError(null);
+        edTime.setError(null);
+        edDuration.setError(null);
+        edCapacity.setError(null);
+        edPrice.setError(null);
+        edDescription.setError(null);
+        
         if (showNotification) {
             DialogHelper.showSuccessDialog(getActivity(), "All inputs cleared successfully!");
         }
@@ -466,5 +478,24 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
         recyclerViewSeeMore.setAdapter(classInstanceAdapter);
 
         seeMoreDialog.show();
+    }
+
+    @Override
+    public void handleDeleteAction(int position) {
+        Course course = courseLists.get(position);
+        DialogHelper.showConfirmationDialog(
+                requireActivity(),
+                "Are you sure you want to delete course \"" + course.getCourseName() + "\"?",
+                null,
+                null,
+                () -> {
+                    // Delete course and refresh list
+                    courseService.deleteCourse(course.getCourseId());
+                    courseLists.remove(position);
+                    syncCourseManager.deleteCourseOnFirebase(course.getCourseId());
+
+                    loadCourseFromDatabase();
+                    DialogHelper.showSuccessDialog(requireActivity(), "Course removed successfully!");
+                });
     }
 }
