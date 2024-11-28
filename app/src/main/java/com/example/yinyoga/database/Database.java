@@ -106,7 +106,7 @@ public class Database extends SQLiteOpenHelper {
             Log.d("Database", "Table Class Instances created successfully");
 
             String CREATE_NOTIFICATIONS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NOTIFICATIONS + " ("
-                    + COLUMN_NOTIFICATION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + COLUMN_NOTIFICATION_ID + " TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))), "
                     + COLUMN_NOTIFICATION_EMAIL + " TEXT NOT NULL, "
                     + COLUMN_NOTIFICATION_TITLE + " TEXT NOT NULL, "
                     + COLUMN_NOTIFICATION_DESCRIPTION + " TEXT, "

@@ -36,13 +36,13 @@ public class NotificationRepository {
 
     public List<Notification> getAllNotifications() {
         List<Notification> notifications = new ArrayList<>();
-        String query = "SELECT * FROM notifications ORDER BY createdDate DESC";
+        String query = "SELECT * FROM notifications WHERE email = '' ORDER BY createdDate DESC";
 
         try (SQLiteDatabase db = database.getReadableDatabase();
              Cursor cursor = db.rawQuery(query, null)) {
             while (cursor.moveToNext()) {
                 Notification notification = new Notification(
-                        cursor.getInt(0),
+                        cursor.getString(0),
                         cursor.getString(1),
                         cursor.getString(2),
                         cursor.getString(3),
@@ -72,7 +72,7 @@ public class NotificationRepository {
 
     public void clearAllNotifications() {
         try (SQLiteDatabase db = database.getWritableDatabase()) {
-            db.delete("notifications", null, null);
+            db.delete("notifications", "email = ?", new String[]{""});
         }
     }
 }

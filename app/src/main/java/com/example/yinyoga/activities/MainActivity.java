@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.yinyoga.R;
+import com.example.yinyoga.fragments.ManageBookingFragment;
 import com.example.yinyoga.fragments.ManageClassInstancesFragment;
 import com.example.yinyoga.fragments.ManageCoursesFragment;
 import com.example.yinyoga.models.Course;
@@ -126,6 +127,8 @@ public class MainActivity extends AppCompatActivity implements NetworkUtil.Netwo
                 selectedFragment = new ManageCoursesFragment();
             } else if (id == R.id.nav_manage_class_instances) {
                 selectedFragment = new ManageClassInstancesFragment();
+            } else if (id == R.id.nav_manage_booking) {
+                selectedFragment = new ManageBookingFragment();
             } else if (id == R.id.nav_profile) {
                 // Start the Activity for the user profile page
                 Intent intent = new Intent(MainActivity.this, ManageUserActivity.class);

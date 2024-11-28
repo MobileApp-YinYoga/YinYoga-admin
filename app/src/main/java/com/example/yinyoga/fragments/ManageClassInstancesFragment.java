@@ -67,7 +67,7 @@ public class ManageClassInstancesFragment extends Fragment implements ClassInsta
     private Spinner spTeacher, spCourseId;
     private EditText edDate, edInstanceId, searchInput;
     private TextView tvInstanceId, tvTitle, tvSubtitle, tvClearSearch;
-    private String selectedField;
+    private String selectedField = "courseId";
     private ClassInstanceService instanceService;
     private CourseService courseService;
     private List<String> arrayCourseSpinner;
@@ -483,13 +483,13 @@ public class ManageClassInstancesFragment extends Fragment implements ClassInsta
 
 
     public void loadInstancesFromDatabase() {
+        syncClassInstanceManager.syncClassInstanceToFirestore();
+        syncClassInstanceManager.syncClassInstanceFromFirestore();
+
         instanceLists.clear();
         instanceLists = instanceService.getAllClassInstances();
 
         if (!instanceLists.isEmpty()) {
-            syncClassInstanceManager.syncClassInstanceToFirestore();
-            syncClassInstanceManager.syncClassInstanceFromFirestore();
-
             instanceAdapter = new ClassInstanceAdapter(instanceLists, this);
             instanceAdapter.setCustomListeners(this);
             recyclerView.setAdapter(instanceAdapter);

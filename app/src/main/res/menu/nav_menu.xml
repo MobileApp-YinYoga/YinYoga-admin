@@ -10,6 +10,11 @@
         android:icon="@drawable/ic_manage_class_instances" />
 
     <item
+        android:id="@+id/nav_manage_booking"
+        android:title="Manage Booking"
+        android:icon="@drawable/ic_manage_booking" />
+
+    <item
         android:id="@+id/nav_notifications"
         android:title="Notifications"
         android:icon="@drawable/ic_notification" />

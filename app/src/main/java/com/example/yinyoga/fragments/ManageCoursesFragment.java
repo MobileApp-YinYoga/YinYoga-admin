@@ -76,13 +76,10 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
         super.onViewCreated(view, savedInstanceState);
 
         initViews(view);
-
         setupRecyclerView();
-
         loadCourseFromDatabase();
 
         setEventTextChangeForSearch();
-
         add_task.setOnClickListener(v -> openAddClassPopup(-1));
     }
 
@@ -328,13 +325,13 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
     }
 
     public void loadCourseFromDatabase() {
+        syncCourseManager.syncCoursesToFirestore();
+        syncCourseManager.syncCourseFromFirestore();
+
         courseLists.clear();
         courseLists = courseService.getAllCourses();
 
         if (!courseLists.isEmpty()) {
-            syncCourseManager.syncCoursesToFirestore();
-            syncCourseManager.syncCourseFromFirestore();
-
             coursesAdapter = new CourseAdapter(courseLists, this);
             coursesAdapter.setCustomListeners(this);
             recyclerView.setAdapter(coursesAdapter);

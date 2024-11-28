@@ -20,9 +20,8 @@ import java.util.List;
 import java.util.Map;
 
 public class SyncNotificationManager {
-
-    private FirebaseFirestore db;
-    private Database dbHelper;
+    private final FirebaseFirestore db;
+    private final Database dbHelper;
     private final NotificationRepository notificationRepository;
 
     public SyncNotificationManager(Context context) {
