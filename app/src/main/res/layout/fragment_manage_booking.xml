@@ -1,6 +1,166 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="426dp"
+        android:layout_height="730dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="48dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/im_background" />
+
+    <TextView
+        android:id="@+id/main_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/poppins_semibold"
+        android:text="Manage Booking"
+        android:textColor="@color/main"
+        android:textSize="64px"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Icon info -->
+    <LinearLayout
+        android:id="@+id/linear_all_booking"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/button_selected_background"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_title">
+
+        <TextView
+            android:id="@+id/all_booking"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="18"
+            android:textColor="@color/white"
+            android:textSize="36px" />
+
+        <TextView
+            android:id="@+id/all_booking_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="All Booking"
+            android:textColor="@color/white"
+            android:textSize="30px" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_approve"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/button_selected_background"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        app:layout_constraintEnd_toStartOf="@+id/linear_reject"
+        app:layout_constraintStart_toEndOf="@+id/linear_all_booking"
+        app:layout_constraintTop_toBottomOf="@+id/main_title">
+
+        <TextView
+            android:id="@+id/approve_booking"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="7"
+            android:textColor="@color/white"
+            android:textSize="36px" />
+
+        <TextView
+            android:id="@+id/all_approve_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="Approve"
+            android:textColor="@color/white"
+            android:textSize="30px" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_reject"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/button_selected_background"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_title">
+
+        <TextView
+            android:id="@+id/reject_booking"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="11"
+            android:textColor="@color/white"
+            android:textSize="36px" />
+
+        <TextView
+            android:id="@+id/all_reject_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="Reject"
+            android:textColor="@color/white"
+            android:textSize="30px" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/label_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:fontFamily="@font/poppins_semibold"
+        android:text="All Booking"
+        android:textColor="@color/main"
+        android:textSize="48px"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.072"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linear_all_booking" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewManageBooking"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/label_title"
+        tools:listitem="@layout/recycler_manage_booking" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
