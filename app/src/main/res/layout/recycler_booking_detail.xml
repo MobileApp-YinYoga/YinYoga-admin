@@ -21,7 +21,7 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/class_instance_image"
+                android:id="@+id/booking_detail_image"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:alpha="0.7"
@@ -46,7 +46,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/courseId"
+                android:id="@+id/booking_detail_course_name_instanceId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
@@ -67,10 +67,10 @@
                 android:layout_marginStart="20dp"
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/courseId">
+                app:layout_constraintTop_toBottomOf="@id/booking_detail_course_name_instanceId">
 
                 <TextView
-                    android:id="@+id/tvDate"
+                    android:id="@+id/booking_detail_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_medium"
@@ -88,7 +88,7 @@
                 app:layout_constraintTop_toBottomOf="@id/linear_class_type">
 
                 <TextView
-                    android:id="@+id/tvTeacher"
+                    android:id="@+id/booking_detail_teacher"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_medium"

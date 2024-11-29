@@ -94,7 +94,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins_semibold"
-            android:text="Approve"
+            android:text="Confirmed"
             android:textColor="@color/white"
             android:textSize="30px" />
     </LinearLayout>
@@ -128,7 +128,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins_semibold"
-            android:text="Reject"
+            android:text="Cancelled"
             android:textColor="@color/white"
             android:textSize="30px" />
     </LinearLayout>

@@ -332,9 +332,7 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
         courseLists = courseService.getAllCourses();
 
         if (!courseLists.isEmpty()) {
-            coursesAdapter = new CourseAdapter(courseLists, this);
-            coursesAdapter.setCustomListeners(this);
-            recyclerView.setAdapter(coursesAdapter);
+            coursesAdapter.updateCourseList(courseLists);
         }
     }
 
@@ -343,6 +341,8 @@ public class ManageCoursesFragment extends Fragment implements CourseAdapter.Cus
 
         courseLists = new ArrayList<>();
         coursesAdapter = new CourseAdapter(courseLists);
+
+        coursesAdapter.setCustomListeners(this);
         recyclerView.setAdapter(coursesAdapter);
     }
 

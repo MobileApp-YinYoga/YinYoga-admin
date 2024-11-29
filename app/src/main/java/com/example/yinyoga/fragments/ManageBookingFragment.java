@@ -1,9 +1,12 @@
 package com.example.yinyoga.fragments;
 
+import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,21 +16,30 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.yinyoga.R;
 import com.example.yinyoga.adapters.BookingAdapter;
+import com.example.yinyoga.adapters.CourseAdapter;
 import com.example.yinyoga.adapters.DetailAdapter;
 import com.example.yinyoga.models.Booking;
 import com.example.yinyoga.models.ClassInstance;
 import com.example.yinyoga.models.Course;
+import com.example.yinyoga.service.BookingService;
+import com.example.yinyoga.service.ClassInstanceService;
+import com.example.yinyoga.service.CourseService;
+import com.example.yinyoga.sync.SyncBookingDetailManager;
+import com.example.yinyoga.sync.SyncBookingManager;
+import com.example.yinyoga.sync.SyncCourseManager;
+import com.example.yinyoga.utils.DialogHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ManageBookingFragment extends Fragment {
-    private RecyclerView bookingRecyclerView;
-    private RecyclerView detailRecyclerView;
+public class ManageBookingFragment extends Fragment implements BookingAdapter.CustomListeners {
+    private RecyclerView manageBookingRecyclerView;
     private BookingAdapter bookingAdapter;
-    private DetailAdapter detailAdapter;
+    private LinearLayout llAllBookings, llConfirmedBookings, llCancelledBookings;
     private List<Booking> bookingList;
-    private List<ClassInstance> detailList;
+    private BookingService bookingService;
+    private SyncBookingManager syncBookingManager;
+    private SyncBookingDetailManager syncBookingDetailManager;
 
     @Nullable
     @Override
@@ -39,31 +51,90 @@ public class ManageBookingFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Initialize the RecyclerView
-        bookingRecyclerView = view.findViewById(R.id.recyclerViewManageBooking);
-        bookingRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        initViews(view);
+        setupRecyclerView();
+        loadCourseFromDatabase();
 
-        // Initialize the booking list and add some sample data
+        llAllBookings.setOnClickListener(v -> {
+            bookingList.clear();
+            bookingList = bookingService.getAllBookings();
+            bookingAdapter.updateBookingList(bookingList);
+        });
+
+        llConfirmedBookings.setOnClickListener(v -> {
+            bookingList.clear();
+            bookingList = bookingService.getConfirmedBookings();
+            bookingAdapter.updateBookingList(bookingList);
+        });
+
+        llCancelledBookings.setOnClickListener(v -> {
+            bookingList.clear();
+            bookingList = bookingService.getCancelledBookings();
+            bookingAdapter.updateBookingList(bookingList);
+        });
+    }
+
+    public void loadCourseFromDatabase() {
+        syncBookingManager.syncBookingsToFirestore();
+        syncBookingManager.syncBookingsFromFirestore();
+
+        syncBookingDetailManager.syncBookingDetailsFromFirestore();
+        syncBookingDetailManager.syncBookingDetailsFromFirestore();
+
+        bookingList.clear();
+        bookingList = bookingService.getAllBookings();
+
+        if (bookingList != null) {
+            bookingAdapter.updateBookingList(bookingList);
+        }
+    }
+
+    private void setupRecyclerView() {
+        manageBookingRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+
         bookingList = new ArrayList<>();
-        bookingList.add(new Booking("YUxjdhdwfjsjn54547", "user@example.com", "2024-11-29", "Confirmed", "$50"));
-        bookingList.add(new Booking("Aixjdhdwfjsjn12345", "anotheruser@example.com", "2024-11-28", "Pending", "$40"));
+        bookingService = new BookingService(requireContext());
+        bookingAdapter = new BookingAdapter(bookingList, requireContext());
 
-        // Set the adapter for RecyclerView
-        bookingAdapter = new BookingAdapter(bookingList, getContext());
-        bookingRecyclerView.setAdapter(bookingAdapter);
+        bookingAdapter.setCustomListeners(this);
+        manageBookingRecyclerView.setAdapter(bookingAdapter);
+    }
 
-        // Initialize the booking detail list with sample data
-        detailList = new ArrayList<>();
-        Course sampleCourse = new Course(1, "Learn the basics of yoga");
-        detailList.add(new ClassInstance("Class001", sampleCourse, "2024-11-29", "John Doe", new byte[0]));  // Example with empty image data
-        detailList.add(new ClassInstance("Class002", sampleCourse, "2024-12-01", "Jane Smith", new byte[0]));  // Example with empty image data
+    private void initViews(View view) {
+        manageBookingRecyclerView = view.findViewById(R.id.recyclerViewManageBooking);
+        syncBookingManager = new SyncBookingManager(requireContext());
+        syncBookingDetailManager = new SyncBookingDetailManager(requireContext());
 
-        // Initialize the booking detail RecyclerView
-        detailRecyclerView = view.findViewById(R.id.recyclerViewBookingDetail);
-        detailRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        llAllBookings = view.findViewById(R.id.linear_all_booking);
+        llConfirmedBookings = view.findViewById(R.id.linear_approve);
+        llCancelledBookings = view.findViewById(R.id.linear_reject);
+    }
 
-        // Set the adapter for booking detail RecyclerView
-        detailAdapter = new DetailAdapter(detailList, this.getContext());
-        detailRecyclerView.setAdapter(detailAdapter);
+    @Override
+    public void confirmBooking(Booking booking) {
+        DialogHelper.showConfirmationDialog(
+                requireActivity(),
+                "Are you sure you want to confirm this booking?",
+                null,
+                null,
+                () -> {
+                    bookingService.confirmBooking(booking.getBookingId());
+                    loadCourseFromDatabase();
+                    DialogHelper.showSuccessDialog(requireActivity(), "Booking confirmed successfully!");
+                });
+    }
+
+    @Override
+    public void cancelBooking(Booking booking) {
+        DialogHelper.showConfirmationDialog(
+                requireActivity(),
+                "Are you sure you want to cancel this booking?",
+                null,
+                null,
+                () -> {
+                    bookingService.cancelBooking(booking.getBookingId());
+                    loadCourseFromDatabase();
+                    DialogHelper.showSuccessDialog(requireActivity(), "Booking cancelled successfully!");
+                });
     }
 }

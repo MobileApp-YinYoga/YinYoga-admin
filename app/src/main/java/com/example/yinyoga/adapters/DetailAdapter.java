@@ -14,16 +14,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.yinyoga.R;
 import com.example.yinyoga.models.ClassInstance;
+import com.example.yinyoga.utils.ImageHelper;
 
 import java.util.List;
 
 public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.ClassInstanceViewHolder> {
 
-    private List<ClassInstance> ClassInstanceList;
+    private List<ClassInstance> classInstanceList;
     private Context context;
 
     public DetailAdapter(List<ClassInstance> ClassInstanceList, Context context) {
-        this.ClassInstanceList = ClassInstanceList;
+        this.classInstanceList = ClassInstanceList;
         this.context = context;
     }
 
@@ -36,37 +37,35 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.ClassInsta
 
     @Override
     public void onBindViewHolder(@NonNull ClassInstanceViewHolder holder, int position) {
-        ClassInstance ClassInstance = ClassInstanceList.get(position);
+        ClassInstance classInstance = classInstanceList.get(position);
 
         // Set data to the views
-        holder.instanceId.setText("Class ID: " + ClassInstance.getInstanceId());
-        holder.courseId.setText(ClassInstance.getCourse().getCourseId());
-        holder.date.setText("Date: " + ClassInstance.getDate());
-        holder.teacher.setText("Teacher: " + ClassInstance.getTeacher());
+        holder.courseNameInstanceId.setText(classInstance.getCourse().getCourseName() + " - " + classInstance.getInstanceId());
+        holder.date.setText("Date: " + classInstance.getDate());
+        holder.teacher.setText("Teacher: " + classInstance.getTeacher());
 
         // Convert byte[] imageUrl to Bitmap and set it to ImageView
-        if (ClassInstance.getImageUrl() != null) {
-            Bitmap bitmap = BitmapFactory.decodeByteArray(ClassInstance.getImageUrl(), 0, ClassInstance.getImageUrl().length);
+        if (classInstance.getImageUrl() != null) {
+            Bitmap bitmap = ImageHelper.convertByteArrayToBitmap(classInstance.getImageUrl());
             holder.classInstanceImage.setImageBitmap(bitmap);
         }
     }
 
     @Override
     public int getItemCount() {
-        return ClassInstanceList.size();
+        return classInstanceList.size();
     }
 
     public static class ClassInstanceViewHolder extends RecyclerView.ViewHolder {
-        TextView instanceId, courseId, date, teacher;
+        TextView courseNameInstanceId, date, teacher;
         ImageView classInstanceImage;
 
         public ClassInstanceViewHolder(@NonNull View itemView) {
             super(itemView);
-            instanceId = itemView.findViewById(R.id.tvInstanceId);
-            courseId = itemView.findViewById(R.id.courseId);
-            date = itemView.findViewById(R.id.tvDate);
-            teacher = itemView.findViewById(R.id.tvTeacher);
-            classInstanceImage = itemView.findViewById(R.id.class_instance_image);
+            courseNameInstanceId = itemView.findViewById(R.id.booking_detail_course_name_instanceId);
+            date = itemView.findViewById(R.id.booking_detail_date);
+            teacher = itemView.findViewById(R.id.booking_detail_teacher);
+            classInstanceImage = itemView.findViewById(R.id.booking_detail_image);
         }
     }
 }

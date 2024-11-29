@@ -18,9 +18,9 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:background="@drawable/edittext_shadow"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_shadow">
 
             <TextView
                 android:id="@+id/booking_id"
@@ -44,7 +44,6 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="20dp"
                 android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/booking_id">
 
@@ -88,32 +87,32 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewBookingDetail"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="20dp"
-                android:layout_marginBottom="30dp"
+                android:layout_marginBottom="10dp"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linear_infor"
-                app:layout_constraintVertical_bias="0.0"
-                tools:listitem="@layout/recycler_manage_booking" />
+                tools:listitem="@layout/recycler_booking_detail" />
 
             <LinearLayout
                 android:id="@+id/button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
                 android:layout_marginEnd="10dp"
-                android:layout_marginBottom="20dp"
                 android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <Button
                     android:id="@+id/btnConfirm"
-                    android:layout_width="100dp"
-                    android:layout_height="33dp"
+                    android:layout_width="110dp"
+                    android:layout_height="35dp"
                     android:layout_marginEnd="10dp"
                     android:backgroundTint="@color/main"
                     android:fontFamily="@font/poppins_semibold"
@@ -126,8 +125,8 @@
 
                 <Button
                     android:id="@+id/btnCancel"
-                    android:layout_width="100dp"
-                    android:layout_height="33dp"
+                    android:layout_width="110dp"
+                    android:layout_height="35dp"
                     android:layout_marginEnd="10dp"
                     android:backgroundTint="#506D674B"
                     android:fontFamily="@font/poppins_semibold"
@@ -149,6 +148,16 @@
                 android:src="@drawable/ic_info"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_bottom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:text=""
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linear_infor" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
