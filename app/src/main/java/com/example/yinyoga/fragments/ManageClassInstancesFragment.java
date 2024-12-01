@@ -50,7 +50,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
@@ -490,9 +489,7 @@ public class ManageClassInstancesFragment extends Fragment implements ClassInsta
         instanceLists = instanceService.getAllClassInstances();
 
         if (!instanceLists.isEmpty()) {
-            instanceAdapter = new ClassInstanceAdapter(instanceLists, this);
-            instanceAdapter.setCustomListeners(this);
-            recyclerView.setAdapter(instanceAdapter);
+            instanceAdapter.updateInstanceList(instanceLists);
         }
     }
 
@@ -501,6 +498,8 @@ public class ManageClassInstancesFragment extends Fragment implements ClassInsta
 
         instanceLists = new ArrayList<>();
         instanceAdapter = new ClassInstanceAdapter(instanceLists, this);
+
+        instanceAdapter.setCustomListeners(this);
         recyclerView.setAdapter(instanceAdapter);
     }
 

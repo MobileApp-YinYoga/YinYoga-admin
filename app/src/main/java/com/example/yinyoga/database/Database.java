@@ -125,7 +125,7 @@ public class Database extends SQLiteOpenHelper {
             Log.d("Database", "Table arts created successfully");
 
             String CREATE_BOOKINGS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_BOOKINGS + " ("
-                    + COLUMN_BOOKING_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + COLUMN_BOOKING_ID + " TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))), "
                     + COLUMN_BOOKING_DATE + " TEXT NOT NULL, "
                     + COLUMN_BOOKING_EMAIL + " TEXT NOT NULL, "
                     + COLUMN_BOOKING_STATUS + " TEXT NOT NULL, "
@@ -134,8 +134,8 @@ public class Database extends SQLiteOpenHelper {
             Log.d("Database", "Table Bookings created successfully");
 
             String CREATE_BOOKING_DETAILS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_BOOKING_DETAILS + " ("
-                    + COLUMN_BOOKING_DETAIL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    + COLUMN_BOOKING_DETAIL_BOOKING_ID + " INTEGER NOT NULL, "
+                    + COLUMN_BOOKING_DETAIL_ID + " TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))), "
+                    + COLUMN_BOOKING_DETAIL_BOOKING_ID + " TEXT NOT NULL, "
                     + COLUMN_BOOKING_DETAIL_INSTANCE_ID + " TEXT NOT NULL, "
                     + COLUMN_BOOKING_DETAIL_PRICE + " REAL NOT NULL, "
                     + "FOREIGN KEY(" + COLUMN_BOOKING_DETAIL_BOOKING_ID + ") REFERENCES " + TABLE_BOOKINGS + "(" + COLUMN_BOOKING_ID + "))";

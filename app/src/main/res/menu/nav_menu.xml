@@ -1,5 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@+id/nav_manage_booking"
+        android:title="Manage Booking"
+        android:icon="@drawable/ic_manage_booking" />
+
+    <item
         android:id="@+id/nav_manage_classes"
         android:title="Manage Courses"
         android:icon="@drawable/ic_manage_classes" />
@@ -8,11 +13,6 @@
         android:id="@+id/nav_manage_class_instances"
         android:title="Manage Class Instances"
         android:icon="@drawable/ic_manage_class_instances" />
-
-    <item
-        android:id="@+id/nav_manage_booking"
-        android:title="Manage Booking"
-        android:icon="@drawable/ic_manage_booking" />
 
     <item
         android:id="@+id/nav_notifications"
