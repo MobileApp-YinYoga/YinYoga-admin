@@ -254,8 +254,15 @@ public class ManageUserActivity extends AppCompatActivity {
             return;
         }
 
-        if (userService.verifyPassword(oldPassword, username)) {
-            userService.updatePassword(newPassword, username);
+        User user = userService.getUser(sessionManager.getUsername());
+        if (userService.verifyPassword(oldPassword, user.getPassword())) {
+            String passwordHash = userService.hashPassword(newPassword);
+            userService.updatePassword(passwordHash, username);
+
+            sessionManager.updatePassword(newPassword);
+            etOldPassword.setText("");
+            etNewPassword.setText("");
+            etConfirmNewPassword.setText("");
             DialogHelper.showSuccessDialog(this, "Password changed successfully.");
         } else {
             etOldPassword.setError("Incorrect current password");

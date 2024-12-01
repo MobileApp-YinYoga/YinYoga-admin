@@ -47,7 +47,7 @@
         app:layout_constraintTop_toBottomOf="@+id/main_title">
 
         <TextView
-            android:id="@+id/all_booking"
+            android:id="@+id/tv_all_booking"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins_semibold"
@@ -81,7 +81,7 @@
         app:layout_constraintTop_toBottomOf="@+id/main_title">
 
         <TextView
-            android:id="@+id/approve_booking"
+            android:id="@+id/tv_approve_booking"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins_semibold"
@@ -115,7 +115,7 @@
         app:layout_constraintTop_toBottomOf="@+id/main_title">
 
         <TextView
-            android:id="@+id/reject_booking"
+            android:id="@+id/tv_reject_booking"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins_semibold"

@@ -167,7 +167,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
         if (isValidPassword(newPassword, confirmPassword)){
             String hashedPassword = userService.hashPassword(newPassword);
-            userService.updatePassword(currentUser.getEmail(), hashedPassword);
+            userService.updatePassword(hashedPassword, currentUser.getUsername());
 
             DialogHelper.showSuccessDialog(this, "Password set successfully!");
             new Intent(ForgotPasswordActivity.this, LoginActivity.class);

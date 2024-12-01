@@ -1,12 +1,14 @@
 package com.example.yinyoga.fragments;
 
 import android.app.Dialog;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,6 +38,7 @@ public class ManageBookingFragment extends Fragment implements BookingAdapter.Cu
     private RecyclerView manageBookingRecyclerView;
     private BookingAdapter bookingAdapter;
     private LinearLayout llAllBookings, llConfirmedBookings, llCancelledBookings;
+    private TextView tvAllBookings, tvConfirmedBookings, tvCancelledBookings;
     private List<Booking> bookingList;
     private BookingService bookingService;
     private SyncBookingManager syncBookingManager;
@@ -86,6 +89,14 @@ public class ManageBookingFragment extends Fragment implements BookingAdapter.Cu
 
         if (bookingList != null) {
             bookingAdapter.updateBookingList(bookingList);
+
+            tvAllBookings.setText(String.valueOf(bookingList.size()));
+
+            int confirmedBookings = bookingService.getConfirmedBookings().size();
+            int cancelledBookings = bookingService.getCancelledBookings().size();
+
+            tvConfirmedBookings.setText(String.valueOf(confirmedBookings));
+            tvCancelledBookings.setText(String.valueOf(cancelledBookings));
         }
     }
 
@@ -108,6 +119,10 @@ public class ManageBookingFragment extends Fragment implements BookingAdapter.Cu
         llAllBookings = view.findViewById(R.id.linear_all_booking);
         llConfirmedBookings = view.findViewById(R.id.linear_approve);
         llCancelledBookings = view.findViewById(R.id.linear_reject);
+
+        tvAllBookings = view.findViewById(R.id.tv_all_booking);
+        tvConfirmedBookings = view.findViewById(R.id.tv_approve_booking);
+        tvCancelledBookings = view.findViewById(R.id.tv_reject_booking);
     }
 
     @Override
