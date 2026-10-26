@@ -36,7 +36,7 @@ The project integrates Firebase services for data-related functionality and Goog
 <p align="center">
   <img src="https://github.com/user-attachments/assets/9c0855ec-3b11-4c96-9508-ca7e355f1a35" width="22%" alt="YinYoga Admin screen 1" />
   &nbsp;
-  <img src="https://github.com/user-attachments/assets/58cec233-2b95-4aec-80de-ce51907cb3d3" width="22%" alt="YinYoga Admin screen 2" />
+  <img width="395" height="881" alt="image" src="https://github.com/user-attachments/assets/b23e86bd-9360-4cbf-8f6f-50d83e1062ae" />
   &nbsp;
   <img src="https://github.com/user-attachments/assets/ca54db7c-1bc7-4e7b-8060-1155ecffa39e" width="22%" alt="YinYoga Admin screen 3" />
   &nbsp;
